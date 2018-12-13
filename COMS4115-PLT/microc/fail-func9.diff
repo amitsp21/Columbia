@@ -1,0 +1,4 @@
+1c1
+< ./testall.sh: line 73: ./microc.nativ321e: No such file or directory
+---
+> Fatal error: exception Failure("illegal argument found int expected bool in 42")

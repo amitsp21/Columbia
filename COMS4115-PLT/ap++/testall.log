@@ -1,0 +1,18 @@
+/usr/local/opt/llvm/bin/lli
+
+###### Testing test-helloworld
+./ap_plusplus.native tests/test-helloworld.mc > test-helloworld.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-helloworld.ll > test-helloworld.s
+cc -o test-helloworld.exe test-helloworld.s printbig.o
+./test-helloworld.exe
+diff -b test-helloworld.out tests/test-helloworld.out > test-helloworld.diff
+###### SUCCESS
+
+###### Testing test-list01
+./ap_plusplus.native tests/test-list01.mc > test-list01.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-list01.ll > test-list01.s
+cc -o test-list01.exe test-list01.s printbig.o
+./test-list01.exe
+diff -b test-list01.out tests/test-list01.out > test-list01.diff
+FAILED test-list01.out differs from tests/test-list01.out
+###### FAILED
