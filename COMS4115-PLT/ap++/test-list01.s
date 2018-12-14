@@ -1,8 +1,8 @@
 	.section	__TEXT,__text,regular,pure_instructions
 	.macosx_version_min 10, 13
-	.globl	_list_get_int32         ## -- Begin function list_get_int32
+	.globl	_list_get               ## -- Begin function list_get
 	.p2align	4, 0x90
-_list_get_int32:                        ## @list_get_int32
+_list_get:                              ## @list_get
 	.cfi_startproc
 ## %bb.0:                               ## %entry
 	movq	%rdi, -8(%rsp)
@@ -29,23 +29,38 @@ _list_push_int32:                       ## @list_push_int32
 	retq
 	.cfi_endproc
                                         ## -- End function
+	.globl	_list_size_int32        ## -- Begin function list_size_int32
+	.p2align	4, 0x90
+_list_size_int32:                       ## @list_size_int32
+	.cfi_startproc
+## %bb.0:                               ## %entry
+	movq	%rdi, -8(%rsp)
+	movl	4(%rdi), %eax
+	retq
+	.cfi_endproc
+                                        ## -- End function
 	.globl	_main                   ## -- Begin function main
 	.p2align	4, 0x90
 _main:                                  ## @main
 	.cfi_startproc
 ## %bb.0:                               ## %entry
-	pushq	%r14
+	pushq	%r15
 	.cfi_def_cfa_offset 16
-	pushq	%rbx
+	pushq	%r14
 	.cfi_def_cfa_offset 24
-	subq	$4024, %rsp             ## imm = 0xFB8
-	.cfi_def_cfa_offset 4048
-	.cfi_offset %rbx, -24
-	.cfi_offset %r14, -16
-	movq	$0, 8(%rsp)
-	leaq	24(%rsp), %rax
-	movq	%rax, 16(%rsp)
-	leaq	8(%rsp), %rbx
+	pushq	%rbx
+	.cfi_def_cfa_offset 32
+	subq	$8032, %rsp             ## imm = 0x1F60
+	.cfi_def_cfa_offset 8064
+	.cfi_offset %rbx, -32
+	.cfi_offset %r14, -24
+	.cfi_offset %r15, -16
+	movq	$0, 16(%rsp)
+	leaq	32(%rsp), %rax
+	movq	%rax, 24(%rsp)
+	movq	%rax, 8(%rsp)
+	movq	$0, (%rsp)
+	leaq	16(%rsp), %rbx
 	movl	$101, %esi
 	movq	%rbx, %rdi
 	callq	_list_push_int32
@@ -57,7 +72,7 @@ _main:                                  ## @main
 	callq	_list_push_int32
 	xorl	%esi, %esi
 	movq	%rbx, %rdi
-	callq	_list_get_int32
+	callq	_list_get
 	movl	%eax, %ecx
 	leaq	L_fmt(%rip), %r14
 	xorl	%eax, %eax
@@ -66,7 +81,7 @@ _main:                                  ## @main
 	callq	_printf
 	movl	$1, %esi
 	movq	%rbx, %rdi
-	callq	_list_get_int32
+	callq	_list_get
 	movl	%eax, %ecx
 	xorl	%eax, %eax
 	movq	%r14, %rdi
@@ -74,16 +89,44 @@ _main:                                  ## @main
 	callq	_printf
 	movl	$2, %esi
 	movq	%rbx, %rdi
-	callq	_list_get_int32
+	callq	_list_get
+	movl	%eax, %ecx
+	xorl	%eax, %eax
+	movq	%r14, %rdi
+	movl	%ecx, %esi
+	callq	_printf
+	movq	%rsp, %r15
+	movl	$1, %esi
+	movq	%r15, %rdi
+	callq	_list_get
+	movl	%eax, %ecx
+	xorl	%eax, %eax
+	movq	%r14, %rdi
+	movl	%ecx, %esi
+	callq	_printf
+	leaq	L_fmt.2(%rip), %rdi
+	leaq	L_strptr(%rip), %rsi
+	xorl	%eax, %eax
+	callq	_printf
+	movq	%rbx, %rdi
+	callq	_list_size_int32
+	movl	%eax, %ecx
+	xorl	%eax, %eax
+	movq	%r14, %rdi
+	movl	%ecx, %esi
+	callq	_printf
+	movq	%r15, %rdi
+	callq	_list_size_int32
 	movl	%eax, %ecx
 	xorl	%eax, %eax
 	movq	%r14, %rdi
 	movl	%ecx, %esi
 	callq	_printf
 	xorl	%eax, %eax
-	addq	$4024, %rsp             ## imm = 0xFB8
+	addq	$8032, %rsp             ## imm = 0x1F60
 	popq	%rbx
 	popq	%r14
+	popq	%r15
 	retq
 	.cfi_endproc
                                         ## -- End function
@@ -96,6 +139,9 @@ L_fmt.1:                                ## @fmt.1
 
 L_fmt.2:                                ## @fmt.2
 	.asciz	"%s\n"
+
+L_strptr:                               ## @strptr
+	.asciz	"list size:"
 
 
 .subsections_via_symbols

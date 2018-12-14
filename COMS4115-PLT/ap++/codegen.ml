@@ -35,7 +35,6 @@ let translate (globals, functions) =
   and str_t      = L.pointer_type (L.i8_type context)
   and void_t     = L.void_type   context 
   and list_t t   = L.struct_type context [| L.i32_type context; L.i32_type context; (L.pointer_type t) |]
-  in let ptr_list_t t = L.pointer_type (list_t t) 
   in
 
   (* Return the LLVM type for a AP++ type *)
@@ -47,7 +46,13 @@ let translate (globals, functions) =
     | A.Void  -> void_t
     | A.List t -> list_t (ltype_of_typ t)
   in
-
+  let ltype_str typ : StringMap.key = match typ with
+       i32_t -> "i32_t"
+     | i1_t -> "i1_t"
+     | float_t -> "float_t"
+     | str_t -> "str_t"
+     | void_t -> "void_t"
+  in
   (* Create a map of global variables after creating each *)
   let global_vars : L.llvalue StringMap.t =
     let global_var m (t, n) = 
@@ -63,23 +68,27 @@ let translate (globals, functions) =
       L.declare_function "printf" printf_t the_module in
   
   (* int32 list_get(list, index) *)
-  let list_get_int32 : L.llvalue = L.define_function "list_get_int32" (L.function_type i32_t [| L.pointer_type (list_t i32_t); i32_t |]) the_module in
-     let build = L.builder_at_end context (L.entry_block list_get_int32) in
-     let listPtr = L.build_alloca (L.pointer_type (list_t i32_t)) "list_ptr_alloc" build in
-     let _ = L.build_store (L.param list_get_int32 0) listPtr build in
-     let idxPtr = L.build_alloca i32_t "idx_alloc" build in
-     let _ = L.build_store (L.param list_get_int32 1) idxPtr build in
-     let listLoad = L.build_load listPtr "list_load" build in
-     (* int** *)
-     let listArrayPtr = L.build_struct_gep listLoad 2 "list_array_ptr" build in
-     (* int* *)
-     let listArrayLoad = L.build_load listArrayPtr "array_load" build in
-     let idx = L.build_load idxPtr "idx_load" build in
-     (* int* *)
-     let listArrayElementPtr = L.build_gep listArrayLoad [| idx |] "list_arry_element_ptr" build in
-     (* int *)
-     let elementVal = L.build_load listArrayElementPtr "list_array_element_ptr" build in
-     ignore(L.build_ret elementVal build);
+  let list_get : L.llvalue StringMap.t = 
+    let list_get_ty m ty = 
+       let def = L.define_function "list_get" (L.function_type ty [| L.pointer_type (list_t ty); i32_t |]) the_module in
+       let build = L.builder_at_end context (L.entry_block def) in
+       let listPtr = L.build_alloca (L.pointer_type (list_t ty)) "list_ptr_alloc" build in
+       let _ = L.build_store (L.param def 0) listPtr build in
+       let idxPtr = L.build_alloca i32_t "idx_alloc" build in
+       let _ = L.build_store (L.param def 1) idxPtr build in
+       let listLoad = L.build_load listPtr "list_load" build in
+       (* int** *)
+       let listArrayPtr = L.build_struct_gep listLoad 2 "list_array_ptr" build in
+       (* int* *)
+       let listArrayLoad = L.build_load listArrayPtr "array_load" build in
+       let idx = L.build_load idxPtr "idx_load" build in
+       (* int* *)
+       let listArrayElementPtr = L.build_gep listArrayLoad [| idx |] "list_arry_element_ptr" build in
+       (* int *)
+       let elementVal = L.build_load listArrayElementPtr "list_array_element_ptr" build in
+       let _ = L.build_ret elementVal build in
+       StringMap.add (ltype_str ty) def m in
+  List.fold_left list_get_ty StringMap.empty [ i32_t ] in
 
   (* void list_push(list, int32 value) *)
   let list_push_int32 : L.llvalue = L.define_function "list_push_int32" (L.function_type void_t [| L.pointer_type (list_t i32_t); i32_t |]) the_module in
@@ -113,6 +122,15 @@ let translate (globals, functions) =
      ignore(L.build_store nextSize listSizePtr build);
      ignore(L.build_store (L.build_load valPtr "val" build) nextElementPtr build);
      ignore(L.build_ret_void build);
+
+  let list_size_int32 : L.llvalue = L.define_function "list_size_int32" (L.function_type i32_t [| L.pointer_type (list_t i32_t) |]) the_module in
+     let build = L.builder_at_end context (L.entry_block list_size_int32) in
+     let listPtr = L.build_alloca (L.pointer_type (list_t i32_t)) "list_ptr_alloc" build in
+     ignore(L.build_store (L.param list_size_int32 0) listPtr build);
+     let listLoad = L.build_load listPtr "list_load" build in
+     let listSizePtr = L.build_struct_gep listLoad 1 "list_size" build in 
+     let listSize = L.build_load listSizePtr "list_size" build in
+     ignore(L.build_ret listSize build);
 
   (* Define each function (arguments and return type) so we can 
      call it even before we've created its body *)
@@ -225,7 +243,9 @@ let translate (globals, functions) =
     | A.Neg                  -> L.build_neg
     | A.Not                  -> L.build_not) e' "tmp" builder
     | SListGet (id, e) ->
-       L.build_call list_get_int32 [| (lookup id); (expr builder e) |] "list_get" builder 
+       L.build_call (StringMap.find (ltype_str (fst e)) list_get) [| (lookup id); (expr builder e) |] "list_get" builder 
+    | SListSize (id) ->
+       L.build_call list_size_int32 [| (lookup id) |] "list_size" builder 
     | SCall ("prints", [e]) ->
       L.build_call printf_func [| str_format_str ; (expr builder e) |] 
       "printf" builder

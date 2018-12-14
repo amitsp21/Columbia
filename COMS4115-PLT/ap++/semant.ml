@@ -137,8 +137,8 @@ let check (globals, functions) =
              Int -> Int
            | _ -> raise (Failure ("list index must be integer"))
          in (ty, SListGet(var, (ty, e')))
-      | ListPop id -> (Int, SListPop(id))
-      | ListSize id -> (Int, SListSize(id))
+      | ListPop var -> (Int, SListPop(var))
+      | ListSize var -> (Int, SListSize(var))
       | Call(fname, args) as call -> 
           let fd = find_func fname in
           let param_length = List.length fd.formals in
