@@ -1,7 +1,7 @@
 type op = Add | Sub | Mult | Div | Mod | Equal | Neq | Less | Leq | Greater | Geq
           | And | Or 
 
-type uop = PlusPlus | MinusMinus | Neg | Not
+type uop = PlusPlusPre | PlusPlusPost | MinusMinusPre | MinusMinusPost | Neg | Not
 
 type typ = Int | Bool | Float | String | Void | List of typ
 

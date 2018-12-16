@@ -108,8 +108,10 @@ let check (globals, functions) =
           let ty = match op with
             Neg when t = Int || t = Float -> t
           | Not when t = Bool -> Bool
-          | PlusPlus when t = Int -> t
-          | MinusMinus when t = Int -> t
+          | PlusPlusPre when t = Int -> t
+          | MinusMinusPre when t = Int -> t
+          | PlusPlusPost when t = Int -> t
+          | MinusMinusPost when t = Int -> t
           | _ -> raise (Failure ("illegal unary operator"))
           in (ty, SUnop(op, (t, e')))
       | Binop(e1, op, e2) as e -> 

@@ -121,8 +121,10 @@ expr:
 | expr TIMES  expr                        { Binop($1, Mult, $3) }
 | expr DIVIDE expr                        { Binop($1, Div, $3) }
 | expr MOD    expr                        { Binop($1, Mod, $3) }
-| PLUSPLUS ID                             { Unop(PlusPlus, Id($2)) }
-| MINUSMINUS ID                           { Unop(MinusMinus, Id($2)) }
+| PLUSPLUS ID                             { Unop(PlusPlusPre, Id($2)) }
+| MINUSMINUS ID                           { Unop(MinusMinusPre, Id($2)) }
+| ID PLUSPLUS                             { Unop(PlusPlusPost, Id($1)) }
+| ID MINUSMINUS                           { Unop(MinusMinusPost, Id($1)) }
 | expr EQ expr                            { Binop($1, Equal, $3) }
 | expr NEQ expr                           { Binop($1, Neq, $3) }
 | expr LT expr                            { Binop($1, Less, $3) }

@@ -25,10 +25,26 @@ cc -o test-minusminus01.exe test-minusminus01.s printbig.o
 diff -b test-minusminus01.out tests/test-minusminus01.out > test-minusminus01.diff
 ###### SUCCESS
 
+###### Testing test-minusminus02
+./ap_plusplus.native tests/test-minusminus02.mc > test-minusminus02.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-minusminus02.ll > test-minusminus02.s
+cc -o test-minusminus02.exe test-minusminus02.s printbig.o
+./test-minusminus02.exe
+diff -b test-minusminus02.out tests/test-minusminus02.out > test-minusminus02.diff
+###### SUCCESS
+
 ###### Testing test-plusplus01
 ./ap_plusplus.native tests/test-plusplus01.mc > test-plusplus01.ll
 /usr/local/opt/llvm/bin/llc -relocation-model=pic test-plusplus01.ll > test-plusplus01.s
 cc -o test-plusplus01.exe test-plusplus01.s printbig.o
 ./test-plusplus01.exe
 diff -b test-plusplus01.out tests/test-plusplus01.out > test-plusplus01.diff
+###### SUCCESS
+
+###### Testing test-plusplus02
+./ap_plusplus.native tests/test-plusplus02.mc > test-plusplus02.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-plusplus02.ll > test-plusplus02.s
+cc -o test-plusplus02.exe test-plusplus02.s printbig.o
+./test-plusplus02.exe
+diff -b test-plusplus02.out tests/test-plusplus02.out > test-plusplus02.diff
 ###### SUCCESS

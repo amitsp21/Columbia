@@ -294,20 +294,35 @@ let translate (globals, functions) =
         A.Neg when t = A.Float -> L.build_fneg e' "tmp" builder
       | A.Neg                  -> L.build_neg e' "tmp" builder
       | A.Not                  -> L.build_not e' "tmp" builder
-      | A.PlusPlus -> 
+      | A.PlusPlusPre -> 
         let newVal = (L.build_add e' (L.const_int i32_t 1)) "tmp" builder in
         let id = match (e'') with 
           SId s -> s
           | _ -> raise (Failure ("PlusPlus can only be applied to an Id type")) in
         let varPtr = (lookup id) in
         let _ = L.build_store newVal varPtr builder in newVal
-      | A.MinusMinus ->
+      | A.MinusMinusPre ->
         let newVal = (L.build_sub e' (L.const_int i32_t 1)) "tmp" builder in
         let id = match (e'') with 
           SId s -> s
           | _ -> raise (Failure ("PlusPlus can only be applied to an Id type")) in
         let varPtr = (lookup id) in
-        let _ = L.build_store newVal varPtr builder in newVal)
+        let _ = L.build_store newVal varPtr builder in newVal
+      | A.PlusPlusPost -> 
+        let newVal = (L.build_add e' (L.const_int i32_t 1)) "tmp" builder in
+        let id = match (e'') with 
+          SId s -> s
+          | _ -> raise (Failure ("PlusPlus can only be applied to an Id type")) in
+        let varPtr = (lookup id) in
+        let _ = L.build_store newVal varPtr builder in e'
+      | A.MinusMinusPost ->
+        let newVal = (L.build_sub e' (L.const_int i32_t 1)) "tmp" builder in
+        let id = match (e'') with 
+          SId s -> s
+          | _ -> raise (Failure ("PlusPlus can only be applied to an Id type")) in
+        let varPtr = (lookup id) in
+        let _ = L.build_store newVal varPtr builder in e')
+
     | SListGet (list_type, id, e) ->
       L.build_call (StringMap.find (type_str list_type) list_get) [| (lookup id); (expr builder e) |] "list_get" builder
     | SListSize (list_type, id) -> 
