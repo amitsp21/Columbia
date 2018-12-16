@@ -288,5 +288,8 @@ merge:                                            ; preds = %while
   call void @list_setint({ i32, i32, i32* }* %a, i32 0, i32 5)
   %list_get21 = call i32 @list_getint({ i32, i32, i32* }* %a, i32 0)
   %printf22 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_get21)
+  call void @list_setint({ i32, i32, i32* }* %a, i32 1, i32 10)
+  %list_get23 = call i32 @list_getint({ i32, i32, i32* }* %a, i32 1)
+  %printf24 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_get23)
   ret i32 0
 }

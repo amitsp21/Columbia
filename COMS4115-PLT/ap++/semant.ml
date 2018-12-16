@@ -108,7 +108,9 @@ let check (globals, functions) =
           let ty = match op with
             Neg when t = Int || t = Float -> t
           | Not when t = Bool -> Bool
-          | _ -> raise (Failure ("illegal unary operator "))
+          | PlusPlus when t = Int -> t
+          | MinusMinus when t = Int -> t
+          | _ -> raise (Failure ("illegal unary operator"))
           in (ty, SUnop(op, (t, e')))
       | Binop(e1, op, e2) as e -> 
           let (t1, e1') = expr e1 
@@ -129,17 +131,20 @@ let check (globals, functions) =
          let (t, e') = expr e in
          let ty = match t with 
              Int -> Int
-           | _ -> raise (Failure ("list index must be integer")) in
+             | _ -> raise (Failure ("list_get index must be integer")) in
          let list_type = match (type_of_identifier var) with
              List x -> x
+             | _ -> raise (Failure ("list_get operand not a list"))
          in (ty, SListGet(list_type, var, (ty, e')))
       | ListPop var -> 
           let list_type = match (type_of_identifier var) with
              List x -> x
+             | _ -> raise (Failure ("list_pop operand not a list"))
           in (list_type, SListPop(list_type, var))
       | ListSize var -> 
           let list_type = match (type_of_identifier var) with
              List x -> x
+             | _ -> raise (Failure ("list_size operand not a list"))
           in (Int, SListSize(list_type, var))
       | Call(fname, args) as call -> 
           let fd = find_func fname in
@@ -170,7 +175,12 @@ let check (globals, functions) =
     (* Return a semantically-checked statement i.e. containing sexprs *)
     let rec check_stmt = function
         Expr e -> SExpr (expr e)
-      | ListPush (id, e) -> SListPush(id, expr e)
+      | ListPush (var, e) -> 
+        let (t, e') = expr e in
+         let list_type = match (type_of_identifier var) with
+             List x -> if x != t then raise (Failure("list_push value type does not match list type")) else x
+             | _ -> raise (Failure ("list_get operand not a list"))
+        in SListPush(var, expr e)
       | ListSet (var, e1, e2) ->
          let (t1, e1') = expr e1 in
          let (t2, e2') = expr e2 in
@@ -178,7 +188,8 @@ let check (globals, functions) =
              Int -> Int
            | _ -> raise (Failure ("list index must be integer")) in
          let list_type = match (type_of_identifier var) with
-            List x -> x
+            List x -> if x != t2 then raise (Failure("list_set value type does not match list type")) else x
+            | _ -> raise (Failure ("list_get operand not a list"))
          in SListSet(list_type, var, (ty, e1'), (t2, e2'))
       | If(p, b1, b2) -> SIf(check_bool_expr p, check_stmt b1, check_stmt b2)
       | While(p, s) -> SWhile(check_bool_expr p, check_stmt s)

@@ -22,5 +22,7 @@ int main()
   printi(#a);
   a[0] = 5;
   printi(a[0]);
+  list_set(a, 1, 10);
+  printi(a[1]);
   return 0;
 }

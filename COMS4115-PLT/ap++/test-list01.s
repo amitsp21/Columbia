@@ -305,6 +305,18 @@ LBB15_1:                                ## %while
 	movq	%r14, %rdi
 	movl	%ecx, %esi
 	callq	_printf
+	movl	$1, %esi
+	movl	$10, %edx
+	movq	%rbx, %rdi
+	callq	_list_setint
+	movl	$1, %esi
+	movq	%rbx, %rdi
+	callq	_list_getint
+	movl	%eax, %ecx
+	xorl	%eax, %eax
+	movq	%r14, %rdi
+	movl	%ecx, %esi
+	callq	_printf
 	xorl	%eax, %eax
 	addq	$12056, %rsp            ## imm = 0x2F18
 	popq	%rbx
