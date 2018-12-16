@@ -106,6 +106,8 @@ stmt:
 | IF LPAREN expr RPAREN stmt ELSE stmt      { If($3, $5, $7) }
 | WHILE LPAREN expr RPAREN stmt             { While($3, $5) }
 | LIST_PUSH LPAREN ID COMMA expr RPAREN SEMICOLON { ListPush($3, $5) }
+| LIST_SET LPAREN ID COMMA expr COMMA expr RPAREN SEMICOLON { ListSet($3, $5, $7) }
+| ID LBRACK expr RBRACK ASSIGN expr SEMICOLON         { ListSet($1, $3, $6) }
 
 /* executes code logic and evaluates to a value */
 expr:
@@ -136,8 +138,6 @@ expr:
 | ID LPAREN args_opt RPAREN		            { Call($1, $3) }
 | LIST_GET LPAREN ID COMMA expr RPAREN    { ListGet($3, $5) }
 | ID LBRACK expr RBRACK                   { ListGet($1, $3) }
-| LIST_SET LPAREN ID COMMA expr COMMA expr RPAREN { ListSet{$3, $5, $7} }
-| ID LBRACK expr RBRACK ASSIGN expr       { ListSet($1, $3, $6) }
 | LIST_POP LPAREN ID RPAREN               { ListPop($3) }
 | LIST_SIZE LPAREN ID RPAREN              { ListSize($3) }
 | HASH ID                                 { ListSize($2) }

@@ -39,6 +39,43 @@ _list_getfloat:                         ## @list_getfloat
 	retq
 	.cfi_endproc
                                         ## -- End function
+	.globl	_list_setbool           ## -- Begin function list_setbool
+	.p2align	4, 0x90
+_list_setbool:                          ## @list_setbool
+	.cfi_startproc
+## %bb.0:                               ## %entry
+	movq	%rdi, -8(%rsp)
+	movq	8(%rdi), %rax
+	movslq	%esi, %rcx
+	andl	$1, %edx
+	movb	%dl, (%rax,%rcx)
+	retq
+	.cfi_endproc
+                                        ## -- End function
+	.globl	_list_setint            ## -- Begin function list_setint
+	.p2align	4, 0x90
+_list_setint:                           ## @list_setint
+	.cfi_startproc
+## %bb.0:                               ## %entry
+	movq	%rdi, -8(%rsp)
+	movq	8(%rdi), %rax
+	movslq	%esi, %rcx
+	movl	%edx, (%rax,%rcx,4)
+	retq
+	.cfi_endproc
+                                        ## -- End function
+	.globl	_list_setfloat          ## -- Begin function list_setfloat
+	.p2align	4, 0x90
+_list_setfloat:                         ## @list_setfloat
+	.cfi_startproc
+## %bb.0:                               ## %entry
+	movq	%rdi, -8(%rsp)
+	movq	8(%rdi), %rax
+	movslq	%esi, %rcx
+	movsd	%xmm0, (%rax,%rcx,8)
+	retq
+	.cfi_endproc
+                                        ## -- End function
 	.globl	_list_pushbool          ## -- Begin function list_pushbool
 	.p2align	4, 0x90
 _list_pushbool:                         ## @list_pushbool
@@ -222,10 +259,10 @@ _main:                                  ## @main
 	leaq	24(%rsp), %rdi
 	movl	$1, %esi
 	callq	_list_getint
-	jmp	LBB12_1
+	jmp	LBB15_1
 	.p2align	4, 0x90
-LBB12_2:                                ## %while_body
-                                        ##   in Loop: Header=BB12_1 Depth=1
+LBB15_2:                                ## %while_body
+                                        ##   in Loop: Header=BB15_1 Depth=1
 	movq	%rbx, %rdi
 	callq	_list_popint
 	movl	%eax, %ecx
@@ -235,7 +272,7 @@ LBB12_2:                                ## %while_body
 	callq	_printf
 	movq	%rbx, %rdi
 	callq	_list_sizeint
-LBB12_1:                                ## %while
+LBB15_1:                                ## %while
                                         ## =>This Inner Loop Header: Depth=1
 	movl	%eax, %ecx
 	xorl	%eax, %eax
@@ -245,13 +282,27 @@ LBB12_1:                                ## %while
 	movq	%rbx, %rdi
 	callq	_list_sizeint
 	testl	%eax, %eax
-	jg	LBB12_2
+	jg	LBB15_2
 ## %bb.3:                               ## %merge
-	leaq	8(%rsp), %rdi
+	leaq	8(%rsp), %rbx
+	movq	%rbx, %rdi
 	callq	_list_sizeint
 	movl	%eax, %ecx
-	leaq	L_fmt(%rip), %rdi
+	leaq	L_fmt(%rip), %r14
 	xorl	%eax, %eax
+	movq	%r14, %rdi
+	movl	%ecx, %esi
+	callq	_printf
+	xorl	%esi, %esi
+	movl	$5, %edx
+	movq	%rbx, %rdi
+	callq	_list_setint
+	xorl	%esi, %esi
+	movq	%rbx, %rdi
+	callq	_list_getint
+	movl	%eax, %ecx
+	xorl	%eax, %eax
+	movq	%r14, %rdi
 	movl	%ecx, %esi
 	callq	_printf
 	xorl	%eax, %eax

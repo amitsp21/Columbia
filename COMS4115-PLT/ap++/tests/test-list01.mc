@@ -20,5 +20,7 @@ int main()
     printi(list_size(a));
   }
   printi(#a);
+  a[0] = 5;
+  printi(a[0]);
   return 0;
 }

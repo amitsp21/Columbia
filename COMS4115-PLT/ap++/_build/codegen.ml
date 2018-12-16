@@ -339,7 +339,7 @@ let translate (globals, functions) =
       | SListPush (id, e) -> 
         ignore(L.build_call (StringMap.find (type_str (fst e)) list_push) [| (lookup id); (expr builder e) |] "" builder); builder 
       | SListSet (list_type, id, e1, e2) ->
-        ignore(L.build_call (StringMap.find (type_str list_type) list_set) [| (lookup id); (expr builder e1), (expr builder e2) |] "" builder); builder
+        ignore(L.build_call (StringMap.find (type_str list_type) list_set) [| (lookup id); (expr builder e1); (expr builder e2) |] "" builder); builder
       | SExpr e -> ignore(expr builder e); builder 
       | SReturn e -> ignore(match fdecl.styp with
                               (* Special "return nothing" instr *)

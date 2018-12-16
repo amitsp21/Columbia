@@ -52,6 +52,42 @@ entry:
   ret double %list_array_element_ptr
 }
 
+define void @list_setbool({ i32, i32, i1* }*, i32, i1) {
+entry:
+  %list_ptr_alloc = alloca { i32, i32, i1* }*
+  store { i32, i32, i1* }* %0, { i32, i32, i1* }** %list_ptr_alloc
+  %list_load = load { i32, i32, i1* }*, { i32, i32, i1* }** %list_ptr_alloc
+  %list_array_ptr = getelementptr inbounds { i32, i32, i1* }, { i32, i32, i1* }* %list_load, i32 0, i32 2
+  %list_array_load = load i1*, i1** %list_array_ptr
+  %list_arry_next_element_ptr = getelementptr i1, i1* %list_array_load, i32 %1
+  store i1 %2, i1* %list_arry_next_element_ptr
+  ret void
+}
+
+define void @list_setint({ i32, i32, i32* }*, i32, i32) {
+entry:
+  %list_ptr_alloc = alloca { i32, i32, i32* }*
+  store { i32, i32, i32* }* %0, { i32, i32, i32* }** %list_ptr_alloc
+  %list_load = load { i32, i32, i32* }*, { i32, i32, i32* }** %list_ptr_alloc
+  %list_array_ptr = getelementptr inbounds { i32, i32, i32* }, { i32, i32, i32* }* %list_load, i32 0, i32 2
+  %list_array_load = load i32*, i32** %list_array_ptr
+  %list_arry_next_element_ptr = getelementptr i32, i32* %list_array_load, i32 %1
+  store i32 %2, i32* %list_arry_next_element_ptr
+  ret void
+}
+
+define void @list_setfloat({ i32, i32, double* }*, i32, double) {
+entry:
+  %list_ptr_alloc = alloca { i32, i32, double* }*
+  store { i32, i32, double* }* %0, { i32, i32, double* }** %list_ptr_alloc
+  %list_load = load { i32, i32, double* }*, { i32, i32, double* }** %list_ptr_alloc
+  %list_array_ptr = getelementptr inbounds { i32, i32, double* }, { i32, i32, double* }* %list_load, i32 0, i32 2
+  %list_array_load = load double*, double** %list_array_ptr
+  %list_arry_next_element_ptr = getelementptr double, double* %list_array_load, i32 %1
+  store double %2, double* %list_arry_next_element_ptr
+  ret void
+}
+
 define void @list_pushbool({ i32, i32, i1* }*, i1) {
 entry:
   %list_ptr_alloc = alloca { i32, i32, i1* }*
@@ -249,5 +285,8 @@ while_body:                                       ; preds = %while
 merge:                                            ; preds = %while
   %list_size19 = call i32 @list_sizeint({ i32, i32, i32* }* %a)
   %printf20 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_size19)
+  call void @list_setint({ i32, i32, i32* }* %a, i32 0, i32 5)
+  %list_get21 = call i32 @list_getint({ i32, i32, i32* }* %a, i32 0)
+  %printf22 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_get21)
   ret i32 0
 }
