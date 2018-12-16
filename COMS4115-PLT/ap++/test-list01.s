@@ -182,6 +182,13 @@ _main:                                  ## @main
 	movq	%r14, %rdi
 	movl	%ecx, %esi
 	callq	_printf
+	movq	%rbx, %rdi
+	callq	_list_sizeint
+	movl	%eax, %ecx
+	xorl	%eax, %eax
+	movq	%r14, %rdi
+	movl	%ecx, %esi
+	callq	_printf
 	xorl	%eax, %eax
 	addq	$12056, %rsp            ## imm = 0x2F18
 	popq	%rbx

@@ -184,5 +184,7 @@ entry:
   %printf13 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_get12)
   %list_get14 = call i32 @list_getint({ i32, i32, i32* }* %b, i32 1)
   %printf15 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_get14)
+  %list_size = call i32 @list_sizeint({ i32, i32, i32* }* %a)
+  %printf16 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_size)
   ret i32 0
 }

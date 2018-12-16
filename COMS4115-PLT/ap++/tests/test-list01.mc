@@ -15,5 +15,6 @@ int main()
   printi(list_get(a, 1));
   printi(a[2]);
   printi(b[1]);
+  printi(list_size(a));
   return 0;
 }

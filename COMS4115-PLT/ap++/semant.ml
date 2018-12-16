@@ -134,7 +134,10 @@ let check (globals, functions) =
              List x -> x
          in (ty, SListGet(list_type, var, (ty, e')))
       | ListPop var -> (Int, SListPop(var))
-      | ListSize var -> (Int, SListSize(var))
+      | ListSize var -> 
+          let list_type = match (type_of_identifier var) with
+             List x -> x
+          in (Int, SListSize(list_type, var))
       | Call(fname, args) as call -> 
           let fd = find_func fname in
           let param_length = List.length fd.formals in

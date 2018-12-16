@@ -255,8 +255,8 @@ let translate (globals, functions) =
     | A.Not                  -> L.build_not) e' "tmp" builder
     | SListGet (list_type, id, e) ->
       L.build_call (StringMap.find (type_str list_type) list_get) [| (lookup id); (expr builder e) |] "list_get" builder
-    | SListSize (id) -> 
-      L.build_call ((StringMap.find (type_str A.Int)) list_size) [| (lookup id) |] "list_size" builder
+    | SListSize (list_type, id) -> 
+      L.build_call ((StringMap.find (type_str list_type)) list_size) [| (lookup id) |] "list_size" builder
     | SCall ("prints", [e]) ->
       L.build_call printf_func [| str_format_str ; (expr builder e) |] 
       "printf" builder
