@@ -186,11 +186,7 @@ let check (globals, functions) =
     let rec check_stmt = function
         Expr e -> SExpr (expr e)
       | ListPush (var, e) -> 
-        let (t, e') = expr e in
-         let list_type = match (type_of_identifier var) with
-             List x -> if x != t then raise (Failure("list_push value type does not match list type")) else x
-             | _ -> raise (Failure ("list_get operand not a list"))
-        in SListPush(var, expr e)
+        SListPush(var, check_match_list_type_expr var e)
       | ListSet (var, e1, e2) ->
           SListSet(get_list_type var, var, check_int_expr e1, check_match_list_type_expr var e2)
       | If(p, b1, b2) -> SIf(check_bool_expr p, check_stmt b1, check_stmt b2)
