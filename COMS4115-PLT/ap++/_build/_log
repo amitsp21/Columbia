@@ -26,72 +26,54 @@ ocamlfind ocamldep -package llvm -package llvm.analysis -modules semant.ml > sem
 # Target: codegen.cmo, tags: { package(llvm), package(llvm.analysis), warn(+a-4), byte, compile, extension:cmo, extension:ml, file:codegen.cmo, file:codegen.ml, implem, ocaml, quiet, traverse }
 ocamlfind ocamlc -c -w +a-4 -package llvm -package llvm.analysis -o codegen.cmo codegen.ml
 + ocamlfind ocamlc -c -w +a-4 -package llvm -package llvm.analysis -o codegen.cmo codegen.ml
-File "codegen.ml", line 168, characters 8-599:
-Warning 8: this pattern-matching is not exhaustive.
-Here is an example of a case that is not matched:
-(Int|Bool|Float|String|Void)
-File "codegen.ml", line 225, characters 4-466:
+File "codegen.ml", line 236, characters 4-466:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a case that is not matched:
 Mod
-File "codegen.ml", line 241, characters 4-153:
+File "codegen.ml", line 252, characters 4-153:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a case that is not matched:
 (PlusPlus|MinusMinus)
-File "codegen.ml", line 195, characters 44-3171:
+File "codegen.ml", line 206, characters 44-3210:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a case that is not matched:
 (SListPop _|SListSlice (_, _, _))
-File "codegen.ml", line 283, characters 27-1944:
+File "codegen.ml", line 294, characters 27-1974:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a case that is not matched:
 (SContinue|SBreak)
 File "codegen.ml", line 31, characters 6-11:
 Warning 26: unused variable i64_t.
-File "codegen.ml", line 50, characters 7-12:
-Warning 27: unused variable i32_t.
-File "codegen.ml", line 51, characters 7-11:
-Warning 27: unused variable i1_t.
-File "codegen.ml", line 52, characters 7-14:
-Warning 27: unused variable float_t.
-File "codegen.ml", line 53, characters 7-12:
-Warning 27: unused variable str_t.
-File "codegen.ml", line 54, characters 7-13:
-Warning 27: unused variable void_t.
-File "codegen.ml", line 51, characters 7-11:
-Warning 11: this match case is unused.
-File "codegen.ml", line 52, characters 7-14:
-Warning 11: this match case is unused.
-File "codegen.ml", line 53, characters 7-12:
-Warning 11: this match case is unused.
-File "codegen.ml", line 54, characters 7-13:
-Warning 11: this match case is unused.
-File "codegen.ml", line 110, characters 9-22:
+File "codegen.ml", line 112, characters 9-22:
 Warning 26: unused variable listAllocSize.
-File "codegen.ml", line 120, characters 9-24:
+File "codegen.ml", line 122, characters 9-24:
 Warning 26: unused variable nextElementLoad.
 # Target: scanner.cmo, tags: { package(llvm), package(llvm.analysis), warn(+a-4), byte, compile, extension:cmo, extension:ml, file:scanner.cmo, file:scanner.ml, implem, ocaml, quiet, traverse }
 ocamlfind ocamlc -c -w +a-4 -package llvm -package llvm.analysis -o scanner.cmo scanner.ml
 # Target: semant.cmo, tags: { package(llvm), package(llvm.analysis), warn(+a-4), byte, compile, extension:cmo, extension:ml, file:semant.cmo, file:semant.ml, implem, ocaml, quiet, traverse }
 ocamlfind ocamlc -c -w +a-4 -package llvm -package llvm.analysis -o semant.cmo semant.ml
 + ocamlfind ocamlc -c -w +a-4 -package llvm -package llvm.analysis -o semant.cmo semant.ml
-File "semant.ml", line 100, characters 19-2409:
+File "semant.ml", line 133, characters 25-85:
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a case that is not matched:
+(Int|Bool|Float|String|Void)
+File "semant.ml", line 94, characters 19-2509:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a case that is not matched:
 ListSlice (_, _, _)
-File "semant.ml", line 170, characters 25-960:
+File "semant.ml", line 165, characters 25-960:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a case that is not matched:
 (Continue|Break)
-File "semant.ml", line 107, characters 8-28:
+File "semant.ml", line 101, characters 8-28:
 Warning 26: unused variable ex.
-File "semant.ml", line 112, characters 8-25:
+File "semant.ml", line 106, characters 8-25:
 Warning 26: unused variable ex.
-File "semant.ml", line 119, characters 8-30:
+File "semant.ml", line 113, characters 8-30:
 Warning 26: unused variable e.
-File "semant.ml", line 142, characters 8-33:
+File "semant.ml", line 138, characters 8-33:
 Warning 26: unused variable call.
-File "semant.ml", line 162, characters 8-22:
+File "semant.ml", line 158, characters 8-22:
 Warning 26: unused variable check_int_expr.
 # Target: ap_plusplus.cmo, tags: { package(llvm), package(llvm.analysis), warn(+a-4), byte, compile, extension:cmo, extension:ml, file:ap_plusplus.cmo, file:ap_plusplus.ml, implem, ocaml, quiet, traverse }
 ocamlfind ocamlc -c -w +a-4 -package llvm -package llvm.analysis -o ap_plusplus.cmo ap_plusplus.ml
@@ -106,72 +88,54 @@ ocamlfind ocamlopt -c -w +a-4 -package llvm -package llvm.analysis -o parser.cmx
 # Target: codegen.cmx, tags: { package(llvm), package(llvm.analysis), warn(+a-4), compile, extension:cmx, extension:ml, file:codegen.cmx, file:codegen.ml, implem, native, ocaml, quiet, traverse }
 ocamlfind ocamlopt -c -w +a-4 -package llvm -package llvm.analysis -o codegen.cmx codegen.ml
 + ocamlfind ocamlopt -c -w +a-4 -package llvm -package llvm.analysis -o codegen.cmx codegen.ml
-File "codegen.ml", line 168, characters 8-599:
-Warning 8: this pattern-matching is not exhaustive.
-Here is an example of a case that is not matched:
-(Int|Bool|Float|String|Void)
-File "codegen.ml", line 225, characters 4-466:
+File "codegen.ml", line 236, characters 4-466:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a case that is not matched:
 Mod
-File "codegen.ml", line 241, characters 4-153:
+File "codegen.ml", line 252, characters 4-153:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a case that is not matched:
 (PlusPlus|MinusMinus)
-File "codegen.ml", line 195, characters 44-3171:
+File "codegen.ml", line 206, characters 44-3210:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a case that is not matched:
 (SListPop _|SListSlice (_, _, _))
-File "codegen.ml", line 283, characters 27-1944:
+File "codegen.ml", line 294, characters 27-1974:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a case that is not matched:
 (SContinue|SBreak)
 File "codegen.ml", line 31, characters 6-11:
 Warning 26: unused variable i64_t.
-File "codegen.ml", line 50, characters 7-12:
-Warning 27: unused variable i32_t.
-File "codegen.ml", line 51, characters 7-11:
-Warning 27: unused variable i1_t.
-File "codegen.ml", line 52, characters 7-14:
-Warning 27: unused variable float_t.
-File "codegen.ml", line 53, characters 7-12:
-Warning 27: unused variable str_t.
-File "codegen.ml", line 54, characters 7-13:
-Warning 27: unused variable void_t.
-File "codegen.ml", line 51, characters 7-11:
-Warning 11: this match case is unused.
-File "codegen.ml", line 52, characters 7-14:
-Warning 11: this match case is unused.
-File "codegen.ml", line 53, characters 7-12:
-Warning 11: this match case is unused.
-File "codegen.ml", line 54, characters 7-13:
-Warning 11: this match case is unused.
-File "codegen.ml", line 110, characters 9-22:
+File "codegen.ml", line 112, characters 9-22:
 Warning 26: unused variable listAllocSize.
-File "codegen.ml", line 120, characters 9-24:
+File "codegen.ml", line 122, characters 9-24:
 Warning 26: unused variable nextElementLoad.
 # Target: scanner.cmx, tags: { package(llvm), package(llvm.analysis), warn(+a-4), compile, extension:cmx, extension:ml, file:scanner.cmx, file:scanner.ml, implem, native, ocaml, quiet, traverse }
 ocamlfind ocamlopt -c -w +a-4 -package llvm -package llvm.analysis -o scanner.cmx scanner.ml
 # Target: semant.cmx, tags: { package(llvm), package(llvm.analysis), warn(+a-4), compile, extension:cmx, extension:ml, file:semant.cmx, file:semant.ml, implem, native, ocaml, quiet, traverse }
 ocamlfind ocamlopt -c -w +a-4 -package llvm -package llvm.analysis -o semant.cmx semant.ml
 + ocamlfind ocamlopt -c -w +a-4 -package llvm -package llvm.analysis -o semant.cmx semant.ml
-File "semant.ml", line 100, characters 19-2409:
+File "semant.ml", line 133, characters 25-85:
+Warning 8: this pattern-matching is not exhaustive.
+Here is an example of a case that is not matched:
+(Int|Bool|Float|String|Void)
+File "semant.ml", line 94, characters 19-2509:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a case that is not matched:
 ListSlice (_, _, _)
-File "semant.ml", line 170, characters 25-960:
+File "semant.ml", line 165, characters 25-960:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a case that is not matched:
 (Continue|Break)
-File "semant.ml", line 107, characters 8-28:
+File "semant.ml", line 101, characters 8-28:
 Warning 26: unused variable ex.
-File "semant.ml", line 112, characters 8-25:
+File "semant.ml", line 106, characters 8-25:
 Warning 26: unused variable ex.
-File "semant.ml", line 119, characters 8-30:
+File "semant.ml", line 113, characters 8-30:
 Warning 26: unused variable e.
-File "semant.ml", line 142, characters 8-33:
+File "semant.ml", line 138, characters 8-33:
 Warning 26: unused variable call.
-File "semant.ml", line 162, characters 8-22:
+File "semant.ml", line 158, characters 8-22:
 Warning 26: unused variable check_int_expr.
 # Target: ap_plusplus.cmx, tags: { package(llvm), package(llvm.analysis), warn(+a-4), compile, extension:cmx, extension:ml, file:ap_plusplus.cmx, file:ap_plusplus.ml, implem, native, ocaml, quiet, traverse }
 ocamlfind ocamlopt -c -w +a-4 -package llvm -package llvm.analysis -o ap_plusplus.cmx ap_plusplus.ml

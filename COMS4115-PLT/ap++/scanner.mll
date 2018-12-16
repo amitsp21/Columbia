@@ -36,6 +36,7 @@ rule token = parse
 | "return" { RETURN }
 | "int"   { INT }
 | "bool"  { BOOL }
+| "float" { FLOAT }
 | "void"  { VOID }
 | "<"     { LT }
 | ">"	  { GT }

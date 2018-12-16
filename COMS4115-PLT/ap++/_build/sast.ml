@@ -11,7 +11,7 @@ and sx =
   | SUnop of uop * sexpr
   | SAssign of string * sexpr
   | SCall of string * sexpr list
-  | SListGet of string * sexpr
+  | SListGet of typ * string * sexpr
   | SListPop of string
   | SListSize of string
   | SListSlice of string * sexpr * sexpr

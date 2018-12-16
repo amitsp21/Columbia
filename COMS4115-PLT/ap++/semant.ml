@@ -67,12 +67,6 @@ let check (globals, functions) =
   in
 
   let _ = find_func "main" in (* Ensure "main" is defined *)
-  (* Resolve executing function
-  let execFunc = match functions with 
-    | [] -> raise(Failure("Must have at least 1 function defined"))
-    | x :: [] -> x
-    | _ :: xs -> execFunc xs
-  in *)
 
   let check_function func =
     (* Make sure no formals or locals are void or duplicates *)
@@ -135,8 +129,10 @@ let check (globals, functions) =
          let (t, e') = expr e in
          let ty = match t with 
              Int -> Int
-           | _ -> raise (Failure ("list index must be integer"))
-         in (ty, SListGet(var, (ty, e')))
+           | _ -> raise (Failure ("list index must be integer")) in
+         let list_type = match (type_of_identifier var) with
+             List x -> x
+         in (ty, SListGet(list_type, var, (ty, e')))
       | ListPop var -> (Int, SListPop(var))
       | ListSize var -> (Int, SListSize(var))
       | Call(fname, args) as call -> 
@@ -164,7 +160,6 @@ let check (globals, functions) =
       and err = "expected Integer expression"
       in if t' != Int then raise (Failure err) else (t', e') 
     in
-
 
     (* Return a semantically-checked statement i.e. containing sexprs *)
     let rec check_stmt = function
