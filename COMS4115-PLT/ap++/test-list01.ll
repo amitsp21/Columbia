@@ -115,6 +115,54 @@ entry:
   ret void
 }
 
+define i1 @list_popbool({ i32, i32, i1* }*) {
+entry:
+  %list_ptr_alloc = alloca { i32, i32, i1* }*
+  store { i32, i32, i1* }* %0, { i32, i32, i1* }** %list_ptr_alloc
+  %list_load = load { i32, i32, i1* }*, { i32, i32, i1* }** %list_ptr_alloc
+  %list_array_ptr = getelementptr inbounds { i32, i32, i1* }, { i32, i32, i1* }* %list_load, i32 0, i32 2
+  %list_array_load = load i1*, i1** %list_array_ptr
+  %list_size_ptr = getelementptr inbounds { i32, i32, i1* }, { i32, i32, i1* }* %list_load, i32 0, i32 1
+  %list_size = load i32, i32* %list_size_ptr
+  %dec_size = sub i32 %list_size, 1
+  %list_arry_next_element_ptr = getelementptr i1, i1* %list_array_load, i32 %dec_size
+  %list_arry_next_element = load i1, i1* %list_arry_next_element_ptr
+  store i32 %dec_size, i32* %list_size_ptr
+  ret i1 %list_arry_next_element
+}
+
+define i32 @list_popint({ i32, i32, i32* }*) {
+entry:
+  %list_ptr_alloc = alloca { i32, i32, i32* }*
+  store { i32, i32, i32* }* %0, { i32, i32, i32* }** %list_ptr_alloc
+  %list_load = load { i32, i32, i32* }*, { i32, i32, i32* }** %list_ptr_alloc
+  %list_array_ptr = getelementptr inbounds { i32, i32, i32* }, { i32, i32, i32* }* %list_load, i32 0, i32 2
+  %list_array_load = load i32*, i32** %list_array_ptr
+  %list_size_ptr = getelementptr inbounds { i32, i32, i32* }, { i32, i32, i32* }* %list_load, i32 0, i32 1
+  %list_size = load i32, i32* %list_size_ptr
+  %dec_size = sub i32 %list_size, 1
+  %list_arry_next_element_ptr = getelementptr i32, i32* %list_array_load, i32 %dec_size
+  %list_arry_next_element = load i32, i32* %list_arry_next_element_ptr
+  store i32 %dec_size, i32* %list_size_ptr
+  ret i32 %list_arry_next_element
+}
+
+define double @list_popfloat({ i32, i32, double* }*) {
+entry:
+  %list_ptr_alloc = alloca { i32, i32, double* }*
+  store { i32, i32, double* }* %0, { i32, i32, double* }** %list_ptr_alloc
+  %list_load = load { i32, i32, double* }*, { i32, i32, double* }** %list_ptr_alloc
+  %list_array_ptr = getelementptr inbounds { i32, i32, double* }, { i32, i32, double* }* %list_load, i32 0, i32 2
+  %list_array_load = load double*, double** %list_array_ptr
+  %list_size_ptr = getelementptr inbounds { i32, i32, double* }, { i32, i32, double* }* %list_load, i32 0, i32 1
+  %list_size = load i32, i32* %list_size_ptr
+  %dec_size = sub i32 %list_size, 1
+  %list_arry_next_element_ptr = getelementptr double, double* %list_array_load, i32 %dec_size
+  %list_arry_next_element = load double, double* %list_arry_next_element_ptr
+  store i32 %dec_size, i32* %list_size_ptr
+  ret double %list_arry_next_element
+}
+
 define i32 @list_sizebool({ i32, i32, i1* }*) {
 entry:
   %list_ptr_alloc = alloca { i32, i32, i1* }*
@@ -186,5 +234,9 @@ entry:
   %printf15 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_get14)
   %list_size = call i32 @list_sizeint({ i32, i32, i32* }* %a)
   %printf16 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_size)
+  %list_pop = call i32 @list_popint({ i32, i32, i32* }* %a)
+  %printf17 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_pop)
+  %list_size18 = call i32 @list_sizeint({ i32, i32, i32* }* %a)
+  %printf19 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_size18)
   ret i32 0
 }

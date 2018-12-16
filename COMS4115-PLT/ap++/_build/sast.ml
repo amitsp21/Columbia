@@ -12,7 +12,7 @@ and sx =
   | SAssign of string * sexpr
   | SCall of string * sexpr list
   | SListGet of typ * string * sexpr
-  | SListPop of string
+  | SListPop of typ * string
   | SListSize of typ * string
   | SListSlice of string * sexpr * sexpr
   | SNoexpr

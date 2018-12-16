@@ -133,7 +133,10 @@ let check (globals, functions) =
          let list_type = match (type_of_identifier var) with
              List x -> x
          in (ty, SListGet(list_type, var, (ty, e')))
-      | ListPop var -> (Int, SListPop(var))
+      | ListPop var -> 
+          let list_type = match (type_of_identifier var) with
+             List x -> x
+          in (list_type, SListPop(list_type, var))
       | ListSize var -> 
           let list_type = match (type_of_identifier var) with
              List x -> x

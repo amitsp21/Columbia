@@ -67,7 +67,7 @@ let translate (globals, functions) =
   let printf_func : L.llvalue = 
       L.declare_function "printf" printf_t the_module in
   
-  (* int32 list_get(list, index) *)
+  (* ltype list_get(list, index) *)
   let list_get : L.llvalue StringMap.t = 
     let list_get_ty m typ = 
        let ltype = (ltype_of_typ typ) in 
@@ -127,6 +127,29 @@ let translate (globals, functions) =
      StringMap.add defName def m in 
   List.fold_left list_push_ty StringMap.empty [ A.Bool; A.Int; A.Float ] in
 
+  (* ltype list_pop(list) *)
+  let list_pop : L.llvalue StringMap.t = 
+    let list_pop_ty m typ =
+       let ltype = (ltype_of_typ typ) in 
+       let defName = (type_str typ) in
+       let def = L.define_function ("list_pop" ^ defName) (L.function_type ltype [| L.pointer_type (list_t ltype) |]) the_module in
+       let build = L.builder_at_end context (L.entry_block def) in
+       let listPtr = L.build_alloca (L.pointer_type (list_t ltype)) "list_ptr_alloc" build in
+       ignore(L.build_store (L.param def 0) listPtr build);
+       let listLoad = L.build_load listPtr "list_load" build in
+       let listArrayPtr = L.build_struct_gep listLoad 2 "list_array_ptr" build in
+       let listArrayLoad = L.build_load listArrayPtr "list_array_load" build in
+       let listSizePtr = L.build_struct_gep listLoad 1 "list_size_ptr" build in 
+       let listSize = L.build_load listSizePtr "list_size" build in
+       let listSizeMin1 = L.build_sub listSize (L.const_int i32_t 1) "dec_size" build in
+       let lastElementPtr = L.build_gep listArrayLoad [| listSizeMin1 |] "list_arry_next_element_ptr" build in
+       let lastElementVal = L.build_load lastElementPtr "list_arry_next_element" build in
+       let _ = L.build_store listSizeMin1 listSizePtr build in
+       let _ = L.build_ret lastElementVal build in
+    StringMap.add defName def m in
+  List.fold_left list_pop_ty StringMap.empty [ A.Bool; A.Int; A.Float ] in
+
+  (* int32 list_size(list) *)
   let list_size : L.llvalue StringMap.t = 
     let list_size_ty m typ =
      let ltype = (ltype_of_typ typ) in 
@@ -257,6 +280,8 @@ let translate (globals, functions) =
       L.build_call (StringMap.find (type_str list_type) list_get) [| (lookup id); (expr builder e) |] "list_get" builder
     | SListSize (list_type, id) -> 
       L.build_call ((StringMap.find (type_str list_type)) list_size) [| (lookup id) |] "list_size" builder
+    | SListPop (list_type, id) -> 
+      L.build_call ((StringMap.find (type_str list_type)) list_pop) [| (lookup id) |] "list_pop" builder
     | SCall ("prints", [e]) ->
       L.build_call printf_func [| str_format_str ; (expr builder e) |] 
       "printf" builder

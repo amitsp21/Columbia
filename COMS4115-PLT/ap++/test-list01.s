@@ -88,6 +88,51 @@ _list_pushfloat:                        ## @list_pushfloat
 	retq
 	.cfi_endproc
                                         ## -- End function
+	.globl	_list_popbool           ## -- Begin function list_popbool
+	.p2align	4, 0x90
+_list_popbool:                          ## @list_popbool
+	.cfi_startproc
+## %bb.0:                               ## %entry
+	movq	%rdi, -8(%rsp)
+	movq	8(%rdi), %rax
+	movl	4(%rdi), %ecx
+	decl	%ecx
+	movslq	%ecx, %rcx
+	movb	(%rax,%rcx), %al
+	movl	%ecx, 4(%rdi)
+	retq
+	.cfi_endproc
+                                        ## -- End function
+	.globl	_list_popint            ## -- Begin function list_popint
+	.p2align	4, 0x90
+_list_popint:                           ## @list_popint
+	.cfi_startproc
+## %bb.0:                               ## %entry
+	movq	%rdi, -8(%rsp)
+	movq	8(%rdi), %rax
+	movl	4(%rdi), %ecx
+	decl	%ecx
+	movslq	%ecx, %rcx
+	movl	(%rax,%rcx,4), %eax
+	movl	%ecx, 4(%rdi)
+	retq
+	.cfi_endproc
+                                        ## -- End function
+	.globl	_list_popfloat          ## -- Begin function list_popfloat
+	.p2align	4, 0x90
+_list_popfloat:                         ## @list_popfloat
+	.cfi_startproc
+## %bb.0:                               ## %entry
+	movq	%rdi, -8(%rsp)
+	movq	8(%rdi), %rax
+	movl	4(%rdi), %ecx
+	decl	%ecx
+	movslq	%ecx, %rcx
+	movsd	(%rax,%rcx,8), %xmm0    ## xmm0 = mem[0],zero
+	movl	%ecx, 4(%rdi)
+	retq
+	.cfi_endproc
+                                        ## -- End function
 	.globl	_list_sizebool          ## -- Begin function list_sizebool
 	.p2align	4, 0x90
 _list_sizebool:                         ## @list_sizebool
@@ -177,6 +222,20 @@ _main:                                  ## @main
 	leaq	8(%rsp), %rdi
 	movl	$1, %esi
 	callq	_list_getint
+	movl	%eax, %ecx
+	xorl	%eax, %eax
+	movq	%r14, %rdi
+	movl	%ecx, %esi
+	callq	_printf
+	movq	%rbx, %rdi
+	callq	_list_sizeint
+	movl	%eax, %ecx
+	xorl	%eax, %eax
+	movq	%r14, %rdi
+	movl	%ecx, %esi
+	callq	_printf
+	movq	%rbx, %rdi
+	callq	_list_popint
 	movl	%eax, %ecx
 	xorl	%eax, %eax
 	movq	%r14, %rdi
