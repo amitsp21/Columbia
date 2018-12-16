@@ -255,41 +255,46 @@ entry:
   %list.arry7 = getelementptr inbounds { i32, i32, i32* }, { i32, i32, i32* }* %c, i32 0, i32 2
   %p8 = alloca i32, i32 1000
   store i32* %p8, i32** %list.arry7
-  %a9 = load { i32, i32, i32* }, { i32, i32, i32* }* %a
-  store { i32, i32, i32* } %a9, { i32, i32, i32* }* %b
+  %d = alloca i32
+  store i32 11, i32* %d
+  %d9 = load i32, i32* %d
+  %tmp = add i32 %d9, 1
+  %printf = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %tmp)
+  %a10 = load { i32, i32, i32* }, { i32, i32, i32* }* %a
+  store { i32, i32, i32* } %a10, { i32, i32, i32* }* %b
   call void @list_pushint({ i32, i32, i32* }* %a, i32 101)
   call void @list_pushint({ i32, i32, i32* }* %a, i32 102)
   call void @list_pushint({ i32, i32, i32* }* %a, i32 103)
   %list_get = call i32 @list_getint({ i32, i32, i32* }* %a, i32 0)
-  %printf = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_get)
-  %list_get10 = call i32 @list_getint({ i32, i32, i32* }* %a, i32 1)
-  %printf11 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_get10)
-  %list_get12 = call i32 @list_getint({ i32, i32, i32* }* %a, i32 2)
+  %printf11 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_get)
+  %list_get12 = call i32 @list_getint({ i32, i32, i32* }* %a, i32 1)
   %printf13 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_get12)
-  %list_get14 = call i32 @list_getint({ i32, i32, i32* }* %b, i32 1)
+  %list_get14 = call i32 @list_getint({ i32, i32, i32* }* %a, i32 2)
   %printf15 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_get14)
+  %list_get16 = call i32 @list_getint({ i32, i32, i32* }* %b, i32 1)
+  %printf17 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_get16)
   br label %while
 
 while:                                            ; preds = %while_body, %entry
-  %list_size18 = call i32 @list_sizeint({ i32, i32, i32* }* %a)
-  %tmp = icmp sgt i32 %list_size18, 0
-  br i1 %tmp, label %while_body, label %merge
+  %list_size20 = call i32 @list_sizeint({ i32, i32, i32* }* %a)
+  %tmp21 = icmp sgt i32 %list_size20, 0
+  br i1 %tmp21, label %while_body, label %merge
 
 while_body:                                       ; preds = %while
   %list_pop = call i32 @list_popint({ i32, i32, i32* }* %a)
-  %printf16 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_pop)
+  %printf18 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_pop)
   %list_size = call i32 @list_sizeint({ i32, i32, i32* }* %a)
-  %printf17 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_size)
+  %printf19 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_size)
   br label %while
 
 merge:                                            ; preds = %while
-  %list_size19 = call i32 @list_sizeint({ i32, i32, i32* }* %a)
-  %printf20 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_size19)
+  %list_size22 = call i32 @list_sizeint({ i32, i32, i32* }* %a)
+  %printf23 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_size22)
   call void @list_setint({ i32, i32, i32* }* %a, i32 0, i32 5)
-  %list_get21 = call i32 @list_getint({ i32, i32, i32* }* %a, i32 0)
-  %printf22 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_get21)
+  %list_get24 = call i32 @list_getint({ i32, i32, i32* }* %a, i32 0)
+  %printf25 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_get24)
   call void @list_setint({ i32, i32, i32* }* %a, i32 1, i32 10)
-  %list_get23 = call i32 @list_getint({ i32, i32, i32* }* %a, i32 1)
-  %printf24 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_get23)
+  %list_get26 = call i32 @list_getint({ i32, i32, i32* }* %a, i32 1)
+  %printf27 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_get26)
   ret i32 0
 }
