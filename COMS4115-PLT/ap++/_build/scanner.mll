@@ -43,6 +43,7 @@ rule token = parse
 | "#"     { HASH }
 | "list_push" { LIST_PUSH }
 | "list_get" { LIST_GET }
+| "list_set" { LIST_SET }
 | "list_pop" { LIST_POP }
 | "list_size" { LIST_SIZE }
 | "list" { LIST }

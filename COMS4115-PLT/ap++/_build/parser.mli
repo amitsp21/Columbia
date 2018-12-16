@@ -39,6 +39,7 @@ type token =
   | CONTINUE
   | LIST_PUSH
   | LIST_GET
+  | LIST_SET
   | LIST_POP
   | LIST_SIZE
   | HASH

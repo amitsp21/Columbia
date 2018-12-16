@@ -171,6 +171,15 @@ let check (globals, functions) =
     let rec check_stmt = function
         Expr e -> SExpr (expr e)
       | ListPush (id, e) -> SListPush(id, expr e)
+      | ListSet (var, e1, e2) ->
+         let (t1, e1') = expr e1 in
+         let (t2, e2') = expr e2 in
+         let ty = match t1 with 
+             Int -> Int
+           | _ -> raise (Failure ("list index must be integer")) in
+         let list_type = match (type_of_identifier var) with
+            List x -> x
+         in SListSet(list_type, var, (ty, e1'), (t2, e2'))
       | If(p, b1, b2) -> SIf(check_bool_expr p, check_stmt b1, check_stmt b2)
       | While(p, s) -> SWhile(check_bool_expr p, check_stmt s)
       | Return e -> let (t, e') = expr e in

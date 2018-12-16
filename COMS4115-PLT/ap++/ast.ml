@@ -32,6 +32,7 @@ type stmt =
 | If of expr * stmt * stmt
 | While of expr * stmt
 | ListPush of string * expr
+| ListSet of string * expr * expr
 
 type func_decl = {
     typ : typ;

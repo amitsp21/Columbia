@@ -88,7 +88,25 @@ let translate (globals, functions) =
        StringMap.add defName def m in
   List.fold_left list_get_ty StringMap.empty [ A.Bool; A.Int; A.Float ] in
 
-  (* void list_push(list, int32 value) *)
+  (* void list_set(list, int32 idx, typ value) *)
+  let list_set : L.llvalue StringMap.t = 
+    let list_set_ty m typ =
+     let ltype = (ltype_of_typ typ) in 
+     let defName = (type_str typ) in
+     let def = L.define_function ("list_set" ^ defName) (L.function_type void_t [| L.pointer_type (list_t ltype); i32_t; ltype |]) the_module in
+     let build = L.builder_at_end context (L.entry_block def) in
+     let listPtr = L.build_alloca (L.pointer_type (list_t ltype)) "list_ptr_alloc" build in
+     ignore(L.build_store (L.param def 0) listPtr build);
+     let listLoad = L.build_load listPtr "list_load" build in
+     let listArrayPtr = L.build_struct_gep listLoad 2 "list_array_ptr" build in
+     let listArrayLoad = L.build_load listArrayPtr "list_array_load" build in
+     let idxElementPtr = L.build_gep listArrayLoad [| L.param def 1 |] "list_arry_next_element_ptr" build in
+     let _ = L.build_store (L.param def 2) idxElementPtr build in
+     let _ = L.build_ret_void build in
+     StringMap.add defName def m in 
+  List.fold_left list_set_ty StringMap.empty [ A.Bool; A.Int; A.Float ] in
+
+  (* void list_push(list, typ value) *)
   let list_push : L.llvalue StringMap.t = 
     let list_push_ty m typ =
      let ltype = (ltype_of_typ typ) in 
@@ -320,6 +338,8 @@ let translate (globals, functions) =
         SBlock sl -> List.fold_left stmt builder sl
       | SListPush (id, e) -> 
         ignore(L.build_call (StringMap.find (type_str (fst e)) list_push) [| (lookup id); (expr builder e) |] "" builder); builder 
+      | SListSet (list_type, id, e1, e2) ->
+        ignore(L.build_call (StringMap.find (type_str list_type) list_set) [| (lookup id); (expr builder e1), (expr builder e2) |] "" builder); builder
       | SExpr e -> ignore(expr builder e); builder 
       | SReturn e -> ignore(match fdecl.styp with
                               (* Special "return nothing" instr *)
