@@ -288,14 +288,26 @@ let translate (globals, functions) =
     | A.Greater -> L.build_icmp L.Icmp.Sgt
     | A.Geq     -> L.build_icmp L.Icmp.Sge
     ) e1' e2' "tmp" builder
-    | SUnop(op, ((t, _) as e)) ->
+    | SUnop(op, ((t, e'') as e)) ->
           let e' = expr builder e in
       (match op with
         A.Neg when t = A.Float -> L.build_fneg e' "tmp" builder
       | A.Neg                  -> L.build_neg e' "tmp" builder
       | A.Not                  -> L.build_not e' "tmp" builder
-      | A.PlusPlus             -> (L.build_add e' (L.const_int i32_t 1)) "tmp" builder
-      | A.MinusMinus             -> (L.build_sub e' (L.const_int i32_t 1)) "tmp" builder)
+      | A.PlusPlus -> 
+        let newVal = (L.build_add e' (L.const_int i32_t 1)) "tmp" builder in
+        let id = match (e'') with 
+          SId s -> s
+          | _ -> raise (Failure ("PlusPlus can only be applied to an Id type")) in
+        let varPtr = (lookup id) in
+        let _ = L.build_store newVal varPtr builder in newVal
+      | A.MinusMinus ->
+        let newVal = (L.build_sub e' (L.const_int i32_t 1)) "tmp" builder in
+        let id = match (e'') with 
+          SId s -> s
+          | _ -> raise (Failure ("PlusPlus can only be applied to an Id type")) in
+        let varPtr = (lookup id) in
+        let _ = L.build_store newVal varPtr builder in newVal)
     | SListGet (list_type, id, e) ->
       L.build_call (StringMap.find (type_str list_type) list_get) [| (lookup id); (expr builder e) |] "list_get" builder
     | SListSize (list_type, id) -> 
