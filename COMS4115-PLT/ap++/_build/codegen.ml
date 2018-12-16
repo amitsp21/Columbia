@@ -294,7 +294,8 @@ let translate (globals, functions) =
         A.Neg when t = A.Float -> L.build_fneg e' "tmp" builder
       | A.Neg                  -> L.build_neg e' "tmp" builder
       | A.Not                  -> L.build_not e' "tmp" builder
-      | A.PlusPlus             -> (L.build_add e' (L.const_int i32_t 1)) "tmp" builder)
+      | A.PlusPlus             -> (L.build_add e' (L.const_int i32_t 1)) "tmp" builder
+      | A.MinusMinus             -> (L.build_sub e' (L.const_int i32_t 1)) "tmp" builder)
     | SListGet (list_type, id, e) ->
       L.build_call (StringMap.find (type_str list_type) list_get) [| (lookup id); (expr builder e) |] "list_get" builder
     | SListSize (list_type, id) -> 

@@ -213,26 +213,15 @@ _main:                                  ## @main
 	.cfi_def_cfa_offset 12080
 	.cfi_offset %rbx, -24
 	.cfi_offset %r14, -16
-	movq	$0, (%rsp)
-	leaq	8056(%rsp), %rax
-	movq	%rax, 8(%rsp)
-	movq	$0, 16(%rsp)
+	movq	$0, 8(%rsp)
 	leaq	4056(%rsp), %rax
-	movq	%rax, 24(%rsp)
-	movq	$0, 40(%rsp)
-	leaq	56(%rsp), %rax
-	movq	%rax, 48(%rsp)
-	movl	$11, 36(%rsp)
-	leaq	L_fmt(%rip), %r14
-	movl	$12, %esi
-	xorl	%eax, %eax
-	movq	%r14, %rdi
-	callq	_printf
-	movq	(%rsp), %rax
-	movq	8(%rsp), %rcx
 	movq	%rax, 16(%rsp)
-	movq	%rcx, 24(%rsp)
-	movq	%rsp, %rbx
+	movq	$0, 40(%rsp)
+	leaq	56(%rsp), %rcx
+	movq	%rcx, 48(%rsp)
+	movq	%rax, 32(%rsp)
+	movq	$0, 24(%rsp)
+	leaq	8(%rsp), %rbx
 	movl	$101, %esi
 	movq	%rbx, %rdi
 	callq	_list_pushint
@@ -246,6 +235,7 @@ _main:                                  ## @main
 	movq	%rbx, %rdi
 	callq	_list_getint
 	movl	%eax, %ecx
+	leaq	L_fmt(%rip), %r14
 	xorl	%eax, %eax
 	movq	%r14, %rdi
 	movl	%ecx, %esi
@@ -266,7 +256,7 @@ _main:                                  ## @main
 	movq	%r14, %rdi
 	movl	%ecx, %esi
 	callq	_printf
-	leaq	16(%rsp), %rdi
+	leaq	24(%rsp), %rdi
 	movl	$1, %esi
 	callq	_list_getint
 	jmp	LBB15_1
@@ -294,7 +284,7 @@ LBB15_1:                                ## %while
 	testl	%eax, %eax
 	jg	LBB15_2
 ## %bb.3:                               ## %merge
-	movq	%rsp, %rbx
+	leaq	8(%rsp), %rbx
 	movq	%rbx, %rdi
 	callq	_list_sizeint
 	movl	%eax, %ecx

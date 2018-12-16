@@ -30,15 +30,11 @@ File "codegen.ml", line 277, characters 4-466:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a case that is not matched:
 Mod
-File "codegen.ml", line 293, characters 6-298:
-Warning 8: this pattern-matching is not exhaustive.
-Here is an example of a case that is not matched:
-MinusMinus
-File "codegen.ml", line 247, characters 44-3493:
+File "codegen.ml", line 247, characters 44-3582:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a case that is not matched:
 SListSlice (_, _, _)
-File "codegen.ml", line 338, characters 27-2170:
+File "codegen.ml", line 339, characters 27-2170:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a case that is not matched:
 (SContinue|SBreak)
@@ -86,15 +82,11 @@ File "codegen.ml", line 277, characters 4-466:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a case that is not matched:
 Mod
-File "codegen.ml", line 293, characters 6-298:
-Warning 8: this pattern-matching is not exhaustive.
-Here is an example of a case that is not matched:
-MinusMinus
-File "codegen.ml", line 247, characters 44-3493:
+File "codegen.ml", line 247, characters 44-3582:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a case that is not matched:
 SListSlice (_, _, _)
-File "codegen.ml", line 338, characters 27-2170:
+File "codegen.ml", line 339, characters 27-2170:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a case that is not matched:
 (SContinue|SBreak)
