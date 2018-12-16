@@ -41,6 +41,7 @@ type token =
   | LIST_GET
   | LIST_POP
   | LIST_SIZE
+  | HASH
   | ILITERAL of (int)
   | BLITERAL of (bool)
   | SLITERAL of (string)

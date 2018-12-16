@@ -15,8 +15,10 @@ int main()
   printi(list_get(a, 1));
   printi(a[2]);
   printi(b[1]);
-  printi(list_size(a));
-  printi(list_pop(a));
-  printi(list_size(a));
+  while (list_size(a) > 0) {
+    printi(list_pop(a));
+    printi(list_size(a));
+  }
+  printi(#a);
   return 0;
 }

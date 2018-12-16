@@ -40,6 +40,7 @@ rule token = parse
 | "void"  { VOID }
 | "<"     { LT }
 | ">"	  { GT }
+| "#"     { HASH }
 | "list_push" { LIST_PUSH }
 | "list_get" { LIST_GET }
 | "list_pop" { LIST_POP }

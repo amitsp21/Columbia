@@ -232,11 +232,22 @@ entry:
   %printf13 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_get12)
   %list_get14 = call i32 @list_getint({ i32, i32, i32* }* %b, i32 1)
   %printf15 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_get14)
-  %list_size = call i32 @list_sizeint({ i32, i32, i32* }* %a)
-  %printf16 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_size)
-  %list_pop = call i32 @list_popint({ i32, i32, i32* }* %a)
-  %printf17 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_pop)
+  br label %while
+
+while:                                            ; preds = %while_body, %entry
   %list_size18 = call i32 @list_sizeint({ i32, i32, i32* }* %a)
-  %printf19 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_size18)
+  %tmp = icmp sgt i32 %list_size18, 0
+  br i1 %tmp, label %while_body, label %merge
+
+while_body:                                       ; preds = %while
+  %list_pop = call i32 @list_popint({ i32, i32, i32* }* %a)
+  %printf16 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_pop)
+  %list_size = call i32 @list_sizeint({ i32, i32, i32* }* %a)
+  %printf17 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_size)
+  br label %while
+
+merge:                                            ; preds = %while
+  %list_size19 = call i32 @list_sizeint({ i32, i32, i32* }* %a)
+  %printf20 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_size19)
   ret i32 0
 }
