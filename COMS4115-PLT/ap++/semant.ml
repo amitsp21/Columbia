@@ -171,6 +171,16 @@ let check (globals, functions) =
       and err = "expected Integer expression"
       in if t' != Int then raise (Failure err) else (t', e') 
     in
+    let get_list_type l = 
+      match (type_of_identifier l) with
+             List x -> x
+             | _ -> raise (Failure ("list_get operand not a list"))
+    in
+    let check_match_list_type_expr l e = 
+     let (t', e') = expr e
+      and err = "list type and expression type do not match"
+      in if t' != (get_list_type l) then raise (Failure err) else (t', e') 
+    in
 
     (* Return a semantically-checked statement i.e. containing sexprs *)
     let rec check_stmt = function
@@ -182,11 +192,7 @@ let check (globals, functions) =
              | _ -> raise (Failure ("list_get operand not a list"))
         in SListPush(var, expr e)
       | ListSet (var, e1, e2) ->
-         let (t, e') = expr e2 in
-         let list_type = match (type_of_identifier var) with
-            List x -> if x != t then raise (Failure("list_set value type does not match list type")) else x
-            | _ -> raise (Failure ("list_get operand not a list"))
-         in SListSet(list_type, var, check_int_expr e1, (t, e'))
+          SListSet(get_list_type var, var, check_int_expr e1, check_match_list_type_expr var e2)
       | If(p, b1, b2) -> SIf(check_bool_expr p, check_stmt b1, check_stmt b2)
       | While(p, s) -> SWhile(check_bool_expr p, check_stmt s)
       | Return e -> let (t, e') = expr e in
