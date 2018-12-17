@@ -30,6 +30,7 @@ type token =
   | ELSE
   | ELSEIF
   | WHILE
+  | FOR
   | INT
   | BOOL
   | FLOAT

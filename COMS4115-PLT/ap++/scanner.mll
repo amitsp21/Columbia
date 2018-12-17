@@ -31,6 +31,7 @@ rule token = parse
 | "else"  { ELSE }
 | "elseif" { ELSEIF }
 | "while" { WHILE }
+| "for"   { FOR }
 | "break" { BREAK }
 | "continue" { CONTINUE }
 | "return" { RETURN }

@@ -1,3 +1,5 @@
+/* Ocamlyacc parser for AP++ */
+
 %{
 open Ast
 %}
@@ -7,7 +9,7 @@ open Ast
 %token PLUSPLUS MINUSMINUS
 %token NOT AND OR
 %token EQ NEQ LT LEQ GT GEQ
-%token RETURN IF ELSE ELSEIF WHILE INT BOOL FLOAT STRING VOID BREAK CONTINUE
+%token RETURN IF ELSE ELSEIF WHILE FOR INT BOOL FLOAT STRING VOID BREAK CONTINUE
 %token LIST_PUSH LIST_GET LIST_SET LIST_POP LIST_SIZE HASH
 %token <int> ILITERAL
 %token <bool> BLITERAL
@@ -16,6 +18,9 @@ open Ast
 %token <string> ID
 %token LIST
 %token EOF
+
+%start program
+%type <Ast.program> program
 
 %nonassoc NOELSE
 %nonassoc ELSEIF
@@ -29,9 +34,6 @@ open Ast
 %left TIMES DIVIDE MOD
 %right NOT PLUSPLUS MINUSMINUS
 
-%start program
-%type <Ast.program> program
-
 %%
 
 program: 
@@ -41,6 +43,24 @@ decls:
   /* nothing */   { ([], [])}
 | decls var_decl  { (($2 :: fst $1), snd $1) }
 | decls func_decl { (fst $1, ($2 :: snd $1)) }
+
+/* e.g. int foo(int x, int y) {} */
+func_decl:
+  typ ID LPAREN func_formals_opt RPAREN LBRACE var_decl_list stmt_list RBRACE 
+  { { typ     = $1;
+      fname   = $2;
+      formals = List.rev $4;
+      locals  = List.rev $7;
+      body    = List.rev $8 } }
+
+func_formals_opt:
+   /* nothing */    { [] }
+|  func_formals_list { $1 }
+
+/* int x, bool y */
+func_formals_list:
+  typ ID                         { [($1, $2)] }
+| func_formals_list COMMA typ ID { ($3, $4) :: $1 }
 
 typ:
   INT             { Int }
@@ -58,42 +78,10 @@ var_decl_list:
 /* e.g. int x; */
 var_decl:
   typ ID SEMICOLON { ($1, $2) }
-  /* TODO: typ ID ASSIGN expr SEMICOLON */
-
-/* e.g. int foo(int x, int y) {} */
-func_decl:
-  typ ID LPAREN func_formals_opt RPAREN LBRACE var_decl_list stmt_list RBRACE 
-{ { typ     = $1;
-    fname   = $2;
-    formals = List.rev $4;
-    locals  = List.rev $7;
-    body    = List.rev $8 } }
-
-func_formals_opt:
-   /* nothing */    { [] }
-|  func_formals_list { List.rev $1 }
-
-/* int x, bool y */
-func_formals_list:
-  typ ID 			  { [($1, $2)] }
-| func_formals_list COMMA typ ID { ($3, $4) :: $1 }
 
 stmt_list:
   /* nothing */  { [] }
 | stmt_list stmt { $2 :: $1 }
-
-expr_opt:
-  /* nothing */ { Noexpr }
-| expr          { $1 }
-
-args_opt:
-    /* nothing */ { [] }
-  | args_list  { List.rev $1 }
-
-/* args used for function calls */
-args_list:
-    expr                    { [$1] }
-  | args_list COMMA expr { $3 :: $1 }
 
 /* executes code logic but do not evaluate to any value */
 stmt:
@@ -104,10 +92,16 @@ stmt:
 | LBRACE stmt_list RBRACE                   { Block(List.rev $2) }
 | IF LPAREN expr RPAREN stmt %prec NOELSE   { If($3, $5, Block([])) }
 | IF LPAREN expr RPAREN stmt ELSE stmt      { If($3, $5, $7) }
+| FOR LPAREN expr_opt SEMICOLON expr SEMICOLON expr_opt RPAREN stmt
+                                            { For($3, $5, $7, $9) }
 | WHILE LPAREN expr RPAREN stmt             { While($3, $5) }
 | LIST_PUSH LPAREN ID COMMA expr RPAREN SEMICOLON { ListPush($3, $5) }
 | LIST_SET LPAREN ID COMMA expr COMMA expr RPAREN SEMICOLON { ListSet($3, $5, $7) }
 | ID LBRACK expr RBRACK ASSIGN expr SEMICOLON         { ListSet($1, $3, $6) }
+
+expr_opt:
+  /* nothing */ { Noexpr }
+| expr          { $1 }
 
 /* executes code logic and evaluates to a value */
 expr:
@@ -143,3 +137,13 @@ expr:
 | LIST_POP LPAREN ID RPAREN               { ListPop($3) }
 | LIST_SIZE LPAREN ID RPAREN              { ListSize($3) }
 | HASH ID                                 { ListSize($2) }
+
+args_opt:
+    /* nothing */ { [] }
+  | args_list  { List.rev $1 }
+
+/* args used for function calls */
+args_list:
+    expr                    { [$1] }
+  | args_list COMMA expr { $3 :: $1 }
+

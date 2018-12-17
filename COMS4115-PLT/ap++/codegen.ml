@@ -28,7 +28,6 @@ let translate (globals, functions) =
 
   (* Get types from the context *)
   let i32_t      = L.i32_type    context
-  and i64_t      = L.i64_type    context
   and i8_t       = L.i8_type     context
   and i1_t       = L.i1_type     context
   and float_t    = L.double_type context
@@ -202,6 +201,18 @@ let translate (globals, functions) =
     let float_format_str = L.build_global_stringptr "%g\n" "fmt" builder in
     let str_format_str = L.build_global_stringptr "%s\n" "fmt" builder in
 
+    let init_list list_var list_type = 
+      (* initialize list *)
+      let ptr = L.build_struct_gep list_var 0 "list.size" builder in 
+         ignore(L.build_store (L.const_int i32_t 0) ptr builder);
+      let ptr = L.build_struct_gep list_var 1 "list.size2" builder in 
+         ignore(L.build_store (L.const_int i32_t 0) ptr builder);
+      let ptr = L.build_struct_gep list_var 2 "list.arry" builder in 
+       (* TODO: allocate nothing and have list grow dynamically *)
+        let p = L.build_array_alloca (ltype_of_typ list_type) (L.const_int i32_t 1000) "p" builder in
+        ignore(L.build_store p ptr builder);
+    in
+
     (* Construct the function's "locals": formal arguments and locally
        declared variables.  Allocate each on the stack, initialize their
        value, if appropriate, and remember their values in the "locals" map *)
@@ -209,7 +220,12 @@ let translate (globals, functions) =
       let add_formal m (t, n) p = 
         L.set_value_name n p;
     let local = L.build_alloca (ltype_of_typ t) n builder in
-        ignore (L.build_store p local builder);
+    ignore(
+      match t with 
+        A.List list_type -> init_list local list_type
+      | _ -> ()
+    );
+    ignore (L.build_store p local builder);
     StringMap.add n local m 
 
       (* Allocate space for any locally declared variables and add the
@@ -218,16 +234,7 @@ let translate (globals, functions) =
   let local_var = L.build_alloca (ltype_of_typ t) n builder in 
   ignore(
     match t with 
-    A.List list_type -> 
-    (* initialize list *)
-    let ptr = L.build_struct_gep local_var 0 "list.size" builder in 
-       ignore(L.build_store (L.const_int i32_t 0) ptr builder);
-    let ptr = L.build_struct_gep local_var 1 "list.size2" builder in 
-       ignore(L.build_store (L.const_int i32_t 0) ptr builder);
-    let ptr = L.build_struct_gep local_var 2 "list.arry" builder in 
-     (* TODO: allocate nothing and have list grow dynamically *)
-      let p = L.build_array_alloca (ltype_of_typ list_type) (L.const_int i32_t 1000) "p" builder in
-      ignore(L.build_store p ptr builder);
+      A.List list_type -> init_list local_var list_type
     | _ -> ()
   );
   StringMap.add n local_var m 
@@ -407,7 +414,11 @@ let translate (globals, functions) =
         ignore(L.build_cond_br bool_val body_bb merge_bb pred_builder);
         L.builder_at_end context merge_bb
 
-        in
+      (* Implement for loops as while loops *)
+      | SFor (e1, e2, e3, body) -> stmt builder
+        ( SBlock [SExpr e1 ; SWhile (e2, SBlock [body ; SExpr e3]) ] )
+      
+      in
 
     (* Build the code for each statement in the function *)
     let builder = stmt builder (SBlock fdecl.sbody) in

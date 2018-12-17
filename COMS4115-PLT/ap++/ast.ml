@@ -30,6 +30,7 @@ type stmt =
 | Continue
 | Break
 | If of expr * stmt * stmt
+| For of expr * expr * expr * stmt
 | While of expr * stmt
 | ListPush of string * expr
 | ListSet of string * expr * expr

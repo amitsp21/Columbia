@@ -98,12 +98,12 @@ let check (globals, functions) =
       | SLiteral l -> (String, SSLiteral l)
       | Noexpr     -> (Void, SNoexpr)
       | Id s       -> (type_of_identifier s, SId s)
-      | Assign(var, e) as ex -> 
+      | Assign(var, e) -> 
           let lt = type_of_identifier var
           and (rt, e') = expr e in
           let err = "illegal assignment"
           in (check_assign lt rt err, SAssign(var, (rt, e')))
-      | Unop(op, e) as ex -> 
+      | Unop(op, e) -> 
           let (t, e') = expr e in
           let ty = match op with
             Neg when t = Int || t = Float -> t
@@ -114,7 +114,7 @@ let check (globals, functions) =
           | MinusMinusPost when t = Int -> t
           | _ -> raise (Failure ("illegal unary operator"))
           in (ty, SUnop(op, (t, e')))
-      | Binop(e1, op, e2) as e -> 
+      | Binop(e1, op, e2) -> 
           let (t1, e1') = expr e1 
           and (t2, e2') = expr e2 in
           (* All binary operators require operands of the same type *)
@@ -148,7 +148,7 @@ let check (globals, functions) =
              List x -> x
              | _ -> raise (Failure ("list_size operand not a list"))
           in (Int, SListSize(list_type, var))
-      | Call(fname, args) as call -> 
+      | Call(fname, args) -> 
           let fd = find_func fname in
           let param_length = List.length fd.formals in
           if List.length args != param_length then
@@ -192,6 +192,7 @@ let check (globals, functions) =
       | ListSet (var, e1, e2) ->
           SListSet(get_list_type var, var, check_int_expr e1, check_match_list_type_expr var e2)
       | If(p, b1, b2) -> SIf(check_bool_expr p, check_stmt b1, check_stmt b2)
+      | For(e1, e2, e3, st) -> SFor(expr e1, check_bool_expr e2, expr e3, check_stmt st)
       | While(p, s) -> SWhile(check_bool_expr p, check_stmt s)
       | Return e -> let (t, e') = expr e in
         if t = func.typ then SReturn (t, e') 

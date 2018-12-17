@@ -24,6 +24,7 @@ type sstmt =
 | SContinue
 | SBreak
 | SIf of sexpr * sstmt * sstmt
+| SFor of sexpr * sexpr * sexpr * sstmt
 | SWhile of sexpr * sstmt
 | SListPush of string * sexpr
 | SListSet of typ * string * sexpr * sexpr
