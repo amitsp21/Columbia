@@ -205,29 +205,56 @@ _list_sizefloat:                        ## @list_sizefloat
 _list_slicebool:                        ## @list_slicebool
 	.cfi_startproc
 ## %bb.0:                               ## %entry
-                                        ## kill: def $edx killed $edx def $rdx
-	movq	%rdi, -8(%rsp)
-	movq	8(%rdi), %r8
-	movq	%rsi, -16(%rsp)
-	movq	8(%rsi), %rsi
-	movl	%edx, -20(%rsp)
-	movl	%ecx, -24(%rsp)
-	movl	$0, -28(%rsp)
-	subl	%edx, %ecx
-	cmpl	%ecx, -28(%rsp)
+	pushq	%rbp
+	.cfi_def_cfa_offset 16
+	pushq	%r15
+	.cfi_def_cfa_offset 24
+	pushq	%r14
+	.cfi_def_cfa_offset 32
+	pushq	%r12
+	.cfi_def_cfa_offset 40
+	pushq	%rbx
+	.cfi_def_cfa_offset 48
+	subq	$32, %rsp
+	.cfi_def_cfa_offset 80
+	.cfi_offset %rbx, -48
+	.cfi_offset %r12, -40
+	.cfi_offset %r14, -32
+	.cfi_offset %r15, -24
+	.cfi_offset %rbp, -16
+	movl	%ecx, %ebp
+	movl	%edx, %r14d
+	movq	%rsi, %r15
+	movq	%rdi, %r12
+	movq	%rdi, 24(%rsp)
+	movq	%rsi, 16(%rsp)
+	movl	%edx, 12(%rsp)
+	movl	%ecx, 8(%rsp)
+	movl	$0, 4(%rsp)
+	subl	%edx, %ebp
+	cmpl	%ebp, 4(%rsp)
 	jg	LBB15_3
 	.p2align	4, 0x90
 LBB15_2:                                ## %while_body
                                         ## =>This Inner Loop Header: Depth=1
-	movslq	-28(%rsp), %rdi
-	leal	(%rdi,%rdx), %eax
-	cltq
-	movzbl	(%r8,%rax), %eax
-	movb	%al, (%rsi,%rdi)
-	incl	-28(%rsp)
-	cmpl	%ecx, -28(%rsp)
+	movl	4(%rsp), %ebx
+	leal	(%rbx,%r14), %esi
+	movq	%r12, %rdi
+	callq	_list_getbool
+	movzbl	%al, %edx
+	movq	%r15, %rdi
+	movl	%ebx, %esi
+	callq	_list_setbool
+	incl	4(%rsp)
+	cmpl	%ebp, 4(%rsp)
 	jle	LBB15_2
 LBB15_3:                                ## %merge
+	addq	$32, %rsp
+	popq	%rbx
+	popq	%r12
+	popq	%r14
+	popq	%r15
+	popq	%rbp
 	retq
 	.cfi_endproc
                                         ## -- End function
@@ -236,29 +263,56 @@ LBB15_3:                                ## %merge
 _list_sliceint:                         ## @list_sliceint
 	.cfi_startproc
 ## %bb.0:                               ## %entry
-                                        ## kill: def $edx killed $edx def $rdx
-	movq	%rdi, -8(%rsp)
-	movq	8(%rdi), %r8
-	movq	%rsi, -16(%rsp)
-	movq	8(%rsi), %rsi
-	movl	%edx, -20(%rsp)
-	movl	%ecx, -24(%rsp)
-	movl	$0, -28(%rsp)
-	subl	%edx, %ecx
-	cmpl	%ecx, -28(%rsp)
+	pushq	%rbp
+	.cfi_def_cfa_offset 16
+	pushq	%r15
+	.cfi_def_cfa_offset 24
+	pushq	%r14
+	.cfi_def_cfa_offset 32
+	pushq	%r12
+	.cfi_def_cfa_offset 40
+	pushq	%rbx
+	.cfi_def_cfa_offset 48
+	subq	$32, %rsp
+	.cfi_def_cfa_offset 80
+	.cfi_offset %rbx, -48
+	.cfi_offset %r12, -40
+	.cfi_offset %r14, -32
+	.cfi_offset %r15, -24
+	.cfi_offset %rbp, -16
+	movl	%ecx, %ebp
+	movl	%edx, %r14d
+	movq	%rsi, %r15
+	movq	%rdi, %r12
+	movq	%rdi, 24(%rsp)
+	movq	%rsi, 16(%rsp)
+	movl	%edx, 12(%rsp)
+	movl	%ecx, 8(%rsp)
+	movl	$0, 4(%rsp)
+	subl	%edx, %ebp
+	cmpl	%ebp, 4(%rsp)
 	jg	LBB16_3
 	.p2align	4, 0x90
 LBB16_2:                                ## %while_body
                                         ## =>This Inner Loop Header: Depth=1
-	movslq	-28(%rsp), %rdi
-	leal	(%rdi,%rdx), %eax
-	cltq
-	movl	(%r8,%rax,4), %eax
-	movl	%eax, (%rsi,%rdi,4)
-	incl	-28(%rsp)
-	cmpl	%ecx, -28(%rsp)
+	movl	4(%rsp), %ebx
+	leal	(%rbx,%r14), %esi
+	movq	%r12, %rdi
+	callq	_list_getint
+	movq	%r15, %rdi
+	movl	%ebx, %esi
+	movl	%eax, %edx
+	callq	_list_setint
+	incl	4(%rsp)
+	cmpl	%ebp, 4(%rsp)
 	jle	LBB16_2
 LBB16_3:                                ## %merge
+	addq	$32, %rsp
+	popq	%rbx
+	popq	%r12
+	popq	%r14
+	popq	%r15
+	popq	%rbp
 	retq
 	.cfi_endproc
                                         ## -- End function
@@ -267,29 +321,55 @@ LBB16_3:                                ## %merge
 _list_slicefloat:                       ## @list_slicefloat
 	.cfi_startproc
 ## %bb.0:                               ## %entry
-                                        ## kill: def $edx killed $edx def $rdx
-	movq	%rdi, -8(%rsp)
-	movq	8(%rdi), %r8
-	movq	%rsi, -16(%rsp)
-	movq	8(%rsi), %rsi
-	movl	%edx, -20(%rsp)
-	movl	%ecx, -24(%rsp)
-	movl	$0, -28(%rsp)
-	subl	%edx, %ecx
-	cmpl	%ecx, -28(%rsp)
+	pushq	%rbp
+	.cfi_def_cfa_offset 16
+	pushq	%r15
+	.cfi_def_cfa_offset 24
+	pushq	%r14
+	.cfi_def_cfa_offset 32
+	pushq	%r12
+	.cfi_def_cfa_offset 40
+	pushq	%rbx
+	.cfi_def_cfa_offset 48
+	subq	$32, %rsp
+	.cfi_def_cfa_offset 80
+	.cfi_offset %rbx, -48
+	.cfi_offset %r12, -40
+	.cfi_offset %r14, -32
+	.cfi_offset %r15, -24
+	.cfi_offset %rbp, -16
+	movl	%ecx, %ebp
+	movl	%edx, %r14d
+	movq	%rsi, %r15
+	movq	%rdi, %r12
+	movq	%rdi, 24(%rsp)
+	movq	%rsi, 16(%rsp)
+	movl	%edx, 12(%rsp)
+	movl	%ecx, 8(%rsp)
+	movl	$0, 4(%rsp)
+	subl	%edx, %ebp
+	cmpl	%ebp, 4(%rsp)
 	jg	LBB17_3
 	.p2align	4, 0x90
 LBB17_2:                                ## %while_body
                                         ## =>This Inner Loop Header: Depth=1
-	movslq	-28(%rsp), %rdi
-	leal	(%rdi,%rdx), %eax
-	cltq
-	movsd	(%r8,%rax,8), %xmm0     ## xmm0 = mem[0],zero
-	movsd	%xmm0, (%rsi,%rdi,8)
-	incl	-28(%rsp)
-	cmpl	%ecx, -28(%rsp)
+	movl	4(%rsp), %ebx
+	leal	(%rbx,%r14), %esi
+	movq	%r12, %rdi
+	callq	_list_getfloat
+	movq	%r15, %rdi
+	movl	%ebx, %esi
+	callq	_list_setfloat
+	incl	4(%rsp)
+	cmpl	%ebp, 4(%rsp)
 	jle	LBB17_2
 LBB17_3:                                ## %merge
+	addq	$32, %rsp
+	popq	%rbx
+	popq	%r12
+	popq	%r14
+	popq	%r15
+	popq	%rbp
 	retq
 	.cfi_endproc
                                         ## -- End function
@@ -303,31 +383,37 @@ _main:                                  ## @main
 	.cfi_offset %rbp, -16
 	movq	%rsp, %rbp
 	.cfi_def_cfa_register %rbp
+	pushq	%r15
+	pushq	%r14
+	pushq	%r12
 	pushq	%rbx
-	subq	$8056, %rsp             ## imm = 0x1F78
-	.cfi_offset %rbx, -24
+	subq	$8048, %rsp             ## imm = 0x1F70
+	.cfi_offset %rbx, -48
+	.cfi_offset %r12, -40
+	.cfi_offset %r14, -32
+	.cfi_offset %r15, -24
+	movl	$0, -80(%rbp)
+	movl	$0, -72(%rbp)
+	leaq	-8080(%rbp), %rax
+	movq	%rax, -64(%rbp)
+	movl	$0, -76(%rbp)
 	movl	$0, -56(%rbp)
-	movl	$0, -48(%rbp)
-	leaq	-8056(%rbp), %rax
-	movq	%rax, -40(%rbp)
-	movl	$0, -52(%rbp)
-	movl	$0, -32(%rbp)
-	leaq	-4056(%rbp), %rax
-	movq	%rax, -24(%rbp)
-	movl	$0, -12(%rbp)
-	leaq	-48(%rbp), %rbx
-	cmpl	$9, -12(%rbp)
+	leaq	-4080(%rbp), %rax
+	movq	%rax, -48(%rbp)
+	movl	$0, -36(%rbp)
+	leaq	-72(%rbp), %rbx
+	cmpl	$9, -36(%rbp)
 	jg	LBB18_3
 	.p2align	4, 0x90
 LBB18_2:                                ## %while_body
                                         ## =>This Inner Loop Header: Depth=1
-	movl	-12(%rbp), %eax
+	movl	-36(%rbp), %eax
 	addl	%eax, %eax
 	leal	(%rax,%rax,4), %esi
 	movq	%rbx, %rdi
 	callq	_list_pushint
-	incl	-12(%rbp)
-	cmpl	$9, -12(%rbp)
+	incl	-36(%rbp)
+	cmpl	$9, -36(%rbp)
 	jle	LBB18_2
 LBB18_3:                                ## %merge
 	movq	%rsp, %rbx
@@ -341,25 +427,65 @@ LBB18_3:                                ## %merge
 	addq	$-4000, %rax            ## imm = 0xF060
 	movq	%rax, %rsp
 	movq	%rax, -8(%rbx)
-	leaq	-48(%rbp), %rdi
-	movl	$1, %edx
-	movl	$4, %ecx
+	leaq	-72(%rbp), %r15
+	movl	$3, %edx
+	movl	$6, %ecx
+	movq	%r15, %rdi
 	callq	_list_sliceint
 	movl	-16(%rbx), %eax
 	movq	-8(%rbx), %rcx
-	movq	%rcx, -24(%rbp)
-	movl	%eax, -32(%rbp)
-	leaq	-32(%rbp), %rdi
-	movl	$2, %esi
+	movq	%rcx, -48(%rbp)
+	movl	%eax, -56(%rbp)
+	leaq	-56(%rbp), %r12
+	movl	$3, %esi
+	movq	%r12, %rdi
 	callq	_list_getint
 	movl	%eax, %ecx
-	leaq	L_fmt(%rip), %rdi
+	leaq	L_fmt(%rip), %r14
 	xorl	%eax, %eax
+	movq	%r14, %rdi
+	movl	%ecx, %esi
+	callq	_printf
+	movq	%rsp, %rbx
+	leaq	-16(%rbx), %rsi
+	movq	%rsi, %rsp
+	movq	%rsp, %rax
+	leaq	-16(%rax), %rsp
+	movl	$0, -16(%rax)
+	movl	$0, -16(%rbx)
+	movq	%rsp, %rax
+	addq	$-4000, %rax            ## imm = 0xF060
+	movq	%rax, %rsp
+	movq	%rax, -8(%rbx)
+	movl	$1, %edx
+	movl	$4, %ecx
+	movq	%r15, %rdi
+	callq	_list_sliceint
+	movl	-16(%rbx), %eax
+	movq	-8(%rbx), %rcx
+	movq	%rcx, -48(%rbp)
+	movl	%eax, -56(%rbp)
+	movl	$3, %esi
+	movq	%r12, %rdi
+	callq	_list_getint
+	movl	%eax, %ecx
+	xorl	%eax, %eax
+	movq	%r14, %rdi
+	movl	%ecx, %esi
+	callq	_printf
+	movq	%r12, %rdi
+	callq	_list_sizeint
+	movl	%eax, %ecx
+	xorl	%eax, %eax
+	movq	%r14, %rdi
 	movl	%ecx, %esi
 	callq	_printf
 	xorl	%eax, %eax
-	leaq	-8(%rbp), %rsp
+	leaq	-32(%rbp), %rsp
 	popq	%rbx
+	popq	%r12
+	popq	%r14
+	popq	%r15
 	popq	%rbp
 	retq
 	.cfi_endproc

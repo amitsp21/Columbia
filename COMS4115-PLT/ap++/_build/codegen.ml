@@ -226,15 +226,11 @@ let translate (globals, functions) =
         let listPtrPtr = L.build_alloca (ptr_list_t ltype) "list_ptr_alloc" build in
         let _ = L.build_store (L.param def 0) listPtrPtr build in
         let listPtr = L.build_load listPtrPtr "list_ptr_ptr" build in
-        let listArrayPtrPtr = L.build_struct_gep listPtr 1 "list_array_ptr" build in
-        let listArrayPtr = L.build_load listArrayPtrPtr "array_load" build in
-   
+
         let listPtrPtr2 = L.build_alloca (ptr_list_t ltype) "list_ptr_alloc2" build in
         let _ = L.build_store (L.param def 1) listPtrPtr2 build in
         let listPtr2 = L.build_load listPtrPtr2 "list_ptr_ptr2" build in
-        let listArrayPtrPtr2 = L.build_struct_gep listPtr2 1 "list_array_ptr2" build in
-        let listArrayPtr2 = L.build_load listArrayPtrPtr2 "array_load2" build in
- 
+
         let idxPtr1 = L.build_alloca i32_t "idx_alloc" build in
         let _ = L.build_store (L.param def 2) idxPtr1 build in
         let idx1 = L.build_load idxPtr1 "idx_load" build in
@@ -254,12 +250,10 @@ let translate (globals, functions) =
         in
         (* assignment: b[cnt] = a[cnt + i] *)
         let loop_body _builder = 
-           let newIndex = L.build_load loop_cnt_ptr "cur_index" _builder in
-           let oldIndex = L.build_add newIndex idx1 "old_index" _builder in
-           let list_array_element_ptr = L.build_gep listArrayPtr [| oldIndex |] "list_arry_element_ptr" _builder in
-           let list_array_element_val = L.build_load list_array_element_ptr "list_arry_element_val" _builder in
-           let list_array_element_ptr2 = L.build_gep listArrayPtr2 [| newIndex |] "list_array_element_ptr2" _builder in
-           let _ = L.build_store list_array_element_val list_array_element_ptr2 _builder in
+           let toIndex = L.build_load loop_cnt_ptr "to_idx" _builder in
+           let fromIndex = L.build_add toIndex idx1 "from_idx" _builder in
+           let get_val = L.build_call (StringMap.find (type_str typ) list_get) [| listPtr; fromIndex |] "list_get" _builder in
+           let _ = L.build_call (StringMap.find (type_str typ) list_set) [| listPtr2; toIndex;  get_val |] "" _builder in
            let indexIncr = L.build_add (L.build_load loop_cnt_ptr "loop_cnt" _builder) (L.const_int i32_t 1) "loop_itr" _builder in
            let _ = L.build_store indexIncr loop_cnt_ptr _builder in 
            _builder

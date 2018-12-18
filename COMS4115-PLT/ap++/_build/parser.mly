@@ -126,7 +126,6 @@ expr:
 | expr AND expr                           { Binop($1, And, $3) }
 | expr OR expr                            { Binop($1, Or, $3) }
 | LPAREN expr RPAREN                      { $2 }
-| ID LBRACK expr_opt COLON expr_opt RBRACK { ListSlice($1, $3, $5) }
 | ID ASSIGN expr                          { Assign($1, $3) }
 | ID LPAREN args_opt RPAREN		            { Call($1, $3) }
 | LIST_GET LPAREN ID COMMA expr RPAREN    { ListGet($3, $5) }
@@ -135,6 +134,7 @@ expr:
 | LIST_SIZE LPAREN ID RPAREN              { ListSize($3) }
 | HASH ID                                 { ListSize($2) }
 | LIST_SLICE LPAREN ID COMMA expr COMMA expr RPAREN { ListSlice($3, $5, $7) }
+| ID LBRACK expr_opt COLON expr_opt RBRACK { ListSlice($1, $3, $5) }
 
 args_opt:
     /* nothing */ { [] }

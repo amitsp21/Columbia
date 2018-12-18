@@ -57,7 +57,10 @@ int main()
   for (i=0; i<10; ++i) {
     list_push(a, i*10);
   }
-  b = list_slice(a, 1, 4);
-  printi(b[2]);
+  b = list_slice(a, 3, 6);
+  printi(b[3]);
+  b = a[1:4];
+  printi(b[3]);
+  printi(#b);
   return 0;
 }
