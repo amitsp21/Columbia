@@ -50,17 +50,13 @@ int main()
     printi(a[i]);
     printi(b[i]);
   }*/
-
   list<int> a;
   list<int> b;
-  int i;
-  for (i=0; i<10; ++i) {
-    list_push(a, i*10);
-  }
-  b = list_slice(a, 3, 6);
-  printi(b[3]);
-  b = a[1:4];
-  printi(b[3]);
+  list_push(a, 1);
+  list_push(a, 2);
+  b = a;
+  list_push(b, 3);
+  printi(b[0]);
   printi(#b);
   return 0;
 }

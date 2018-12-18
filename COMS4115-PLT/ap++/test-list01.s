@@ -378,67 +378,39 @@ LBB17_3:                                ## %merge
 _main:                                  ## @main
 	.cfi_startproc
 ## %bb.0:                               ## %entry
-	pushq	%rbp
-	.cfi_def_cfa_offset 16
-	.cfi_offset %rbp, -16
-	movq	%rsp, %rbp
-	.cfi_def_cfa_register %rbp
-	pushq	%r15
 	pushq	%r14
-	pushq	%r12
+	.cfi_def_cfa_offset 16
 	pushq	%rbx
-	subq	$8048, %rsp             ## imm = 0x1F70
-	.cfi_offset %rbx, -48
-	.cfi_offset %r12, -40
-	.cfi_offset %r14, -32
-	.cfi_offset %r15, -24
-	movl	$0, -80(%rbp)
-	movl	$0, -72(%rbp)
-	leaq	-8080(%rbp), %rax
-	movq	%rax, -64(%rbp)
-	movl	$0, -76(%rbp)
-	movl	$0, -56(%rbp)
-	leaq	-4080(%rbp), %rax
-	movq	%rax, -48(%rbp)
-	movl	$0, -36(%rbp)
-	leaq	-72(%rbp), %rbx
-	cmpl	$9, -36(%rbp)
-	jg	LBB18_3
-	.p2align	4, 0x90
-LBB18_2:                                ## %while_body
-                                        ## =>This Inner Loop Header: Depth=1
-	movl	-36(%rbp), %eax
-	addl	%eax, %eax
-	leal	(%rax,%rax,4), %esi
+	.cfi_def_cfa_offset 24
+	subq	$8040, %rsp             ## imm = 0x1F68
+	.cfi_def_cfa_offset 8064
+	.cfi_offset %rbx, -24
+	.cfi_offset %r14, -16
+	movl	$0, 36(%rsp)
+	movl	$0, 16(%rsp)
+	leaq	4040(%rsp), %rax
+	movq	%rax, 24(%rsp)
+	movl	$0, 32(%rsp)
+	movl	$0, (%rsp)
+	leaq	40(%rsp), %rax
+	movq	%rax, 8(%rsp)
+	leaq	16(%rsp), %rbx
+	movl	$1, %esi
 	movq	%rbx, %rdi
 	callq	_list_pushint
-	incl	-36(%rbp)
-	cmpl	$9, -36(%rbp)
-	jle	LBB18_2
-LBB18_3:                                ## %merge
+	movl	$2, %esi
+	movq	%rbx, %rdi
+	callq	_list_pushint
+	movl	16(%rsp), %eax
+	movq	24(%rsp), %rcx
+	movq	%rcx, 8(%rsp)
+	movl	%eax, (%rsp)
 	movq	%rsp, %rbx
-	leaq	-16(%rbx), %rsi
-	movq	%rsi, %rsp
-	movq	%rsp, %rax
-	leaq	-16(%rax), %rsp
-	movl	$0, -16(%rax)
-	movl	$0, -16(%rbx)
-	movq	%rsp, %rax
-	addq	$-4000, %rax            ## imm = 0xF060
-	movq	%rax, %rsp
-	movq	%rax, -8(%rbx)
-	leaq	-72(%rbp), %r15
-	movl	$3, %edx
-	movl	$6, %ecx
-	movq	%r15, %rdi
-	callq	_list_sliceint
-	movl	-16(%rbx), %eax
-	movq	-8(%rbx), %rcx
-	movq	%rcx, -48(%rbp)
-	movl	%eax, -56(%rbp)
-	leaq	-56(%rbp), %r12
 	movl	$3, %esi
-	movq	%r12, %rdi
+	movq	%rbx, %rdi
+	callq	_list_pushint
+	xorl	%esi, %esi
+	movq	%rbx, %rdi
 	callq	_list_getint
 	movl	%eax, %ecx
 	leaq	L_fmt(%rip), %r14
@@ -446,34 +418,7 @@ LBB18_3:                                ## %merge
 	movq	%r14, %rdi
 	movl	%ecx, %esi
 	callq	_printf
-	movq	%rsp, %rbx
-	leaq	-16(%rbx), %rsi
-	movq	%rsi, %rsp
-	movq	%rsp, %rax
-	leaq	-16(%rax), %rsp
-	movl	$0, -16(%rax)
-	movl	$0, -16(%rbx)
-	movq	%rsp, %rax
-	addq	$-4000, %rax            ## imm = 0xF060
-	movq	%rax, %rsp
-	movq	%rax, -8(%rbx)
-	movl	$1, %edx
-	movl	$4, %ecx
-	movq	%r15, %rdi
-	callq	_list_sliceint
-	movl	-16(%rbx), %eax
-	movq	-8(%rbx), %rcx
-	movq	%rcx, -48(%rbp)
-	movl	%eax, -56(%rbp)
-	movl	$3, %esi
-	movq	%r12, %rdi
-	callq	_list_getint
-	movl	%eax, %ecx
-	xorl	%eax, %eax
-	movq	%r14, %rdi
-	movl	%ecx, %esi
-	callq	_printf
-	movq	%r12, %rdi
+	movq	%rbx, %rdi
 	callq	_list_sizeint
 	movl	%eax, %ecx
 	xorl	%eax, %eax
@@ -481,12 +426,9 @@ LBB18_3:                                ## %merge
 	movl	%ecx, %esi
 	callq	_printf
 	xorl	%eax, %eax
-	leaq	-32(%rbp), %rsp
+	addq	$8040, %rsp             ## imm = 0x1F68
 	popq	%rbx
-	popq	%r12
 	popq	%r14
-	popq	%r15
-	popq	%rbp
 	retq
 	.cfi_endproc
                                         ## -- End function
