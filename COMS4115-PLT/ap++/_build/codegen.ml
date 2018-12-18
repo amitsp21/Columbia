@@ -262,7 +262,7 @@ let translate (globals, functions) =
            let toIndex = L.build_load loop_cnt_ptr "to_idx" _builder in
            let fromIndex = L.build_add toIndex idx1 "from_idx" _builder in
            let get_val = L.build_call (StringMap.find (type_str typ) list_get) [| listPtr; fromIndex |] "list_get" _builder in
-           let _ = L.build_call (StringMap.find (type_str typ) list_set) [| listPtr2; toIndex;  get_val |] "" _builder in
+           let _ = L.build_call (StringMap.find (type_str typ) list_push) [| listPtr2; get_val |] "" _builder in
            let indexIncr = L.build_add (L.build_load loop_cnt_ptr "loop_cnt" _builder) (L.const_int i32_t 1) "loop_itr" _builder in
            let _ = L.build_store indexIncr loop_cnt_ptr _builder in 
            _builder

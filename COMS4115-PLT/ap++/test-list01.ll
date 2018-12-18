@@ -263,7 +263,7 @@ while_body:                                       ; preds = %while
   %to_idx = load i32, i32* %loop_cnt
   %from_idx = add i32 %to_idx, %idx_load
   %list_get = call i1 @list_getbool({ i32*, i1* }* %list_ptr_ptr, i32 %from_idx)
-  call void @list_setbool({ i32*, i1* }* %list_ptr_ptr2, i32 %to_idx, i1 %list_get)
+  call void @list_pushbool({ i32*, i1* }* %list_ptr_ptr2, i1 %list_get)
   %loop_cnt3 = load i32, i32* %loop_cnt
   %loop_itr = add i32 %loop_cnt3, 1
   store i32 %loop_itr, i32* %loop_cnt
@@ -301,7 +301,7 @@ while_body:                                       ; preds = %while
   %to_idx = load i32, i32* %loop_cnt
   %from_idx = add i32 %to_idx, %idx_load
   %list_get = call i32 @list_getint({ i32*, i32* }* %list_ptr_ptr, i32 %from_idx)
-  call void @list_setint({ i32*, i32* }* %list_ptr_ptr2, i32 %to_idx, i32 %list_get)
+  call void @list_pushint({ i32*, i32* }* %list_ptr_ptr2, i32 %list_get)
   %loop_cnt3 = load i32, i32* %loop_cnt
   %loop_itr = add i32 %loop_cnt3, 1
   store i32 %loop_itr, i32* %loop_cnt
@@ -339,7 +339,7 @@ while_body:                                       ; preds = %while
   %to_idx = load i32, i32* %loop_cnt
   %from_idx = add i32 %to_idx, %idx_load
   %list_get = call double @list_getfloat({ i32*, double* }* %list_ptr_ptr, i32 %from_idx)
-  call void @list_setfloat({ i32*, double* }* %list_ptr_ptr2, i32 %to_idx, double %list_get)
+  call void @list_pushfloat({ i32*, double* }* %list_ptr_ptr2, double %list_get)
   %loop_cnt3 = load i32, i32* %loop_cnt
   %loop_itr = add i32 %loop_cnt3, 1
   store i32 %loop_itr, i32* %loop_cnt

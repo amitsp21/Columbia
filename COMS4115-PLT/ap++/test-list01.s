@@ -220,47 +220,42 @@ _list_slicebool:                        ## @list_slicebool
 	.cfi_def_cfa_offset 24
 	pushq	%r14
 	.cfi_def_cfa_offset 32
-	pushq	%r12
-	.cfi_def_cfa_offset 40
 	pushq	%rbx
-	.cfi_def_cfa_offset 48
-	subq	$32, %rsp
+	.cfi_def_cfa_offset 40
+	subq	$40, %rsp
 	.cfi_def_cfa_offset 80
-	.cfi_offset %rbx, -48
-	.cfi_offset %r12, -40
+	.cfi_offset %rbx, -40
 	.cfi_offset %r14, -32
 	.cfi_offset %r15, -24
 	.cfi_offset %rbp, -16
-	movl	%ecx, %ebp
-	movl	%edx, %r14d
-	movq	%rsi, %r15
-	movq	%rdi, %r12
-	movq	%rdi, 24(%rsp)
-	movq	%rsi, 16(%rsp)
-	movl	%edx, 12(%rsp)
-	movl	%ecx, 8(%rsp)
-	movl	$0, 4(%rsp)
-	subl	%edx, %ebp
-	cmpl	%ebp, 4(%rsp)
+	movl	%ecx, %ebx
+	movl	%edx, %r15d
+	movq	%rsi, %r14
+	movq	%rdi, %rbp
+	movq	%rdi, 32(%rsp)
+	movq	%rsi, 24(%rsp)
+	movl	%edx, 20(%rsp)
+	movl	%ecx, 16(%rsp)
+	movl	$0, 12(%rsp)
+	subl	%edx, %ebx
+	cmpl	%ebx, 12(%rsp)
 	jg	LBB15_3
 	.p2align	4, 0x90
 LBB15_2:                                ## %while_body
                                         ## =>This Inner Loop Header: Depth=1
-	movl	4(%rsp), %ebx
-	leal	(%rbx,%r14), %esi
-	movq	%r12, %rdi
+	movl	12(%rsp), %esi
+	addl	%r15d, %esi
+	movq	%rbp, %rdi
 	callq	_list_getbool
-	movzbl	%al, %edx
-	movq	%r15, %rdi
-	movl	%ebx, %esi
-	callq	_list_setbool
-	incl	4(%rsp)
-	cmpl	%ebp, 4(%rsp)
+	movzbl	%al, %esi
+	movq	%r14, %rdi
+	callq	_list_pushbool
+	incl	12(%rsp)
+	cmpl	%ebx, 12(%rsp)
 	jle	LBB15_2
 LBB15_3:                                ## %merge
-	addq	$32, %rsp
+	addq	$40, %rsp
 	popq	%rbx
-	popq	%r12
 	popq	%r14
 	popq	%r15
 	popq	%rbp
@@ -278,47 +273,42 @@ _list_sliceint:                         ## @list_sliceint
 	.cfi_def_cfa_offset 24
 	pushq	%r14
 	.cfi_def_cfa_offset 32
-	pushq	%r12
-	.cfi_def_cfa_offset 40
 	pushq	%rbx
-	.cfi_def_cfa_offset 48
-	subq	$32, %rsp
+	.cfi_def_cfa_offset 40
+	subq	$40, %rsp
 	.cfi_def_cfa_offset 80
-	.cfi_offset %rbx, -48
-	.cfi_offset %r12, -40
+	.cfi_offset %rbx, -40
 	.cfi_offset %r14, -32
 	.cfi_offset %r15, -24
 	.cfi_offset %rbp, -16
-	movl	%ecx, %ebp
-	movl	%edx, %r14d
-	movq	%rsi, %r15
-	movq	%rdi, %r12
-	movq	%rdi, 24(%rsp)
-	movq	%rsi, 16(%rsp)
-	movl	%edx, 12(%rsp)
-	movl	%ecx, 8(%rsp)
-	movl	$0, 4(%rsp)
-	subl	%edx, %ebp
-	cmpl	%ebp, 4(%rsp)
+	movl	%ecx, %ebx
+	movl	%edx, %r15d
+	movq	%rsi, %r14
+	movq	%rdi, %rbp
+	movq	%rdi, 32(%rsp)
+	movq	%rsi, 24(%rsp)
+	movl	%edx, 20(%rsp)
+	movl	%ecx, 16(%rsp)
+	movl	$0, 12(%rsp)
+	subl	%edx, %ebx
+	cmpl	%ebx, 12(%rsp)
 	jg	LBB16_3
 	.p2align	4, 0x90
 LBB16_2:                                ## %while_body
                                         ## =>This Inner Loop Header: Depth=1
-	movl	4(%rsp), %ebx
-	leal	(%rbx,%r14), %esi
-	movq	%r12, %rdi
+	movl	12(%rsp), %esi
+	addl	%r15d, %esi
+	movq	%rbp, %rdi
 	callq	_list_getint
-	movq	%r15, %rdi
-	movl	%ebx, %esi
-	movl	%eax, %edx
-	callq	_list_setint
-	incl	4(%rsp)
-	cmpl	%ebp, 4(%rsp)
+	movq	%r14, %rdi
+	movl	%eax, %esi
+	callq	_list_pushint
+	incl	12(%rsp)
+	cmpl	%ebx, 12(%rsp)
 	jle	LBB16_2
 LBB16_3:                                ## %merge
-	addq	$32, %rsp
+	addq	$40, %rsp
 	popq	%rbx
-	popq	%r12
 	popq	%r14
 	popq	%r15
 	popq	%rbp
@@ -336,46 +326,41 @@ _list_slicefloat:                       ## @list_slicefloat
 	.cfi_def_cfa_offset 24
 	pushq	%r14
 	.cfi_def_cfa_offset 32
-	pushq	%r12
-	.cfi_def_cfa_offset 40
 	pushq	%rbx
-	.cfi_def_cfa_offset 48
-	subq	$32, %rsp
+	.cfi_def_cfa_offset 40
+	subq	$40, %rsp
 	.cfi_def_cfa_offset 80
-	.cfi_offset %rbx, -48
-	.cfi_offset %r12, -40
+	.cfi_offset %rbx, -40
 	.cfi_offset %r14, -32
 	.cfi_offset %r15, -24
 	.cfi_offset %rbp, -16
-	movl	%ecx, %ebp
-	movl	%edx, %r14d
-	movq	%rsi, %r15
-	movq	%rdi, %r12
-	movq	%rdi, 24(%rsp)
-	movq	%rsi, 16(%rsp)
-	movl	%edx, 12(%rsp)
-	movl	%ecx, 8(%rsp)
-	movl	$0, 4(%rsp)
-	subl	%edx, %ebp
-	cmpl	%ebp, 4(%rsp)
+	movl	%ecx, %ebx
+	movl	%edx, %r15d
+	movq	%rsi, %r14
+	movq	%rdi, %rbp
+	movq	%rdi, 32(%rsp)
+	movq	%rsi, 24(%rsp)
+	movl	%edx, 20(%rsp)
+	movl	%ecx, 16(%rsp)
+	movl	$0, 12(%rsp)
+	subl	%edx, %ebx
+	cmpl	%ebx, 12(%rsp)
 	jg	LBB17_3
 	.p2align	4, 0x90
 LBB17_2:                                ## %while_body
                                         ## =>This Inner Loop Header: Depth=1
-	movl	4(%rsp), %ebx
-	leal	(%rbx,%r14), %esi
-	movq	%r12, %rdi
+	movl	12(%rsp), %esi
+	addl	%r15d, %esi
+	movq	%rbp, %rdi
 	callq	_list_getfloat
-	movq	%r15, %rdi
-	movl	%ebx, %esi
-	callq	_list_setfloat
-	incl	4(%rsp)
-	cmpl	%ebp, 4(%rsp)
+	movq	%r14, %rdi
+	callq	_list_pushfloat
+	incl	12(%rsp)
+	cmpl	%ebx, 12(%rsp)
 	jle	LBB17_2
 LBB17_3:                                ## %merge
-	addq	$32, %rsp
+	addq	$40, %rsp
 	popq	%rbx
-	popq	%r12
 	popq	%r14
 	popq	%r15
 	popq	%rbp
