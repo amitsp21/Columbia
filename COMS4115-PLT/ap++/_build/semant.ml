@@ -148,6 +148,13 @@ let check (globals, functions) =
              List x -> x
              | _ -> raise (Failure ("list_size operand not a list"))
           in (Int, SListSize(list_type, var))
+      | ListSlice (var, e1, e2) ->
+           let e1' = expr e1 
+           and e2' = expr e2 in
+           let list_type = match (type_of_identifier var) with
+              List x -> x
+              | _ -> raise (Failure ("list_slice operand not a list"))
+           in (type_of_identifier var, SListSlice(list_type, var, e1', e2'))    
       | Call(fname, args) -> 
           let fd = find_func fname in
           let param_length = List.length fd.formals in

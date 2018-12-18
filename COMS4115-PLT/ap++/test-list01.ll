@@ -226,6 +226,138 @@ entry:
   ret i32 %list_size1
 }
 
+define void @list_slicebool({ i32, i1* }*, { i32, i1* }*, i32, i32) {
+entry:
+  %list_ptr_alloc = alloca { i32, i1* }*
+  store { i32, i1* }* %0, { i32, i1* }** %list_ptr_alloc
+  %list_ptr_ptr = load { i32, i1* }*, { i32, i1* }** %list_ptr_alloc
+  %list_array_ptr = getelementptr inbounds { i32, i1* }, { i32, i1* }* %list_ptr_ptr, i32 0, i32 1
+  %array_load = load i1*, i1** %list_array_ptr
+  %list_ptr_alloc2 = alloca { i32, i1* }*
+  store { i32, i1* }* %1, { i32, i1* }** %list_ptr_alloc2
+  %list_ptr_ptr2 = load { i32, i1* }*, { i32, i1* }** %list_ptr_alloc2
+  %list_array_ptr2 = getelementptr inbounds { i32, i1* }, { i32, i1* }* %list_ptr_ptr2, i32 0, i32 1
+  %array_load2 = load i1*, i1** %list_array_ptr2
+  %idx_alloc = alloca i32
+  %idx_load = load i32, i32* %idx_alloc
+  store i32 %2, i32* %idx_alloc
+  %idx_alloc1 = alloca i32
+  %idx_load2 = load i32, i32* %idx_alloc1
+  store i32 %3, i32* %idx_alloc1
+  %loop_cnt = alloca i32
+  store i32 0, i32* %loop_cnt
+  %loop_upper_bound = sub i32 %idx_load2, %idx_load
+  br label %while
+
+while:                                            ; preds = %while_body, %entry
+  %loop_cnt4 = load i32, i32* %loop_cnt
+  %loop_cond = icmp sle i32 %loop_cnt4, %loop_upper_bound
+  br i1 %loop_cond, label %while_body, label %merge
+
+while_body:                                       ; preds = %while
+  %cur_index = load i32, i32* %loop_cnt
+  %old_index = add i32 %cur_index, %idx_load
+  %list_arry_element_ptr = getelementptr i1, i1* %array_load, i32 %old_index
+  %list_arry_element_val = load i1, i1* %list_arry_element_ptr
+  %list_array_element_ptr2 = getelementptr i1, i1* %array_load2, i32 %cur_index
+  store i1 %list_arry_element_val, i1* %list_array_element_ptr2
+  %loop_cnt3 = load i32, i32* %loop_cnt
+  %loop_itr = add i32 %loop_cnt3, 1
+  store i32 %loop_itr, i32* %loop_cnt
+  br label %while
+
+merge:                                            ; preds = %while
+  ret void
+}
+
+define void @list_sliceint({ i32, i32* }*, { i32, i32* }*, i32, i32) {
+entry:
+  %list_ptr_alloc = alloca { i32, i32* }*
+  store { i32, i32* }* %0, { i32, i32* }** %list_ptr_alloc
+  %list_ptr_ptr = load { i32, i32* }*, { i32, i32* }** %list_ptr_alloc
+  %list_array_ptr = getelementptr inbounds { i32, i32* }, { i32, i32* }* %list_ptr_ptr, i32 0, i32 1
+  %array_load = load i32*, i32** %list_array_ptr
+  %list_ptr_alloc2 = alloca { i32, i32* }*
+  store { i32, i32* }* %1, { i32, i32* }** %list_ptr_alloc2
+  %list_ptr_ptr2 = load { i32, i32* }*, { i32, i32* }** %list_ptr_alloc2
+  %list_array_ptr2 = getelementptr inbounds { i32, i32* }, { i32, i32* }* %list_ptr_ptr2, i32 0, i32 1
+  %array_load2 = load i32*, i32** %list_array_ptr2
+  %idx_alloc = alloca i32
+  %idx_load = load i32, i32* %idx_alloc
+  store i32 %2, i32* %idx_alloc
+  %idx_alloc1 = alloca i32
+  %idx_load2 = load i32, i32* %idx_alloc1
+  store i32 %3, i32* %idx_alloc1
+  %loop_cnt = alloca i32
+  store i32 0, i32* %loop_cnt
+  %loop_upper_bound = sub i32 %idx_load2, %idx_load
+  br label %while
+
+while:                                            ; preds = %while_body, %entry
+  %loop_cnt4 = load i32, i32* %loop_cnt
+  %loop_cond = icmp sle i32 %loop_cnt4, %loop_upper_bound
+  br i1 %loop_cond, label %while_body, label %merge
+
+while_body:                                       ; preds = %while
+  %cur_index = load i32, i32* %loop_cnt
+  %old_index = add i32 %cur_index, %idx_load
+  %list_arry_element_ptr = getelementptr i32, i32* %array_load, i32 %old_index
+  %list_arry_element_val = load i32, i32* %list_arry_element_ptr
+  %list_array_element_ptr2 = getelementptr i32, i32* %array_load2, i32 %cur_index
+  store i32 %list_arry_element_val, i32* %list_array_element_ptr2
+  %loop_cnt3 = load i32, i32* %loop_cnt
+  %loop_itr = add i32 %loop_cnt3, 1
+  store i32 %loop_itr, i32* %loop_cnt
+  br label %while
+
+merge:                                            ; preds = %while
+  ret void
+}
+
+define void @list_slicefloat({ i32, double* }*, { i32, double* }*, i32, i32) {
+entry:
+  %list_ptr_alloc = alloca { i32, double* }*
+  store { i32, double* }* %0, { i32, double* }** %list_ptr_alloc
+  %list_ptr_ptr = load { i32, double* }*, { i32, double* }** %list_ptr_alloc
+  %list_array_ptr = getelementptr inbounds { i32, double* }, { i32, double* }* %list_ptr_ptr, i32 0, i32 1
+  %array_load = load double*, double** %list_array_ptr
+  %list_ptr_alloc2 = alloca { i32, double* }*
+  store { i32, double* }* %1, { i32, double* }** %list_ptr_alloc2
+  %list_ptr_ptr2 = load { i32, double* }*, { i32, double* }** %list_ptr_alloc2
+  %list_array_ptr2 = getelementptr inbounds { i32, double* }, { i32, double* }* %list_ptr_ptr2, i32 0, i32 1
+  %array_load2 = load double*, double** %list_array_ptr2
+  %idx_alloc = alloca i32
+  %idx_load = load i32, i32* %idx_alloc
+  store i32 %2, i32* %idx_alloc
+  %idx_alloc1 = alloca i32
+  %idx_load2 = load i32, i32* %idx_alloc1
+  store i32 %3, i32* %idx_alloc1
+  %loop_cnt = alloca i32
+  store i32 0, i32* %loop_cnt
+  %loop_upper_bound = sub i32 %idx_load2, %idx_load
+  br label %while
+
+while:                                            ; preds = %while_body, %entry
+  %loop_cnt4 = load i32, i32* %loop_cnt
+  %loop_cond = icmp sle i32 %loop_cnt4, %loop_upper_bound
+  br i1 %loop_cond, label %while_body, label %merge
+
+while_body:                                       ; preds = %while
+  %cur_index = load i32, i32* %loop_cnt
+  %old_index = add i32 %cur_index, %idx_load
+  %list_arry_element_ptr = getelementptr double, double* %array_load, i32 %old_index
+  %list_arry_element_val = load double, double* %list_arry_element_ptr
+  %list_array_element_ptr2 = getelementptr double, double* %array_load2, i32 %cur_index
+  store double %list_arry_element_val, double* %list_array_element_ptr2
+  %loop_cnt3 = load i32, i32* %loop_cnt
+  %loop_itr = add i32 %loop_cnt3, 1
+  store i32 %loop_itr, i32* %loop_cnt
+  br label %while
+
+merge:                                            ; preds = %while
+  ret void
+}
+
 define i32 @main() {
 entry:
   %a = alloca { i32, i32* }
@@ -246,21 +378,39 @@ entry:
   %list.arry5 = getelementptr inbounds { i32, i32* }, { i32, i32* }* %b, i32 0, i32 1
   %p6 = alloca i32, i32 1000
   store i32* %p6, i32** %list.arry5
+  %i = alloca i32
   %a7 = load { i32, i32* }, { i32, i32* }* %a
   store { i32, i32* } %a7, { i32, i32* }* %b
   call void @list_pushint({ i32, i32* }* %a, i32 1)
-  %list_get = call i32 @list_getint({ i32, i32* }* %a, i32 0)
-  %printf = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_get)
-  %list_get8 = call i32 @list_getint({ i32, i32* }* %b, i32 0)
-  %printf9 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_get8)
-  call void @list_pushint({ i32, i32* }* %a, i32 5)
-  call void @list_pushint({ i32, i32* }* %a, i32 6)
-  %list_get10 = call i32 @list_getint({ i32, i32* }* %b, i32 2)
-  %printf11 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_get10)
+  call void @list_pushint({ i32, i32* }* %a, i32 2)
+  call void @list_pushint({ i32, i32* }* %a, i32 3)
+  call void @list_pushint({ i32, i32* }* %b, i32 100)
   %list_size = call i32 @list_sizeint({ i32, i32* }* %a)
-  %printf12 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_size)
-  %list_size13 = call i32 @list_sizeint({ i32, i32* }* %b)
-  %printf14 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_size13)
+  %printf = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_size)
+  %list_size8 = call i32 @list_sizeint({ i32, i32* }* %b)
+  %printf9 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_size8)
+  store i32 0, i32* %i
+  br label %while
+
+while:                                            ; preds = %while_body, %entry
+  %i17 = load i32, i32* %i
+  %list_size18 = call i32 @list_sizeint({ i32, i32* }* %a)
+  %tmp19 = icmp slt i32 %i17, %list_size18
+  br i1 %tmp19, label %while_body, label %merge
+
+while_body:                                       ; preds = %while
+  %i10 = load i32, i32* %i
+  %list_get = call i32 @list_getint({ i32, i32* }* %a, i32 %i10)
+  %printf11 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_get)
+  %i12 = load i32, i32* %i
+  %list_get13 = call i32 @list_getint({ i32, i32* }* %b, i32 %i12)
+  %printf14 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_get13)
+  %i15 = load i32, i32* %i
+  %tmp16 = add i32 %i15, 1
+  store i32 %tmp16, i32* %i
+  br label %while
+
+merge:                                            ; preds = %while
   ret i32 0
 }
 

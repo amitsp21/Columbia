@@ -36,14 +36,17 @@ int main()
   */
   list<int> a;
   list<int> b;
+  int i;
   b = a;
   list_push(a, 1);
-  printi(a[0]);
-  printi(b[0]);
-  list_push(a, 5);
-  list_push(a, 6);
-  printi(b[2]);
+  list_push(a, 2);
+  list_push(a, 3);
+  list_push(b, 100);
   printi(#a);
   printi(#b);
+  for (i=0; i<#a; ++i) {
+    printi(a[i]);
+    printi(b[i]);
+  }
   return 0;
 }

@@ -14,7 +14,7 @@ and sx =
   | SListGet of typ * string * sexpr
   | SListPop of typ * string
   | SListSize of typ * string
-  | SListSlice of string * sexpr * sexpr
+  | SListSlice of typ * string * sexpr * sexpr
   | SNoexpr
 
 type sstmt =
