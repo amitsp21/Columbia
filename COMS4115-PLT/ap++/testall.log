@@ -41,6 +41,15 @@ cc -o test-list04.exe test-list04.s printbig.o
 diff -b test-list04.out tests/test-list04.out > test-list04.diff
 ###### SUCCESS
 
+###### Testing test-list05
+./ap_plusplus.native tests/test-list05.mc > test-list05.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-list05.ll > test-list05.s
+cc -o test-list05.exe test-list05.s printbig.o
+./test-list05.exe
+diff -b test-list05.out tests/test-list05.out > test-list05.diff
+FAILED test-list05.out differs from tests/test-list05.out
+###### FAILED
+
 ###### Testing test-minusminus01
 ./ap_plusplus.native tests/test-minusminus01.mc > test-minusminus01.ll
 /usr/local/opt/llvm/bin/llc -relocation-model=pic test-minusminus01.ll > test-minusminus01.s
