@@ -205,28 +205,27 @@ _list_sizefloat:                        ## @list_sizefloat
 _list_slicebool:                        ## @list_slicebool
 	.cfi_startproc
 ## %bb.0:                               ## %entry
+                                        ## kill: def $edx killed $edx def $rdx
 	movq	%rdi, -8(%rsp)
 	movq	8(%rdi), %r8
 	movq	%rsi, -16(%rsp)
 	movq	8(%rsi), %rsi
-	movl	-20(%rsp), %edi
 	movl	%edx, -20(%rsp)
-	movl	-24(%rsp), %edx
 	movl	%ecx, -24(%rsp)
 	movl	$0, -28(%rsp)
-	subl	%edi, %edx
-	cmpl	%edx, -28(%rsp)
+	subl	%edx, %ecx
+	cmpl	%ecx, -28(%rsp)
 	jg	LBB15_3
 	.p2align	4, 0x90
 LBB15_2:                                ## %while_body
                                         ## =>This Inner Loop Header: Depth=1
-	movslq	-28(%rsp), %rcx
-	leal	(%rcx,%rdi), %eax
+	movslq	-28(%rsp), %rdi
+	leal	(%rdi,%rdx), %eax
 	cltq
 	movzbl	(%r8,%rax), %eax
-	movb	%al, (%rsi,%rcx)
+	movb	%al, (%rsi,%rdi)
 	incl	-28(%rsp)
-	cmpl	%edx, -28(%rsp)
+	cmpl	%ecx, -28(%rsp)
 	jle	LBB15_2
 LBB15_3:                                ## %merge
 	retq
@@ -237,28 +236,27 @@ LBB15_3:                                ## %merge
 _list_sliceint:                         ## @list_sliceint
 	.cfi_startproc
 ## %bb.0:                               ## %entry
+                                        ## kill: def $edx killed $edx def $rdx
 	movq	%rdi, -8(%rsp)
 	movq	8(%rdi), %r8
 	movq	%rsi, -16(%rsp)
 	movq	8(%rsi), %rsi
-	movl	-20(%rsp), %edi
 	movl	%edx, -20(%rsp)
-	movl	-24(%rsp), %edx
 	movl	%ecx, -24(%rsp)
 	movl	$0, -28(%rsp)
-	subl	%edi, %edx
-	cmpl	%edx, -28(%rsp)
+	subl	%edx, %ecx
+	cmpl	%ecx, -28(%rsp)
 	jg	LBB16_3
 	.p2align	4, 0x90
 LBB16_2:                                ## %while_body
                                         ## =>This Inner Loop Header: Depth=1
-	movslq	-28(%rsp), %rcx
-	leal	(%rcx,%rdi), %eax
+	movslq	-28(%rsp), %rdi
+	leal	(%rdi,%rdx), %eax
 	cltq
 	movl	(%r8,%rax,4), %eax
-	movl	%eax, (%rsi,%rcx,4)
+	movl	%eax, (%rsi,%rdi,4)
 	incl	-28(%rsp)
-	cmpl	%edx, -28(%rsp)
+	cmpl	%ecx, -28(%rsp)
 	jle	LBB16_2
 LBB16_3:                                ## %merge
 	retq
@@ -269,28 +267,27 @@ LBB16_3:                                ## %merge
 _list_slicefloat:                       ## @list_slicefloat
 	.cfi_startproc
 ## %bb.0:                               ## %entry
+                                        ## kill: def $edx killed $edx def $rdx
 	movq	%rdi, -8(%rsp)
 	movq	8(%rdi), %r8
 	movq	%rsi, -16(%rsp)
 	movq	8(%rsi), %rsi
-	movl	-20(%rsp), %edi
 	movl	%edx, -20(%rsp)
-	movl	-24(%rsp), %edx
 	movl	%ecx, -24(%rsp)
 	movl	$0, -28(%rsp)
-	subl	%edi, %edx
-	cmpl	%edx, -28(%rsp)
+	subl	%edx, %ecx
+	cmpl	%ecx, -28(%rsp)
 	jg	LBB17_3
 	.p2align	4, 0x90
 LBB17_2:                                ## %while_body
                                         ## =>This Inner Loop Header: Depth=1
-	movslq	-28(%rsp), %rcx
-	leal	(%rcx,%rdi), %eax
+	movslq	-28(%rsp), %rdi
+	leal	(%rdi,%rdx), %eax
 	cltq
 	movsd	(%r8,%rax,8), %xmm0     ## xmm0 = mem[0],zero
-	movsd	%xmm0, (%rsi,%rcx,8)
+	movsd	%xmm0, (%rsi,%rdi,8)
 	incl	-28(%rsp)
-	cmpl	%edx, -28(%rsp)
+	cmpl	%ecx, -28(%rsp)
 	jle	LBB17_2
 LBB17_3:                                ## %merge
 	retq

@@ -235,13 +235,13 @@ let translate (globals, functions) =
         let listArrayPtrPtr2 = L.build_struct_gep listPtr2 1 "list_array_ptr2" build in
         let listArrayPtr2 = L.build_load listArrayPtrPtr2 "array_load2" build in
  
-         let idxPtr1 = L.build_alloca i32_t "idx_alloc" build in
-        let idx1 = L.build_load idxPtr1 "idx_load" build in
+        let idxPtr1 = L.build_alloca i32_t "idx_alloc" build in
         let _ = L.build_store (L.param def 2) idxPtr1 build in
+        let idx1 = L.build_load idxPtr1 "idx_load" build in
  
-         let idxPtr2 = L.build_alloca i32_t "idx_alloc" build in
-        let idx2 = L.build_load idxPtr2 "idx_load" build in
+        let idxPtr2 = L.build_alloca i32_t "idx_alloc" build in
         let _ = L.build_store (L.param def 3) idxPtr2 build in 
+        let idx2 = L.build_load idxPtr2 "idx_load" build in
  
          (* loop counter init: 0 *)
         let loop_cnt_ptr = L.build_alloca i32_t "loop_cnt" build in

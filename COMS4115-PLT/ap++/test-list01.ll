@@ -239,11 +239,11 @@ entry:
   %list_array_ptr2 = getelementptr inbounds { i32, i1* }, { i32, i1* }* %list_ptr_ptr2, i32 0, i32 1
   %array_load2 = load i1*, i1** %list_array_ptr2
   %idx_alloc = alloca i32
-  %idx_load = load i32, i32* %idx_alloc
   store i32 %2, i32* %idx_alloc
+  %idx_load = load i32, i32* %idx_alloc
   %idx_alloc1 = alloca i32
-  %idx_load2 = load i32, i32* %idx_alloc1
   store i32 %3, i32* %idx_alloc1
+  %idx_load2 = load i32, i32* %idx_alloc1
   %loop_cnt = alloca i32
   store i32 0, i32* %loop_cnt
   %loop_upper_bound = sub i32 %idx_load2, %idx_load
@@ -283,11 +283,11 @@ entry:
   %list_array_ptr2 = getelementptr inbounds { i32, i32* }, { i32, i32* }* %list_ptr_ptr2, i32 0, i32 1
   %array_load2 = load i32*, i32** %list_array_ptr2
   %idx_alloc = alloca i32
-  %idx_load = load i32, i32* %idx_alloc
   store i32 %2, i32* %idx_alloc
+  %idx_load = load i32, i32* %idx_alloc
   %idx_alloc1 = alloca i32
-  %idx_load2 = load i32, i32* %idx_alloc1
   store i32 %3, i32* %idx_alloc1
+  %idx_load2 = load i32, i32* %idx_alloc1
   %loop_cnt = alloca i32
   store i32 0, i32* %loop_cnt
   %loop_upper_bound = sub i32 %idx_load2, %idx_load
@@ -327,11 +327,11 @@ entry:
   %list_array_ptr2 = getelementptr inbounds { i32, double* }, { i32, double* }* %list_ptr_ptr2, i32 0, i32 1
   %array_load2 = load double*, double** %list_array_ptr2
   %idx_alloc = alloca i32
-  %idx_load = load i32, i32* %idx_alloc
   store i32 %2, i32* %idx_alloc
+  %idx_load = load i32, i32* %idx_alloc
   %idx_alloc1 = alloca i32
-  %idx_load2 = load i32, i32* %idx_alloc1
   store i32 %3, i32* %idx_alloc1
+  %idx_load2 = load i32, i32* %idx_alloc1
   %loop_cnt = alloca i32
   store i32 0, i32* %loop_cnt
   %loop_upper_bound = sub i32 %idx_load2, %idx_load
