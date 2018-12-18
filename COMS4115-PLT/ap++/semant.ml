@@ -137,7 +137,7 @@ let check (globals, functions) =
          let list_type = match (type_of_identifier var) with
              List x -> x
              | _ -> raise (Failure ("list_get operand not a list"))
-         in (ty, SListGet(list_type, var, (ty, e')))
+         in (list_type, SListGet(list_type, var, (ty, e')))
       | ListPop var -> 
           let list_type = match (type_of_identifier var) with
              List x -> x

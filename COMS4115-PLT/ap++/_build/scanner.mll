@@ -49,7 +49,7 @@ rule token = parse
 | ['0'-'9']+ as lit { ILITERAL(int_of_string lit) }
 | "true"	{ BLITERAL(true) }
 | "false"	{ BLITERAL(false) }
-| ['0'-'9']+('.')['0'-'9']*(['e' 'E']['+' '-']?['0'-'9']+)? as lit { FLITERAL(lit) }
+| ['0'-'9']+('.')['0'-'9']*(['e' 'E']['+' '-']?['0'-'9']+)? as lit { FLITERAL(float_of_string lit) }
 | '"'(_+ as lit)'"' { SLITERAL(lit) }
 | ['a'-'z' 'A'-'Z']['a'-'z' 'A'-'Z' '0'-'9' '_']* as id_name { ID(id_name) }
 | eof     { EOF }

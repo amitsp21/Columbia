@@ -1696,7 +1696,7 @@ let
 # 1697 "scanner.ml"
 = Lexing.sub_lexeme lexbuf lexbuf.Lexing.lex_start_pos lexbuf.Lexing.lex_curr_pos in
 # 52 "scanner.mll"
-                                                                   ( FLITERAL(lit) )
+                                                                   ( FLITERAL(float_of_string lit) )
 # 1701 "scanner.ml"
 
   | 49 ->

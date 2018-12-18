@@ -5,7 +5,7 @@ and sx =
     SILiteral of int
   | SBLiteral of bool
   | SSLiteral of string
-  | SFLiteral of string
+  | SFLiteral of float
   | SId of string
   | SBinop of sexpr * op * sexpr
   | SUnop of uop * sexpr

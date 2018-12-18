@@ -14,7 +14,7 @@ open Ast
 %token <int> ILITERAL
 %token <bool> BLITERAL
 %token <string> SLITERAL
-%token <string> FLITERAL
+%token <float> FLITERAL
 %token <string> ID
 %token LIST
 %token EOF

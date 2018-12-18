@@ -11,7 +11,7 @@ type expr =
     ILiteral of int
   | BLiteral of bool
   | SLiteral of string
-  | FLiteral of string
+  | FLiteral of float
   | Id of string
   | Binop of expr * op * expr
   | Unop of uop * expr

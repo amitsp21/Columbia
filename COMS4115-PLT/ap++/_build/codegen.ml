@@ -109,7 +109,7 @@ let translate (globals, functions) =
        let elementVal = L.build_load listArrayElementPtr "list_array_element_ptr" build in
        let _ = L.build_ret elementVal build in
        StringMap.add defName def m in
-  List.fold_left list_get_ty StringMap.empty [ A.Bool; A.Int; A.Float ] in
+  List.fold_left list_get_ty StringMap.empty [ A.Bool; A.Int; A.Float; A.String ] in
 
   (* void list_set(list, int32 idx, typ value) *)
   let list_set : L.llvalue StringMap.t = 
@@ -127,7 +127,7 @@ let translate (globals, functions) =
      let _ = L.build_store (L.param def 2) idxElementPtr build in
      let _ = L.build_ret_void build in
      StringMap.add defName def m in 
-  List.fold_left list_set_ty StringMap.empty [ A.Bool; A.Int; A.Float ] in
+  List.fold_left list_set_ty StringMap.empty [ A.Bool; A.Int; A.Float; A.String ] in
 
   (* void list_push(list, typ value) *)
   let list_push : L.llvalue StringMap.t = 
@@ -164,7 +164,7 @@ let translate (globals, functions) =
      let _ = L.build_store (L.build_load valPtr "val" build) nextElementPtr build in
      let _ = L.build_ret_void build in
      StringMap.add defName def m in 
-  List.fold_left list_push_ty StringMap.empty [ A.Bool; A.Int; A.Float ] in
+  List.fold_left list_push_ty StringMap.empty [ A.Bool; A.Int; A.Float; A.String ] in
 
   (* ltype list_pop(list) *)
   let list_pop : L.llvalue StringMap.t = 
@@ -190,7 +190,7 @@ let translate (globals, functions) =
        let _ = L.build_store listSizeMin1 listSizePtr build in
        let _ = L.build_ret lastElementVal build in
     StringMap.add defName def m in
-  List.fold_left list_pop_ty StringMap.empty [ A.Bool; A.Int; A.Float ] in
+  List.fold_left list_pop_ty StringMap.empty [ A.Bool; A.Int; A.Float; A.String ] in
 
   (* int32 list_size(list) *)
   let list_size : L.llvalue StringMap.t = 
@@ -210,7 +210,7 @@ let translate (globals, functions) =
      let listSize = L.build_load listSizePtr "list_size" build in
      ignore(L.build_ret listSize build);
      StringMap.add defName def m in 
-  List.fold_left list_size_ty StringMap.empty [ A.Bool; A.Int; A.Float ] in
+  List.fold_left list_size_ty StringMap.empty [ A.Bool; A.Int; A.Float; A.String ] in
 
   let init_list builder list_ptr list_type = 
     (* initialize size to 0 *)
@@ -271,7 +271,7 @@ let translate (globals, functions) =
         ignore(L.build_ret_void while_builder);
         StringMap.add defName def m
      in 
-     List.fold_left list_slice_ty StringMap.empty [ A.Bool; A.Int; A.Float ] in
+     List.fold_left list_slice_ty StringMap.empty [ A.Bool; A.Int; A.Float; A.String ] in
 
   (* Define each function (arguments and return type) so we can 
      call it even before we've created its body *)
@@ -333,7 +333,7 @@ let translate (globals, functions) =
     let rec expr builder ((_, e) : sexpr) = match e with
         SILiteral i  -> L.const_int i32_t i
       | SBLiteral b  -> L.const_int i1_t (if b then 1 else 0)
-      | SFLiteral l -> L.const_float_of_string float_t l
+      | SFLiteral l -> L.const_float float_t l
       | SSLiteral s -> L.build_global_stringptr (s^"\x00") "strptr" builder
       | SNoexpr     -> L.const_int i32_t 0
       | SId s       -> L.build_load (lookup s) s builder
@@ -421,17 +421,13 @@ let translate (globals, functions) =
        let _ = L.build_call ((StringMap.find (type_str list_type)) list_slice) [| (lookup id); new_list_ptr; (expr builder e1); (expr builder e2) |] "" builder in
        (L.build_load new_list_ptr "new_list" builder);
     | SCall ("prints", [e]) ->
-      L.build_call printf_func [| str_format_str ; (expr builder e) |] 
-      "printf" builder
+      L.build_call printf_func [| str_format_str ; (expr builder e) |] "printf" builder
     | SCall ("printi", [e]) ->
-      L.build_call printf_func [| int_format_str ; (expr builder e) |] 
-      "printf" builder
+      L.build_call printf_func [| int_format_str ; (expr builder e) |] "printf" builder
     | SCall ("printb", [e]) ->
-      L.build_call printf_func [| int_format_str; (expr builder e) |]
-      "printf" builder
+      L.build_call printf_func [| int_format_str; (expr builder e) |] "printf" builder
     | SCall ("printf", [e]) ->
-      L.build_call printf_func [| float_format_str ; (expr builder e) |] 
-      "printf" builder
+      L.build_call printf_func [| float_format_str ; (expr builder e) |] "printf" builder
     | SCall (f, args) ->
          let (fdef, fdecl) = StringMap.find f function_decls in
          let llargs = List.rev (List.map (expr builder) (List.rev args)) in

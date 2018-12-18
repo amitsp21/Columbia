@@ -46,7 +46,7 @@ type token =
   | ILITERAL of (int)
   | BLITERAL of (bool)
   | SLITERAL of (string)
-  | FLITERAL of (string)
+  | FLITERAL of (float)
   | ID of (string)
   | LIST
   | EOF
@@ -759,7 +759,7 @@ let yyact = [|
 # 760 "parser.ml"
                : 'expr))
 ; (fun __caml_parser_env ->
-    let _1 = (Parsing.peek_val __caml_parser_env 0 : string) in
+    let _1 = (Parsing.peek_val __caml_parser_env 0 : float) in
     Obj.repr(
 # 109 "parser.mly"
                                           ( FLiteral(_1) )
