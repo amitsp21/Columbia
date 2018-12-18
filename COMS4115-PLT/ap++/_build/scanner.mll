@@ -46,6 +46,10 @@ rule token = parse
 | "list_pop" { LIST_POP }
 | "list_size" { LIST_SIZE }
 | "list_slice" { LIST_SLICE }
+| "list_clear" { LIST_CLEAR }
+| "list_rev" { LIST_REVERSE }
+| "list_insert" { LIST_INSERT }
+| "list_remove" { LIST_REMOVE }
 | "list" { LIST }
 | ['0'-'9']+ as lit { ILITERAL(int_of_string lit) }
 | "true"	{ BLITERAL(true) }

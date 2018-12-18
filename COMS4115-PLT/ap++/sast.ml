@@ -26,6 +26,10 @@ type sstmt =
 | SWhile of sexpr * sstmt
 | SListPush of string * sexpr
 | SListSet of typ * string * sexpr * sexpr
+| SListClear of typ * string
+(* | SListRev of typ * string
+| SListInsert of typ * string * sexpr * sexpr
+| SListRemove of typ * string * sexpr *)
 
 type sfunc_decl = {
     styp : typ;

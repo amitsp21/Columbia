@@ -445,9 +445,11 @@ let translate (globals, functions) =
     let rec stmt builder = function
         SBlock sl -> List.fold_left stmt builder sl
       | SListPush (id, e) -> 
-        ignore(L.build_call (StringMap.find (type_str (fst e)) list_push) [| (lookup id); (expr builder e) |] "" builder); builder 
+          ignore(L.build_call (StringMap.find (type_str (fst e)) list_push) [| (lookup id); (expr builder e) |] "" builder); builder 
       | SListSet (list_type, id, e1, e2) ->
-        ignore(L.build_call (StringMap.find (type_str list_type) list_set) [| (lookup id); (expr builder e1); (expr builder e2) |] "" builder); builder
+          ignore(L.build_call (StringMap.find (type_str list_type) list_set) [| (lookup id); (expr builder e1); (expr builder e2) |] "" builder); builder
+      | SListClear (list_type, id) ->
+          ignore(init_list builder (lookup id) list_type); builder
       | SExpr e -> ignore(expr builder e); builder 
       | SReturn e -> ignore(match fdecl.styp with
                               (* Special "return nothing" instr *)
@@ -462,11 +464,11 @@ let translate (globals, functions) =
 
          let then_bb = L.append_block context "then" the_function in
          add_terminal (stmt (L.builder_at_end context then_bb) then_stmt)
-           build_br_merge;
+         build_br_merge;
 
          let else_bb = L.append_block context "else" the_function in
          add_terminal (stmt (L.builder_at_end context else_bb) else_stmt)
-           build_br_merge;
+         build_br_merge;
 
          ignore(L.build_cond_br bool_val then_bb else_bb builder);
          L.builder_at_end context merge_bb

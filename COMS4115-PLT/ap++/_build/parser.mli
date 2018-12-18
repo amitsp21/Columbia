@@ -43,6 +43,10 @@ type token =
   | LIST_SIZE
   | HASH
   | LIST_SLICE
+  | LIST_CLEAR
+  | LIST_REVERSE
+  | LIST_INSERT
+  | LIST_REMOVE
   | ILITERAL of (int)
   | BLITERAL of (bool)
   | SLITERAL of (string)

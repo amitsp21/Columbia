@@ -198,6 +198,11 @@ let check (globals, functions) =
         SListPush(var, check_match_list_type_expr var e)
       | ListSet (var, e1, e2) ->
           SListSet(get_list_type var, var, check_int_expr e1, check_match_list_type_expr var e2)
+      | ListClear var ->
+          SListClear(get_list_type var, var)
+(*       | ListReverse var -> SListClear(get_list_type var, var)
+      | ListInsert (var, e1, e2) -> SListClear(get_list_type var, var)
+      | ListRemove (var, e) -> SListClear(get_list_type var, var) *)
       | If(p, b1, b2) -> SIf(check_bool_expr p, check_stmt b1, check_stmt b2)
       | For(e1, e2, e3, st) -> SFor(expr e1, check_bool_expr e2, expr e3, check_stmt st)
       | While(p, s) -> SWhile(check_bool_expr p, check_stmt s)

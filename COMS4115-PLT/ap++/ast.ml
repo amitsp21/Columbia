@@ -32,6 +32,10 @@ type stmt =
 | While of expr * stmt
 | ListPush of string * expr
 | ListSet of string * expr * expr
+| ListClear of string
+(* | ListRev of string
+| ListInsert of string * expr * expr
+| ListRemove of string * expr *)
 
 type func_decl = {
     typ : typ;
