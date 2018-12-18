@@ -231,26 +231,26 @@ let translate (globals, functions) =
        let defName = (type_str typ) in
        let def = L.define_function ("list_slice" ^ defName) (L.function_type void_t [| ptr_list_t ltype; ptr_list_t ltype; i32_t; i32_t |]) the_module in
        let build = L.builder_at_end context (L.entry_block def) in
-
+       
        let listPtrPtr = L.build_alloca (ptr_list_t ltype) "list_ptr_alloc" build in
        let _ = L.build_store (L.param def 0) listPtrPtr build in
-       let listPtr = L.build_load listPtrPtr "list_ptr" build in
- (*      let listArrayPtrPtr = L.build_struct_gep listPtr 2 "list_array_ptr" build in
+       let listPtr = L.build_load listPtrPtr "list_ptr_ptr" build in
+       let listArrayPtrPtr = L.build_struct_gep listPtr 2 "list_array_ptr" build in
        let listArrayPtr = L.build_load listArrayPtrPtr "array_load" build in
- 
+       
        let listPtrPtr2 = L.build_alloca (ptr_list_t ltype) "list_ptr_alloc2" build in
        let _ = L.build_store (L.param def 1) listPtrPtr2 build in
-       let listPtr2 = L.build_load listPtrPtr2 "list_ptr2" build in
+       let listPtr2 = L.build_load listPtrPtr2 "list_ptr_ptr2" build in
        let listArrayPtrPtr2 = L.build_struct_gep listPtr2 2 "list_array_ptr2" build in
        let listArrayPtr2 = L.build_load listArrayPtrPtr2 "array_load2" build in
 
        let idxPtr1 = L.build_alloca i32_t "idx_alloc" build in
-       let _ = L.build_store (L.param def 2) idxPtr1 build in
        let idx1 = L.build_load idxPtr1 "idx_load" build in
-
-       let idxPtr2 = L.build_alloca i32_t "idx_alloc2" build in
+       let _ = L.build_store (L.param def 2) idxPtr1 build in
+       
+       let idxPtr2 = L.build_alloca i32_t "idx_alloc" build in
+       let idx2 = L.build_load idxPtr2 "idx_load" build in
        let _ = L.build_store (L.param def 3) idxPtr2 build in 
-       let idx2 = L.build_load idxPtr2 "idx_load2" build in
 
        (* loop counter init: 0 *)
        let loop_cnt_ptr = L.build_alloca i32_t "loop_cnt" build in
@@ -259,36 +259,22 @@ let translate (globals, functions) =
        let loop_upper_bound = L.build_sub idx2 idx1 "loop_upper_bound" build in
        (* loop condition: cnt <= j-i *)
        let loop_cond _builder = 
-           L.build_icmp L.Icmp.Sle (L.build_load loop_cnt_ptr "loop_cnt" _builder) (loop_upper_bound) "loop_cond" _builder
-       in *)
-       let get_list_val = (L.build_call (StringMap.find (type_str typ) list_get) [| (L.param def 0); (L.const_int i32_t 0) |] "list_get" build) in
-       let _ = (L.build_call printf_func [| (L.build_global_stringptr "%d\n" "fmt" build) ; get_list_val |] "printf" build) in
+           L.build_icmp L.Icmp.Sle (L.build_load loop_cnt_ptr "loop_cnt" _builder) loop_upper_bound "loop_cond" _builder
+       in
        (* assignment: b[cnt] = a[cnt + i] *)
-      (*  let loop_body _builder = 
-          let toIndex = L.build_load loop_cnt_ptr "to_index" _builder in
-          let fromIndex = L.build_add toIndex idx1 "from_index" _builder in
-(*           let list_array_element_ptr = L.build_gep listArrayPtr [| fromIndex |] "list_arry_element_ptr" _builder in
+       let loop_body _builder = 
+          let newIndex = L.build_load loop_cnt_ptr "cur_index" _builder in
+          let oldIndex = L.build_add newIndex idx1 "old_index" _builder in
+          let list_array_element_ptr = L.build_gep listArrayPtr [| oldIndex |] "list_arry_element_ptr" _builder in
           let list_array_element_val = L.build_load list_array_element_ptr "list_arry_element_val" _builder in
-<<<<<<< Updated upstream
           let list_array_element_ptr2 = L.build_gep listArrayPtr2 [| newIndex |] "list_array_element_ptr2" _builder in
           let _ = L.build_store list_array_element_val list_array_element_ptr2 _builder in
           let indexIncr = L.build_add (L.build_load loop_cnt_ptr "loop_cnt" _builder) (L.const_int i32_t 1) "loop_itr" _builder in
           let _ = L.build_store indexIncr loop_cnt_ptr _builder in 
-=======
-          let list_array_element_ptr2 = L.build_gep listArrayPtr2 [| toIndex |] "list_array_element_ptr2" _builder in *)
-          let _ = L.build_store list_array_element_val list_array_element_ptr2 _builder in *)(* 
-          let getVal = (L.build_call (StringMap.find (type_str typ) list_get) [| listPtr; fromIndex |] "list_get" _builder) in
-          (* uncommenting this line causes a segfault...why!? =( *)
-          let _ = (L.build_call printf_func [| (L.build_global_stringptr "%d\n" "fmt" _builder) ; toIndex |] "printf" _builder) in
-          let _ = (L.build_call printf_func [| (L.build_global_stringptr "%d\n" "fmt" _builder) ; get_list_val |] "printf" _builder) in
-          let indexIncr = L.build_add toIndex (L.const_int i32_t 1) "loop_itr" _builder in
-          let _ = L.build_store indexIncr loop_cnt_ptr _builder in
->>>>>>> Stashed changes
           _builder
        in
        let while_builder = build_while build loop_cond loop_body def in
-       ignore(L.build_ret_void while_builder); *)
-       ignore(L.build_ret_void build);
+       ignore(L.build_ret_void while_builder);
        StringMap.add defName def m
     in 
     List.fold_left list_slice_ty StringMap.empty [ A.Bool; A.Int; A.Float ] in
@@ -441,16 +427,20 @@ let translate (globals, functions) =
       let new_list_ptr_ptr = L.build_alloca (ptr_list_t ltype) "new_list_ptr_ptr" builder in
       let _ = init_list builder new_list_ptr_ptr ltype in
       let new_list_ptr = L.build_load new_list_ptr_ptr "new_list_ptr" builder in
-      ignore(L.build_call ((StringMap.find (type_str list_type)) list_slice) [| list_id_to_ptr builder id; new_list_ptr; (expr builder e1); (expr builder e2) |] "" builder);
+      L.build_call ((StringMap.find (type_str list_type)) list_slice) [| list_id_to_ptr builder id; new_list_ptr; (expr builder e1); (expr builder e2) |] "" builder;
       new_list_ptr
     | SCall ("prints", [e]) ->
-      L.build_call printf_func [| str_format_str ; (expr builder e) |] "printf" builder
+      L.build_call printf_func [| str_format_str ; (expr builder e) |] 
+      "printf" builder
     | SCall ("printi", [e]) ->
-      L.build_call printf_func [| int_format_str ; (expr builder e) |] "printf" builder
+      L.build_call printf_func [| int_format_str ; (expr builder e) |] 
+      "printf" builder
     | SCall ("printb", [e]) ->
-      L.build_call printf_func [| int_format_str; (expr builder e) |] "printf" builder
+      L.build_call printf_func [| int_format_str; (expr builder e) |]
+      "printf" builder
     | SCall ("printf", [e]) ->
-      L.build_call printf_func [| float_format_str ; (expr builder e) |] "printf" builder
+      L.build_call printf_func [| float_format_str ; (expr builder e) |] 
+      "printf" builder
     | SCall (f, args) ->
          let (fdef, fdecl) = StringMap.find f function_decls in
          let llargs = List.rev (List.map (expr builder) (List.rev args)) in
