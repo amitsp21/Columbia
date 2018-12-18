@@ -14,8 +14,7 @@ diff -b test-helloworld.out tests/test-helloworld.out > test-helloworld.diff
 cc -o test-list01.exe test-list01.s printbig.o
 ./test-list01.exe
 diff -b test-list01.out tests/test-list01.out > test-list01.diff
-FAILED test-list01.out differs from tests/test-list01.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing test-list02
 ./ap_plusplus.native tests/test-list02.mc > test-list02.ll
@@ -79,6 +78,14 @@ diff -b test-minusminus01.out tests/test-minusminus01.out > test-minusminus01.di
 cc -o test-minusminus02.exe test-minusminus02.s printbig.o
 ./test-minusminus02.exe
 diff -b test-minusminus02.out tests/test-minusminus02.out > test-minusminus02.diff
+###### SUCCESS
+
+###### Testing test-mod01
+./ap_plusplus.native tests/test-mod01.mc > test-mod01.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-mod01.ll > test-mod01.s
+cc -o test-mod01.exe test-mod01.s printbig.o
+./test-mod01.exe
+diff -b test-mod01.out tests/test-mod01.out > test-mod01.diff
 ###### SUCCESS
 
 ###### Testing test-plusplus01

@@ -112,6 +112,7 @@ expr:
 | expr MINUS  expr                        { Binop($1, Sub, $3) }
 | expr TIMES  expr                        { Binop($1, Mult, $3) }
 | expr DIVIDE expr                        { Binop($1, Div, $3) }
+| expr MOD expr                           { Binop($1, Mod, $3) }
 | PLUSPLUS ID                             { Unop(PlusPlusPre, Id($2)) }
 | MINUSMINUS ID                           { Unop(MinusMinusPre, Id($2)) }
 | ID PLUSPLUS                             { Unop(PlusPlusPost, Id($1)) }
