@@ -10,7 +10,7 @@ open Ast
 %token NOT AND OR
 %token EQ NEQ LT LEQ GT GEQ
 %token RETURN IF ELSE ELSEIF WHILE FOR INT BOOL FLOAT STRING VOID BREAK CONTINUE
-%token LIST_PUSH LIST_GET LIST_SET LIST_POP LIST_SIZE HASH LIST_SLICE
+%token LIST_PUSH LIST_GET LIST_SET LIST_POP LIST_SIZE HASH
 %token <int> ILITERAL
 %token <bool> BLITERAL
 %token <string> SLITERAL
@@ -136,7 +136,6 @@ expr:
 | ID LBRACK expr RBRACK                   { ListGet($1, $3) }
 | LIST_POP LPAREN ID RPAREN               { ListPop($3) }
 | LIST_SIZE LPAREN ID RPAREN              { ListSize($3) }
-| LIST_SLICE LPAREN ID COMMA expr COMMA expr RPAREN { ListSlice($3, $5, $7) }
 | HASH ID                                 { ListSize($2) }
 
 args_opt:
