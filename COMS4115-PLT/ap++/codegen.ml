@@ -203,12 +203,13 @@ let translate (globals, functions) =
   List.fold_left list_size_ty StringMap.empty [ A.Bool; A.Int; A.Float ] in
 
   let init_list builder list_ptr list_type = 
-    (* initialize list *)
+    (* initialize size to 0 *)
     let sizePtrStruct = L.build_struct_gep list_ptr 0 "list.size" builder in 
        let sizePtr = L.build_alloca i32_t "tmp" builder in 
        let _ = L.build_store (L.const_int i32_t 0) sizePtr builder in
        let sizeVal = L.build_load sizePtr "tmp" builder in
        ignore(L.build_store sizeVal sizePtrStruct builder);
+    (* initialize array *)
     let listArrayPtr = L.build_struct_gep list_ptr 1 "list.arry" builder in 
      (* TODO: allocate nothing and have list grow dynamically *)
       let p = L.build_array_alloca (ltype_of_typ list_type) (L.const_int i32_t 1000) "p" builder in
@@ -227,6 +228,7 @@ let translate (globals, functions) =
         let listPtr = L.build_load listPtrPtr "list_ptr_ptr" build in
         let listArrayPtrPtr = L.build_struct_gep listPtr 1 "list_array_ptr" build in
         let listArrayPtr = L.build_load listArrayPtrPtr "array_load" build in
+   
         let listPtrPtr2 = L.build_alloca (ptr_list_t ltype) "list_ptr_alloc2" build in
         let _ = L.build_store (L.param def 1) listPtrPtr2 build in
         let listPtr2 = L.build_load listPtrPtr2 "list_ptr_ptr2" build in
@@ -411,10 +413,10 @@ let translate (globals, functions) =
       L.build_call ((StringMap.find (type_str list_type)) list_pop) [| (lookup id) |] "list_pop" builder
     | SListSlice (list_type, id, e1, e2) ->
        let ltype = (ltype_of_typ list_type) in
-       let new_list_ptr = L.build_alloca (list_t ltype) "new_list_ptr_ptr" builder in
+       let new_list_ptr = L.build_alloca (list_t ltype) "new_list_ptr" builder in
        let _ = init_list builder new_list_ptr list_type in
-       L.build_call ((StringMap.find (type_str list_type)) list_slice) [| lookup id; new_list_ptr; (expr builder e1); (expr builder e2) |] "" builder;
-       new_list_ptr
+       let _ = L.build_call ((StringMap.find (type_str list_type)) list_slice) [| (lookup id); new_list_ptr; (expr builder e1); (expr builder e2) |] "" builder in
+       (L.build_load new_list_ptr "new_list" builder);
     | SCall ("prints", [e]) ->
       L.build_call printf_func [| str_format_str ; (expr builder e) |] 
       "printf" builder

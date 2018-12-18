@@ -34,7 +34,9 @@ int main()
   printi(list_size(b));
   print_test(b, 1);
   */
-  list<int> a;
+  
+  /* test list assignment */
+  /* list<int> a;
   list<int> b;
   int i;
   b = a;
@@ -47,6 +49,15 @@ int main()
   for (i=0; i<#a; ++i) {
     printi(a[i]);
     printi(b[i]);
+  }*/
+
+  list<int> a;
+  list<int> b;
+  int i;
+  for (i=0; i<10; ++i) {
+    list_push(a, i*10);
   }
+  b = list_slice(a, 1, 4);
+  printi(b[2]);
   return 0;
 }
