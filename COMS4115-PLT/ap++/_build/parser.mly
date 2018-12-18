@@ -9,7 +9,7 @@ open Ast
 %token PLUSPLUS MINUSMINUS
 %token NOT AND OR
 %token EQ NEQ LT LEQ GT GEQ
-%token RETURN IF ELSE ELSEIF WHILE FOR INT BOOL FLOAT STRING VOID BREAK CONTINUE
+%token RETURN IF ELSE ELSEIF WHILE FOR INT BOOL FLOAT STRING VOID
 %token LIST_PUSH LIST_GET LIST_SET LIST_POP LIST_SIZE HASH
 %token <int> ILITERAL
 %token <bool> BLITERAL
@@ -87,8 +87,6 @@ stmt_list:
 stmt:
   expr SEMICOLON                            { Expr $1 }
 | RETURN expr_opt SEMICOLON                 { Return $2 }
-| BREAK SEMICOLON	                          { Break }
-| CONTINUE SEMICOLON	                      { Continue }
 | LBRACE stmt_list RBRACE                   { Block(List.rev $2) }
 | IF LPAREN expr RPAREN stmt %prec NOELSE   { If($3, $5, Block([])) }
 | IF LPAREN expr RPAREN stmt ELSE stmt      { If($3, $5, $7) }
@@ -114,7 +112,6 @@ expr:
 | expr MINUS  expr                        { Binop($1, Sub, $3) }
 | expr TIMES  expr                        { Binop($1, Mult, $3) }
 | expr DIVIDE expr                        { Binop($1, Div, $3) }
-| expr MOD    expr                        { Binop($1, Mod, $3) }
 | PLUSPLUS ID                             { Unop(PlusPlusPre, Id($2)) }
 | MINUSMINUS ID                           { Unop(MinusMinusPre, Id($2)) }
 | ID PLUSPLUS                             { Unop(PlusPlusPost, Id($1)) }

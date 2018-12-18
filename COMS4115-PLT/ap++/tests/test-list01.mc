@@ -4,9 +4,9 @@ void print_test(list<int> l, int idx) {
     return;
 }
 
-/*int main()
+int main()
 {
-  list<int> a;
+  /*list<int> a;
   list<int> b;
   list<int> c;
   int x;
@@ -15,13 +15,13 @@ void print_test(list<int> l, int idx) {
   b = a;  
   list_push(a, 101);
   list_push(a, 102);
-  list_push(a, 103);
+  list_push(a, 103 + 10);
   printi(list_get(a, 0));
   printi(list_get(a, 1));
   printi(a[2]);
   printi(b[1]);
   for (i=0; i<10; i=i+1) {
-    list_push(a, i);
+    list_push(a, i+10);
   }
   printi(#a);
   a[0] = 5;
@@ -31,26 +31,19 @@ void print_test(list<int> l, int idx) {
   print_test(a, 1);
   a[1] = 42; 
   printi(list_size(a));
+  printi(list_size(b));
   print_test(b, 1);
-
+  */
   list<int> a;
-  int i;
-  list_push(a, 10);
-  list_push(a, 20);
-  printi(list_size(a));
-  printi(a[1]);
-  list_pop(a);
-  printi(list_size(a));
-  return 0;
-}
-*/
-
-int main()
-{
-  list<int> a;
-  int i;
-  for (i=0; i<10; i=i+1) {
-    list_push(a, i);
-  }
+  list<int> b;
+  b = a;
+  list_push(a, 1);
+  printi(a[0]);
+  printi(b[0]);
+  list_push(a, 5);
+  list_push(a, 6);
+  printi(b[2]);
+  printi(#a);
+  printi(#b);
   return 0;
 }

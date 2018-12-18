@@ -18,7 +18,6 @@ rule token = parse
 | "--"    { MINUSMINUS }
 | '*'     { TIMES }
 | '/'     { DIVIDE }
-| '%'	  { MOD }
 | '='     { ASSIGN }
 | "=="    { EQ }
 | "!="    { NEQ }
@@ -32,8 +31,6 @@ rule token = parse
 | "elseif" { ELSEIF }
 | "while" { WHILE }
 | "for"   { FOR }
-| "break" { BREAK }
-| "continue" { CONTINUE }
 | "return" { RETURN }
 | "int"   { INT }
 | "bool"  { BOOL }

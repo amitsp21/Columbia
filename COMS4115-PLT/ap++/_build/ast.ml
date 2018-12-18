@@ -1,4 +1,4 @@
-type op = Add | Sub | Mult | Div | Mod | Equal | Neq | Less | Leq | Greater | Geq
+type op = Add | Sub | Mult | Div | Equal | Neq | Less | Leq | Greater | Geq
           | And | Or 
 
 type uop = PlusPlusPre | PlusPlusPost | MinusMinusPre | MinusMinusPost | Neg | Not
@@ -27,8 +27,6 @@ type stmt =
   Block of stmt list
 | Expr of expr
 | Return of expr
-| Continue
-| Break
 | If of expr * stmt * stmt
 | For of expr * expr * expr * stmt
 | While of expr * stmt

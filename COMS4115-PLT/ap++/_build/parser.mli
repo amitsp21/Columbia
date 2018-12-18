@@ -36,8 +36,6 @@ type token =
   | FLOAT
   | STRING
   | VOID
-  | BREAK
-  | CONTINUE
   | LIST_PUSH
   | LIST_GET
   | LIST_SET
