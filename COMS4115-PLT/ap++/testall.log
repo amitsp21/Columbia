@@ -47,8 +47,7 @@ diff -b test-list04.out tests/test-list04.out > test-list04.diff
 cc -o test-list05.exe test-list05.s printbig.o
 ./test-list05.exe
 diff -b test-list05.out tests/test-list05.out > test-list05.diff
-FAILED test-list05.out differs from tests/test-list05.out
-###### FAILED
+###### SUCCESS
 
 ###### Testing test-minusminus01
 ./ap_plusplus.native tests/test-minusminus01.mc > test-minusminus01.ll

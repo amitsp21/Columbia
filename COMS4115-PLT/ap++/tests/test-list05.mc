@@ -15,6 +15,9 @@ int main()
   list_push(c, 101);
   printi(#c);
   printi(c[#c-1]);
+  list_push(a, 102);
+  printi(#a);
+  printi(a[#a-1]);
 
   return 0;
 }

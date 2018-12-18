@@ -33,8 +33,8 @@ let translate (globals, functions) =
   and float_t    = L.double_type context
   and str_t      = L.pointer_type (L.i8_type context)
   and void_t     = L.void_type   context 
-  and list_t t   = L.struct_type context [| L.i32_type context; (L.pointer_type t) |]
-  and ptr_list_t t = L.pointer_type (L.struct_type context [| L.i32_type context; (L.pointer_type t) |])
+  and list_t t   = L.struct_type context [| L.pointer_type (L.i32_type context); (L.pointer_type t) |]
+  and ptr_list_t t = L.pointer_type (L.struct_type context [| L.pointer_type (L.i32_type context); (L.pointer_type t) |])
   in
 
   (* Return the LLVM type for a AP++ type *)
@@ -149,8 +149,10 @@ let translate (globals, functions) =
      let listArrayPtr = L.build_struct_gep listLoad 1 "list_array_ptr" build in
      (* listArrayLoad = int32* *)
      let listArrayLoad = L.build_load listArrayPtr "list_array_load" build in
+     (* listSizePtrPtr = int** *)
+     let listSizePtrPtr = L.build_struct_gep listLoad 0 "list_size_ptr_ptr" build in 
      (* listSizePtr = int* *)
-     let listSizePtr = L.build_struct_gep listLoad 0 "list_size" build in 
+     let listSizePtr = L.build_load listSizePtrPtr "list_size_ptr" build in
      (* listSize = int32 *)
      let listSize = L.build_load listSizePtr "list_size" build in
      (* nextIndex = int32 *)
@@ -176,7 +178,11 @@ let translate (globals, functions) =
        let listLoad = L.build_load listPtr "list_load" build in
        let listArrayPtr = L.build_struct_gep listLoad 1 "list_array_ptr" build in
        let listArrayLoad = L.build_load listArrayPtr "list_array_load" build in
-       let listSizePtr = L.build_struct_gep listLoad 0 "list_size_ptr" build in 
+       (* listSizePtrPtr = int** *)
+       let listSizePtrPtr = L.build_struct_gep listLoad 0 "list_size_ptr_ptr" build in 
+       (* listSizePtr = int* *)
+       let listSizePtr = L.build_load listSizePtrPtr "list_size_ptr" build in
+       (* listSize = int32 *)
        let listSize = L.build_load listSizePtr "list_size" build in
        let listSizeMin1 = L.build_sub listSize (L.const_int i32_t 1) "dec_size" build in
        let lastElementPtr = L.build_gep listArrayLoad [| listSizeMin1 |] "list_arry_next_element_ptr" build in
@@ -196,7 +202,11 @@ let translate (globals, functions) =
      let listPtr = L.build_alloca (L.pointer_type (list_t ltype)) "list_ptr_alloc" build in
      ignore(L.build_store (L.param def 0) listPtr build);
      let listLoad = L.build_load listPtr "list_load" build in
-     let listSizePtr = L.build_struct_gep listLoad 0 "list_size" build in 
+     (* listSizePtrPtr = int** *)
+     let listSizePtrPtr = L.build_struct_gep listLoad 0 "list_size_ptr_ptr" build in 
+     (* listSizePtr = int* *)
+     let listSizePtr = L.build_load listSizePtrPtr "list_size_ptr" build in
+     (* listSize = int32 *)
      let listSize = L.build_load listSizePtr "list_size" build in
      ignore(L.build_ret listSize build);
      StringMap.add defName def m in 
@@ -204,9 +214,11 @@ let translate (globals, functions) =
 
   let init_list builder list_ptr list_type = 
     (* initialize size to 0 *)
-    let sizePtr = L.build_struct_gep list_ptr 0 "list.size" builder in 
-       ignore(L.build_store (L.const_int i32_t 0) sizePtr builder);
-    (* initialize array *)
+    let sizePtrPtr = L.build_struct_gep list_ptr 0 "list_size_ptr" builder in 
+       let sizePtr = L.build_alloca i32_t "list_size" builder in
+       let _ = L.build_store (L.const_int i32_t 0) sizePtr builder in
+       ignore(L.build_store sizePtr sizePtrPtr builder);
+      (* initialize array *)
     let listArrayPtr = L.build_struct_gep list_ptr 1 "list.arry" builder in 
      (* TODO: allocate nothing and have list grow dynamically *)
       let p = L.build_array_alloca (ltype_of_typ list_type) (L.const_int i32_t 1000) "p" builder in
