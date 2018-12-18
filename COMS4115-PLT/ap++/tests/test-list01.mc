@@ -45,6 +45,7 @@ void print_test(list<int> l, int idx) {
 }
 */
 
+/*
 int main()
 {
   list<int> a;
@@ -52,5 +53,18 @@ int main()
   for (i=0; i<10; i=i+1) {
     list_push(a, i);
   }
+  return 0;
+}*/
+
+int main()
+{
+  list<int> a;
+  list<int> b;
+  int i;
+  for (i=0; i<10; i=i+1) {
+    list_push(a, i);
+  }
+  b = list_slice(a, 0, 2);
+  printi(b[1]);
   return 0;
 }

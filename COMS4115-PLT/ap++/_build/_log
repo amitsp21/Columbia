@@ -26,32 +26,26 @@ ocamlfind ocamldep -package llvm -package llvm.analysis -modules semant.ml > sem
 # Target: codegen.cmo, tags: { package(llvm), package(llvm.analysis), warn(+a-4), byte, compile, extension:cmo, extension:ml, file:codegen.cmo, file:codegen.ml, implem, ocaml, quiet, traverse }
 ocamlfind ocamlc -c -w +a-4 -package llvm -package llvm.analysis -o codegen.cmo codegen.ml
 + ocamlfind ocamlc -c -w +a-4 -package llvm -package llvm.analysis -o codegen.cmo codegen.ml
-File "codegen.ml", line 284, characters 4-466:
+File "codegen.ml", line 370, characters 4-466:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a case that is not matched:
 Mod
-File "codegen.ml", line 254, characters 44-4765:
-Warning 8: this pattern-matching is not exhaustive.
-Here is an example of a case that is not matched:
-SListSlice (_, _, _)
-File "codegen.ml", line 373, characters 27-2337:
+File "codegen.ml", line 430, characters 6-164:
+Warning 10: this expression should have type unit.
+File "codegen.ml", line 457, characters 27-2372:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a case that is not matched:
 (SContinue|SBreak)
-File "codegen.ml", line 129, characters 9-22:
+File "codegen.ml", line 155, characters 9-22:
 Warning 26: unused variable listAllocSize.
-File "codegen.ml", line 139, characters 9-24:
+File "codegen.ml", line 165, characters 9-24:
 Warning 26: unused variable nextElementLoad.
 # Target: scanner.cmo, tags: { package(llvm), package(llvm.analysis), warn(+a-4), byte, compile, extension:cmo, extension:ml, file:scanner.cmo, file:scanner.ml, implem, ocaml, quiet, traverse }
 ocamlfind ocamlc -c -w +a-4 -package llvm -package llvm.analysis -o scanner.cmo scanner.ml
 # Target: semant.cmo, tags: { package(llvm), package(llvm.analysis), warn(+a-4), byte, compile, extension:cmo, extension:ml, file:semant.cmo, file:semant.ml, implem, ocaml, quiet, traverse }
 ocamlfind ocamlc -c -w +a-4 -package llvm -package llvm.analysis -o semant.cmo semant.ml
 + ocamlfind ocamlc -c -w +a-4 -package llvm -package llvm.analysis -o semant.cmo semant.ml
-File "semant.ml", line 94, characters 19-3098:
-Warning 8: this pattern-matching is not exhaustive.
-Here is an example of a case that is not matched:
-ListSlice (_, _, _)
-File "semant.ml", line 188, characters 25-1216:
+File "semant.ml", line 195, characters 25-1216:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a case that is not matched:
 (Continue|Break)
@@ -68,32 +62,26 @@ ocamlfind ocamlopt -c -w +a-4 -package llvm -package llvm.analysis -o parser.cmx
 # Target: codegen.cmx, tags: { package(llvm), package(llvm.analysis), warn(+a-4), compile, extension:cmx, extension:ml, file:codegen.cmx, file:codegen.ml, implem, native, ocaml, quiet, traverse }
 ocamlfind ocamlopt -c -w +a-4 -package llvm -package llvm.analysis -o codegen.cmx codegen.ml
 + ocamlfind ocamlopt -c -w +a-4 -package llvm -package llvm.analysis -o codegen.cmx codegen.ml
-File "codegen.ml", line 284, characters 4-466:
+File "codegen.ml", line 370, characters 4-466:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a case that is not matched:
 Mod
-File "codegen.ml", line 254, characters 44-4765:
-Warning 8: this pattern-matching is not exhaustive.
-Here is an example of a case that is not matched:
-SListSlice (_, _, _)
-File "codegen.ml", line 373, characters 27-2337:
+File "codegen.ml", line 430, characters 6-164:
+Warning 10: this expression should have type unit.
+File "codegen.ml", line 457, characters 27-2372:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a case that is not matched:
 (SContinue|SBreak)
-File "codegen.ml", line 129, characters 9-22:
+File "codegen.ml", line 155, characters 9-22:
 Warning 26: unused variable listAllocSize.
-File "codegen.ml", line 139, characters 9-24:
+File "codegen.ml", line 165, characters 9-24:
 Warning 26: unused variable nextElementLoad.
 # Target: scanner.cmx, tags: { package(llvm), package(llvm.analysis), warn(+a-4), compile, extension:cmx, extension:ml, file:scanner.cmx, file:scanner.ml, implem, native, ocaml, quiet, traverse }
 ocamlfind ocamlopt -c -w +a-4 -package llvm -package llvm.analysis -o scanner.cmx scanner.ml
 # Target: semant.cmx, tags: { package(llvm), package(llvm.analysis), warn(+a-4), compile, extension:cmx, extension:ml, file:semant.cmx, file:semant.ml, implem, native, ocaml, quiet, traverse }
 ocamlfind ocamlopt -c -w +a-4 -package llvm -package llvm.analysis -o semant.cmx semant.ml
 + ocamlfind ocamlopt -c -w +a-4 -package llvm -package llvm.analysis -o semant.cmx semant.ml
-File "semant.ml", line 94, characters 19-3098:
-Warning 8: this pattern-matching is not exhaustive.
-Here is an example of a case that is not matched:
-ListSlice (_, _, _)
-File "semant.ml", line 188, characters 25-1216:
+File "semant.ml", line 195, characters 25-1216:
 Warning 8: this pattern-matching is not exhaustive.
 Here is an example of a case that is not matched:
 (Continue|Break)

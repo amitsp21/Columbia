@@ -13,8 +13,7 @@ diff -b test-helloworld.out tests/test-helloworld.out > test-helloworld.diff
 /usr/local/opt/llvm/bin/llc -relocation-model=pic test-list01.ll > test-list01.s
 cc -o test-list01.exe test-list01.s printbig.o
 ./test-list01.exe
-diff -b test-list01.out tests/test-list01.out > test-list01.diff
-FAILED test-list01.out differs from tests/test-list01.out
+./testall.sh: line 63: 70113 Segmentation fault: 11  ./test-list01.exe
 ###### FAILED
 
 ###### Testing test-minusminus01

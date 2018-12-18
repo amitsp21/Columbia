@@ -44,6 +44,7 @@ type token =
   | LIST_POP
   | LIST_SIZE
   | HASH
+  | LIST_SLICE
   | ILITERAL of (int)
   | BLITERAL of (bool)
   | SLITERAL of (string)
