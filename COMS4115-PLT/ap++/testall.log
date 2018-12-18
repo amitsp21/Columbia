@@ -17,6 +17,30 @@ diff -b test-list01.out tests/test-list01.out > test-list01.diff
 FAILED test-list01.out differs from tests/test-list01.out
 ###### FAILED
 
+###### Testing test-list02
+./ap_plusplus.native tests/test-list02.mc > test-list02.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-list02.ll > test-list02.s
+cc -o test-list02.exe test-list02.s printbig.o
+./test-list02.exe
+diff -b test-list02.out tests/test-list02.out > test-list02.diff
+###### SUCCESS
+
+###### Testing test-list03
+./ap_plusplus.native tests/test-list03.mc > test-list03.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-list03.ll > test-list03.s
+cc -o test-list03.exe test-list03.s printbig.o
+./test-list03.exe
+diff -b test-list03.out tests/test-list03.out > test-list03.diff
+###### SUCCESS
+
+###### Testing test-list04
+./ap_plusplus.native tests/test-list04.mc > test-list04.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-list04.ll > test-list04.s
+cc -o test-list04.exe test-list04.s printbig.o
+./test-list04.exe
+diff -b test-list04.out tests/test-list04.out > test-list04.diff
+###### SUCCESS
+
 ###### Testing test-minusminus01
 ./ap_plusplus.native tests/test-minusminus01.mc > test-minusminus01.ll
 /usr/local/opt/llvm/bin/llc -relocation-model=pic test-minusminus01.ll > test-minusminus01.s

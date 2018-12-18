@@ -344,31 +344,57 @@ define i32 @main() {
 entry:
   %a = alloca { i32, i32* }
   %list.size = getelementptr inbounds { i32, i32* }, { i32, i32* }* %a, i32 0, i32 0
-  %tmp = alloca i32
-  store i32 0, i32* %tmp
-  %tmp1 = load i32, i32* %tmp
-  store i32 %tmp1, i32* %list.size
+  store i32 0, i32* %list.size
   %list.arry = getelementptr inbounds { i32, i32* }, { i32, i32* }* %a, i32 0, i32 1
   %p = alloca i32, i32 1000
   store i32* %p, i32** %list.arry
   %b = alloca { i32, i32* }
-  %list.size2 = getelementptr inbounds { i32, i32* }, { i32, i32* }* %b, i32 0, i32 0
-  %tmp3 = alloca i32
-  store i32 0, i32* %tmp3
-  %tmp4 = load i32, i32* %tmp3
-  store i32 %tmp4, i32* %list.size2
-  %list.arry5 = getelementptr inbounds { i32, i32* }, { i32, i32* }* %b, i32 0, i32 1
+  %list.size1 = getelementptr inbounds { i32, i32* }, { i32, i32* }* %b, i32 0, i32 0
+  store i32 0, i32* %list.size1
+  %list.arry2 = getelementptr inbounds { i32, i32* }, { i32, i32* }* %b, i32 0, i32 1
+  %p3 = alloca i32, i32 1000
+  store i32* %p3, i32** %list.arry2
+  %c = alloca { i32, i32* }
+  %list.size4 = getelementptr inbounds { i32, i32* }, { i32, i32* }* %c, i32 0, i32 0
+  store i32 0, i32* %list.size4
+  %list.arry5 = getelementptr inbounds { i32, i32* }, { i32, i32* }* %c, i32 0, i32 1
   %p6 = alloca i32, i32 1000
   store i32* %p6, i32** %list.arry5
-  call void @list_pushint({ i32, i32* }* %a, i32 1)
-  call void @list_pushint({ i32, i32* }* %a, i32 2)
-  %a7 = load { i32, i32* }, { i32, i32* }* %a
-  store { i32, i32* } %a7, { i32, i32* }* %b
-  call void @list_pushint({ i32, i32* }* %b, i32 3)
+  %i = alloca i32
+  store i32 0, i32* %i
+  br label %while
+
+while:                                            ; preds = %while_body, %entry
+  %i9 = load i32, i32* %i
+  %tmp10 = icmp slt i32 %i9, 5
+  br i1 %tmp10, label %while_body, label %merge
+
+while_body:                                       ; preds = %while
+  %i7 = load i32, i32* %i
+  call void @list_pushint({ i32, i32* }* %a, i32 %i7)
+  %i8 = load i32, i32* %i
+  %tmp = add i32 %i8, 1
+  store i32 %tmp, i32* %i
+  br label %while
+
+merge:                                            ; preds = %while
+  %new_list_ptr = alloca { i32, i32* }
+  %list.size11 = getelementptr inbounds { i32, i32* }, { i32, i32* }* %new_list_ptr, i32 0, i32 0
+  store i32 0, i32* %list.size11
+  %list.arry12 = getelementptr inbounds { i32, i32* }, { i32, i32* }* %new_list_ptr, i32 0, i32 1
+  %p13 = alloca i32, i32 1000
+  store i32* %p13, i32** %list.arry12
+  call void @list_sliceint({ i32, i32* }* %a, { i32, i32* }* %new_list_ptr, i32 2, i32 5)
+  %new_list = load { i32, i32* }, { i32, i32* }* %new_list_ptr
+  store { i32, i32* } %new_list, { i32, i32* }* %b
+  %a14 = load { i32, i32* }, { i32, i32* }* %a
+  store { i32, i32* } %a14, { i32, i32* }* %c
   %list_get = call i32 @list_getint({ i32, i32* }* %b, i32 0)
   %printf = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_get)
   %list_size = call i32 @list_sizeint({ i32, i32* }* %b)
-  %printf8 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_size)
+  %printf15 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_size)
+  %list_size16 = call i32 @list_sizeint({ i32, i32* }* %c)
+  %printf17 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt, i32 0, i32 0), i32 %list_size16)
   ret i32 0
 }
 
@@ -376,20 +402,17 @@ define void @print_test({ i32, i32* } %l, i32 %idx) {
 entry:
   %l1 = alloca { i32, i32* }
   %list.size = getelementptr inbounds { i32, i32* }, { i32, i32* }* %l1, i32 0, i32 0
-  %tmp = alloca i32
-  store i32 0, i32* %tmp
-  %tmp2 = load i32, i32* %tmp
-  store i32 %tmp2, i32* %list.size
+  store i32 0, i32* %list.size
   %list.arry = getelementptr inbounds { i32, i32* }, { i32, i32* }* %l1, i32 0, i32 1
   %p = alloca i32, i32 1000
   store i32* %p, i32** %list.arry
   store { i32, i32* } %l, { i32, i32* }* %l1
-  %idx3 = alloca i32
-  store i32 %idx, i32* %idx3
-  %idx4 = load i32, i32* %idx3
-  %list_get = call i32 @list_getint({ i32, i32* }* %l1, i32 %idx4)
+  %idx2 = alloca i32
+  store i32 %idx, i32* %idx2
+  %idx3 = load i32, i32* %idx2
+  %list_get = call i32 @list_getint({ i32, i32* }* %l1, i32 %idx3)
   %printf = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt.3, i32 0, i32 0), i32 %list_get)
   %list_size = call i32 @list_sizeint({ i32, i32* }* %l1)
-  %printf5 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt.3, i32 0, i32 0), i32 %list_size)
+  %printf4 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @fmt.3, i32 0, i32 0), i32 %list_size)
   ret void
 }

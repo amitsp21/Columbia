@@ -52,11 +52,13 @@ int main()
   }*/
   list<int> a;
   list<int> b;
-  list_push(a, 1);
-  list_push(a, 2);
-  b = a;
-  list_push(b, 3);
+  list<int> c;
+  int i;
+  for (i=0; i<5; ++i) { list_push(a, i); }
+  b = a[2:5];
+  c = a;
   printi(b[0]);
   printi(#b);
+  printi(#c);
   return 0;
 }

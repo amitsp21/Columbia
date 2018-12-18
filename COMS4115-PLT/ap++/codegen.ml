@@ -204,11 +204,8 @@ let translate (globals, functions) =
 
   let init_list builder list_ptr list_type = 
     (* initialize size to 0 *)
-    let sizePtrStruct = L.build_struct_gep list_ptr 0 "list.size" builder in 
-       let sizePtr = L.build_alloca i32_t "tmp" builder in 
-       let _ = L.build_store (L.const_int i32_t 0) sizePtr builder in
-       let sizeVal = L.build_load sizePtr "tmp" builder in
-       ignore(L.build_store sizeVal sizePtrStruct builder);
+    let sizePtr = L.build_struct_gep list_ptr 0 "list.size" builder in 
+       ignore(L.build_store (L.const_int i32_t 0) sizePtr builder);
     (* initialize array *)
     let listArrayPtr = L.build_struct_gep list_ptr 1 "list.arry" builder in 
      (* TODO: allocate nothing and have list grow dynamically *)
