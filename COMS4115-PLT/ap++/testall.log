@@ -143,3 +143,11 @@ cc -o test-plusplus02.exe test-plusplus02.s printbig.o
 ./test-plusplus02.exe
 diff -b test-plusplus02.out tests/test-plusplus02.out > test-plusplus02.diff
 ###### SUCCESS
+
+###### Testing test-quicksort
+./ap_plusplus.native tests/test-quicksort.mc > test-quicksort.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-quicksort.ll > test-quicksort.s
+cc -o test-quicksort.exe test-quicksort.s printbig.o
+./test-quicksort.exe
+diff -b test-quicksort.out tests/test-quicksort.out > test-quicksort.diff
+###### SUCCESS

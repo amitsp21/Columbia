@@ -165,7 +165,7 @@ let check (globals, functions) =
           let fd = find_func fname in
           let param_length = List.length fd.formals in
           if List.length args != param_length then
-            raise (Failure ("illegal arg len"))
+            raise (Failure ("illegal arg len " ^ fname))
           else let check_call (ft, _) e = 
             let (et, e') = expr e in 
             let err = "illegal argument found"
