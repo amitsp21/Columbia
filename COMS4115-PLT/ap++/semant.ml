@@ -154,6 +154,13 @@ let check (globals, functions) =
            let list_type = match (type_of_identifier var) with
               List x -> x
               | _ -> raise (Failure ("list_slice operand not a list"))
+           in 
+           let _ = match (fst e1', fst e2') with
+               (Int, Int) 
+             | (Void, Int) 
+             | (Int, Void)
+             | (Void, Void) -> Int
+             |  _ -> raise (Failure ("invalid list index arguments for list slice"))
            in (type_of_identifier var, SListSlice(list_type, var, e1', e2'))
       | ListFind (var, e) ->
          let (t, e') = expr e in
@@ -163,18 +170,18 @@ let check (globals, functions) =
          in (Int, SListFind(list_type, var, (t, e')))
       | ListLiteral vals ->
          let (t', _) = expr (List.hd vals) in
-(*          let vals' = List.map expr vals in *)
          let map_func lit = expr lit in
          let vals' = List.map map_func vals in
+         (* TODO: check that all vals are of the same type *)
          (List t', SListLiteral(t', vals'))
       | Call(fname, args) -> 
           let fd = find_func fname in
           let param_length = List.length fd.formals in
           if List.length args != param_length then
-            raise (Failure ("illegal arg len " ^ fname))
+            raise (Failure ("illegal argument length " ^ fname))
           else let check_call (ft, _) e = 
             let (et, e') = expr e in 
-            let err = "illegal argument found"
+            let err = "illegal argument found in" ^ fname
             in (check_assign ft et err, e')
           in 
           let args' = List.map2 check_call fd.formals args
