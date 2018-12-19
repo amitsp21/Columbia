@@ -346,7 +346,7 @@ let list_find : L.llvalue StringMap.t =
          if_builder
        in
        let while_builder = build_while build loop_cond loop_body def in
-       ignore(L.build_ret (L.const_int i32_t 0) while_builder);
+       ignore(L.build_ret (L.const_int i32_t (-1)) while_builder);
        StringMap.add defName def m in 
      List.fold_left list_find_ty StringMap.empty [ A.Bool; A.Int; A.Float ] in
 (* 
