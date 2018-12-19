@@ -161,6 +161,12 @@ let check (globals, functions) =
              List x when t = x -> x
              | _ -> raise (Failure ("list_find operand error"))
          in (Int, SListFind(list_type, var, (t, e')))
+      | ListLiteral vals ->
+         let (t', _) = expr (List.hd vals) in
+(*          let vals' = List.map expr vals in *)
+         let map_func lit = expr lit in
+         let vals' = List.map map_func vals in
+         (List t', SListLiteral(t', vals'))
       | Call(fname, args) -> 
           let fd = find_func fname in
           let param_length = List.length fd.formals in
@@ -196,7 +202,6 @@ let check (globals, functions) =
       and err = "list type and expression type do not match"
       in if t' != (get_list_type l) then raise (Failure err) else (t', e') 
     in
-
     (* Return a semantically-checked statement i.e. containing sexprs *)
     let rec check_stmt = function
         Expr e -> SExpr (expr e)
@@ -218,7 +223,7 @@ let check (globals, functions) =
       | Return e -> let (t, e') = expr e in
         if t = func.typ then SReturn (t, e') 
         else raise (Failure ("wrong return type"))
-	    
+
 	    (* A block is correct if each statement is correct and nothing
 	       follows any Return statement.  Nested blocks are flattened. *)
       | Block sl -> 

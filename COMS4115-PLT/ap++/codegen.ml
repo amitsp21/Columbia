@@ -428,23 +428,6 @@ let translate (globals, functions) =
      StringMap.add defName def m in 
   List.fold_left list_insert_ty StringMap.empty [ A.Bool; A.Int; A.Float ] in
 
- (*
-#intializing pointers
-   left = 0
-   right = len(alist)-1
-
-   #condition for termination
-   while left<right:
-
-       #swapping
-       temp = alist[left]
-       alist[left] = alist[right]
-       alist[right] = temp
-
-       #updating pointers
-       left += 1
-       right -= 1
- *)
  (* void list_insert(list, int idx, typ value) *)
   let list_reverse : L.llvalue StringMap.t = 
     let list_reverse_ty m typ =
@@ -633,9 +616,18 @@ let translate (globals, functions) =
        let new_list_ptr = L.build_alloca (list_t ltype) "new_list_ptr" builder in
        let _ = init_list builder new_list_ptr list_type in
        let _ = L.build_call ((StringMap.find (type_str list_type)) list_slice) [| (lookup id); new_list_ptr; (expr builder e1); (expr builder e2) |] "" builder in
-       (L.build_load new_list_ptr "new_list" builder);
+       L.build_load new_list_ptr "new_list" builder
     | SListFind (list_type, id, e) ->
       L.build_call (StringMap.find (type_str list_type) list_find) [| (lookup id); (expr builder e) |] "list_find" builder
+    | SListLiteral (list_type, literals) ->
+       let ltype = (ltype_of_typ list_type) in
+       let new_list_ptr = L.build_alloca (list_t ltype) "new_list_ptr" builder in
+       let _ = init_list builder new_list_ptr list_type in
+       let map_func literal = 
+          ignore(L.build_call (StringMap.find (type_str list_type) list_push) [| new_list_ptr; (expr builder literal) |] "" builder);
+       in
+       let _ = List.rev (List.map map_func literals) in
+       L.build_load new_list_ptr "new_list" builder
     | SCall ("prints", [e]) ->
       L.build_call printf_func [| str_format_str ; (expr builder e) |] "printf" builder
     | SCall ("printi", [e]) ->

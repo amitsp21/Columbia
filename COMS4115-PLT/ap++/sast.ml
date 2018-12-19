@@ -16,6 +16,7 @@ and sx =
   | SListSize of typ * string
   | SListSlice of typ * string * sexpr * sexpr
   | SListFind of typ * string * sexpr
+  | SListLiteral of typ * sexpr list
   | SNoexpr
 
 type sstmt =

@@ -141,6 +141,7 @@ expr:
 | LIST_SLICE LPAREN ID COMMA expr COMMA expr RPAREN { ListSlice($3, $5, $7) }
 | ID LBRACK expr_opt COLON expr_opt RBRACK { ListSlice($1, $3, $5) }
 | LIST_FIND LPAREN ID COMMA expr RPAREN    { ListFind($3, $5) }
+| LBRACK args_opt RBRACK                   { ListLiteral($2) }
 
 args_opt:
     /* nothing */ { [] }

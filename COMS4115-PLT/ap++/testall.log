@@ -104,6 +104,14 @@ cc -o test-list12.exe test-list12.s printbig.o
 diff -b test-list12.out tests/test-list12.out > test-list12.diff
 ###### SUCCESS
 
+###### Testing test-list13
+./ap_plusplus.native tests/test-list13.mc > test-list13.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-list13.ll > test-list13.s
+cc -o test-list13.exe test-list13.s printbig.o
+./test-list13.exe
+diff -b test-list13.out tests/test-list13.out > test-list13.diff
+###### SUCCESS
+
 ###### Testing test-minusminus01
 ./ap_plusplus.native tests/test-minusminus01.mc > test-minusminus01.ll
 /usr/local/opt/llvm/bin/llc -relocation-model=pic test-minusminus01.ll > test-minusminus01.s
