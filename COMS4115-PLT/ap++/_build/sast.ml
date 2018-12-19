@@ -29,9 +29,9 @@ type sstmt =
 | SListSet of typ * string * sexpr * sexpr
 | SListClear of typ * string
 | SListRemove of string * sexpr
+| SListInsert of string * sexpr * sexpr
 (* 
 | SListRev of typ * string
-| SListInsert of typ * string * sexpr * sexpr
  *)
 
 type sfunc_decl = {

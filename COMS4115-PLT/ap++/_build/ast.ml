@@ -35,8 +35,9 @@ type stmt =
 | ListSet of string * expr * expr
 | ListClear of string
 | ListRemove of string * expr
-(* | ListRev of string
 | ListInsert of string * expr * expr
+(* | ListRev of string
+
  *)
 
 type func_decl = {
