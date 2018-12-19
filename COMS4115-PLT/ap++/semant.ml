@@ -206,8 +206,8 @@ let check (globals, functions) =
           SListSet(get_list_type var, var, check_int_expr e1, check_match_list_type_expr var e2)
       | ListClear var ->
           SListClear(get_list_type var, var)
-(*       | ListRemove (var, e) ->
-        SListRemove(var, check_match_list_type_expr var e) *)
+      | ListRemove (var, e) ->
+         SListRemove(var, check_match_list_type_expr var e)
 (*       | ListReverse var -> SListClear(get_list_type var, var)
       | ListInsert (var, e1, e2) -> SListClear(get_list_type var, var)
       | ListRemove (var, e) -> SListClear(get_list_type var, var) *)

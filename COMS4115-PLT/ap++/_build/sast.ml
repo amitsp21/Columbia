@@ -28,8 +28,8 @@ type sstmt =
 | SListPush of string * sexpr
 | SListSet of typ * string * sexpr * sexpr
 | SListClear of typ * string
-(* 
 | SListRemove of string * sexpr
+(* 
 | SListRev of typ * string
 | SListInsert of typ * string * sexpr * sexpr
  *)
