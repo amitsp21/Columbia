@@ -21,6 +21,7 @@ type expr =
   | ListPop of string
   | ListSize of string
   | ListSlice of string * expr * expr
+  | ListFind of string * expr
   | Noexpr
 
 type stmt =

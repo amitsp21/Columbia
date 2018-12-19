@@ -50,6 +50,7 @@ rule token = parse
 | "list_rev" { LIST_REVERSE }
 | "list_insert" { LIST_INSERT }
 | "list_remove" { LIST_REMOVE }
+| "list_find" { LIST_FIND }
 | "list" { LIST }
 | ['0'-'9']+ as lit { ILITERAL(int_of_string lit) }
 | "true"	{ BLITERAL(true) }

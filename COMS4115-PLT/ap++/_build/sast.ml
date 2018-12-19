@@ -15,6 +15,7 @@ and sx =
   | SListPop of typ * string
   | SListSize of typ * string
   | SListSlice of typ * string * sexpr * sexpr
+  | SListFind of typ * string * sexpr
   | SNoexpr
 
 type sstmt =
@@ -27,9 +28,11 @@ type sstmt =
 | SListPush of string * sexpr
 | SListSet of typ * string * sexpr * sexpr
 | SListClear of typ * string
-(* | SListRev of typ * string
+(* 
+| SListRemove of string * sexpr
+| SListRev of typ * string
 | SListInsert of typ * string * sexpr * sexpr
-| SListRemove of typ * string * sexpr *)
+ *)
 
 type sfunc_decl = {
     styp : typ;

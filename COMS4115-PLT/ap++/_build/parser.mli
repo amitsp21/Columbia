@@ -47,6 +47,7 @@ type token =
   | LIST_REVERSE
   | LIST_INSERT
   | LIST_REMOVE
+  | LIST_FIND
   | ILITERAL of (int)
   | BLITERAL of (bool)
   | SLITERAL of (string)

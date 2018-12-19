@@ -10,7 +10,7 @@ open Ast
 %token NOT AND OR
 %token EQ NEQ LT LEQ GT GEQ
 %token RETURN IF ELSE ELSEIF WHILE FOR INT BOOL FLOAT STRING VOID
-%token LIST_PUSH LIST_GET LIST_SET LIST_POP LIST_SIZE HASH LIST_SLICE LIST_CLEAR LIST_REVERSE LIST_INSERT LIST_REMOVE 
+%token LIST_PUSH LIST_GET LIST_SET LIST_POP LIST_SIZE HASH LIST_SLICE LIST_CLEAR LIST_REVERSE LIST_INSERT LIST_REMOVE LIST_FIND 
 %token <int> ILITERAL
 %token <bool> BLITERAL
 %token <string> SLITERAL
@@ -97,9 +97,10 @@ stmt:
 | LIST_SET LPAREN ID COMMA expr COMMA expr RPAREN SEMICOLON { ListSet($3, $5, $7) }
 | ID LBRACK expr RBRACK ASSIGN expr SEMICOLON         { ListSet($1, $3, $6) }
 | LIST_CLEAR LPAREN ID RPAREN SEMICOLON     { ListClear($3) }
-/* | LIST_REVERSE LPAREN ID RPAREN SEMICOLON       { ListReverse($3) }
-| LIST_INSERT LPAREN ID COMMA expr COMMA expr SEMICOLON { ListInsert($3, $5, $7) }
-| LIST_REMOVE LPAREN ID COMMA expr SEMICOLON { ListRemove($3, $5) } */
+/* 
+ | LIST_REMOVE LPAREN ID COMMA expr SEMICOLON { ListRemove($3, $5) } 
+ | LIST_INSERT LPAREN ID COMMA expr COMMA expr SEMICOLON { ListInsert($3, $5, $7) }
+ | LIST_REVERSE LPAREN ID RPAREN SEMICOLON       { ListReverse($3) }*/
 
 expr_opt:
   /* nothing */ { Noexpr }
@@ -140,6 +141,7 @@ expr:
 | HASH ID                                 { ListSize($2) }
 | LIST_SLICE LPAREN ID COMMA expr COMMA expr RPAREN { ListSlice($3, $5, $7) }
 | ID LBRACK expr_opt COLON expr_opt RBRACK { ListSlice($1, $3, $5) }
+| LIST_FIND LPAREN ID COMMA expr RPAREN    { ListFind($3, $5) }
 
 args_opt:
     /* nothing */ { [] }

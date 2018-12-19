@@ -80,16 +80,50 @@ let translate (globals, functions) =
        let pred_bb = L.append_block context "while" func_def in
        ignore(L.build_br pred_bb builder);
  
-        let body_bb = L.append_block context "while_body" func_def in
+       let body_bb = L.append_block context "while_body" func_def in
        add_terminal (build_body (L.builder_at_end context body_bb)) (L.build_br pred_bb);
  
-        let pred_builder = L.builder_at_end context pred_bb in
+       let pred_builder = L.builder_at_end context pred_bb in
        let bool_val = build_predicate pred_builder in
  
-        let merge_bb = L.append_block context "merge" func_def in
+       let merge_bb = L.append_block context "merge" func_def in
        ignore(L.build_cond_br bool_val body_bb merge_bb pred_builder);
        L.builder_at_end context merge_bb
    in
+
+(*
+         let bool_val = expr builder predicate in
+         let merge_bb = L.append_block context "merge" the_function in
+         let build_br_merge = L.build_br merge_bb in (* partial function *)
+
+         let then_bb = L.append_block context "then" the_function in
+         add_terminal (stmt (L.builder_at_end context then_bb) then_stmt)
+         build_br_merge;
+
+         let else_bb = L.append_block context "else" the_function in
+         add_terminal (stmt (L.builder_at_end context else_bb) else_stmt)
+         build_br_merge;
+
+         ignore(L.build_cond_br bool_val then_bb else_bb builder);
+         L.builder_at_end context merge_bb
+
+*)
+   let build_if builder build_predicate build_then_stmt build_else_stmt func_def =
+       let bool_val = build_predicate builder in
+       let merge_bb = L.append_block context "merge" func_def in
+       let build_br_merge = L.build_br merge_bb in (* partial function *)
+
+       let then_bb = L.append_block context "then" func_def in
+       add_terminal (build_then_stmt (L.builder_at_end context then_bb)) 
+       build_br_merge;
+
+       let else_bb = L.append_block context "else" func_def in
+       add_terminal (build_else_stmt (L.builder_at_end context else_bb)) 
+       build_br_merge;
+
+       ignore(L.build_cond_br bool_val then_bb else_bb builder);
+       L.builder_at_end context merge_bb
+  in
   (* ltype list_get(list, index) *)
   let list_get : L.llvalue StringMap.t = 
     let list_get_ty m typ = 
@@ -248,7 +282,7 @@ let translate (globals, functions) =
         let _ = L.build_store (L.param def 3) idxPtr2 build in 
         let idx2 = L.build_load idxPtr2 "idx_load" build in
  
-         (* loop counter init: 0 *)
+        (* loop counter init: 0 *)
         let loop_cnt_ptr = L.build_alloca i32_t "loop_cnt" build in
         let _ = L.build_store (L.const_int i32_t 0) loop_cnt_ptr build in
         (* loop upper bound: j-i *)
@@ -273,6 +307,100 @@ let translate (globals, functions) =
      in 
      List.fold_left list_slice_ty StringMap.empty [ A.Bool; A.Int; A.Float; A.String ] in
 
+let list_find : L.llvalue StringMap.t = 
+    let list_find_ty m typ =
+       let ltype = (ltype_of_typ typ) in 
+       let defName = (type_str typ) in
+       let def = L.define_function ("list_find" ^ defName) (L.function_type i32_t [| L.pointer_type (list_t ltype); ltype |]) the_module in
+       let build = L.builder_at_end context (L.entry_block def) in
+       let listPtr = L.build_alloca (L.pointer_type (list_t ltype)) "list_ptr_alloc" build in
+       ignore(L.build_store (L.param def 0) listPtr build);
+       let findValuePtr = L.build_alloca ltype "find_val_alloc" build in
+       ignore(L.build_store (L.param def 1) findValuePtr build);
+       let findValue = L.build_load findValuePtr "find_val" build in
+       let listLoad = L.build_load listPtr "list_load" build in
+       let listSizePtrPtr = L.build_struct_gep listLoad 0 "list_size_ptr_ptr" build in 
+       let listSizePtr = L.build_load listSizePtrPtr "list_size_ptr" build in
+       let listSize = L.build_load listSizePtr "list_size" build in
+       let loop_idx_ptr = L.build_alloca i32_t "loop_cnt" build in
+       let _ = L.build_store (L.const_int i32_t 0) loop_idx_ptr build in
+       let loop_upper_bound = listSize in
+       let loop_cond _builder = 
+          L.build_icmp L.Icmp.Slt (L.build_load loop_idx_ptr "loop_iter_cnt" _builder) loop_upper_bound "loop_cond" _builder
+       in
+       let loop_body _builder = 
+         let index = L.build_load loop_idx_ptr "to_idx" _builder in
+         let get_val = L.build_call (StringMap.find (type_str typ) list_get) [| listLoad; index |] "list_get" _builder in
+         let if_cond _builder2 = 
+            (match typ with
+                A.Int | A.Bool -> L.build_icmp L.Icmp.Eq 
+              | A.Float -> L.build_fcmp L.Fcmp.Oeq
+              | _ -> raise (Failure ("list_find does not support this list type"))
+            ) get_val findValue "if_cond" _builder2 
+         in
+         let if_body _builder2 = ignore(L.build_ret index _builder2); _builder2 in
+         let else_body _builder2 = ignore(L.const_int i32_t 0); _builder2 in
+         let if_builder = build_if _builder if_cond if_body else_body def in
+         let indexIncr = L.build_add (L.build_load loop_idx_ptr "loop_idx" if_builder) (L.const_int i32_t 1) "loop_itr" if_builder in
+         let _ = L.build_store indexIncr loop_idx_ptr if_builder in 
+         if_builder
+       in
+       let while_builder = build_while build loop_cond loop_body def in
+       ignore(L.build_ret (L.const_int i32_t 0) while_builder);
+       StringMap.add defName def m in 
+     List.fold_left list_find_ty StringMap.empty [ A.Bool; A.Int; A.Float ] in
+(* 
+  (* void list_push(list, typ value) *)
+  let list_remove : L.llvalue StringMap.t = 
+    let list_remove_ty m typ =
+     let ltype = (ltype_of_typ typ) in 
+     let defName = (type_str typ) in
+     let def = L.define_function ("list_remove" ^ defName) (L.function_type void_t [| L.pointer_type (list_t ltype); ltype |]) the_module in
+     let build = L.builder_at_end context (L.entry_block def) in
+     (* listPtr = list** *)
+     let listPtr = L.build_alloca (L.pointer_type (list_t ltype)) "list_ptr_alloc" build in
+     (* store listPtr1*, listPtr2** *)
+     ignore(L.build_store (L.param def 0) listPtr build);
+     let removeIndexPtr = L.build_alloca ltype "rem_idx_alloc" build in
+     (* store int32, int32* *)
+     ignore(L.build_store (L.param def 1) removeIndexPtr build);
+     let removeIndex = L.build_load removeIndexPtr "remove_idx" builder in
+     (* load list**, listLoad = list* *)
+     let listLoad = L.build_load listPtr "list_load" build in
+     (* listArrayPtr = int32** *)
+     let listArrayPtr = L.build_struct_gep listLoad 1 "list_array_ptr" build in
+     (* listArrayLoad = int32* *)
+     let listArrayLoad = L.build_load listArrayPtr "list_array_load" build in
+     (* listSizePtrPtr = int** *)
+     let listSizePtrPtr = L.build_struct_gep listLoad 0 "list_size_ptr_ptr" build in 
+     (* listSizePtr = int* *)
+     let listSizePtr = L.build_load listSizePtrPtr "list_size_ptr" build in
+     (* listSize = int32 *)
+     let listSize = L.build_load listSizePtr "list_size" build in
+     (* loop counter init: 0 *)
+     let loop_idx_ptr = L.build_alloca i32_t "loop_cnt" build in
+     let _ = L.build_store removeIndex loop_idx_ptr build in
+     (* loop upper bound: listSize - 1 *)
+     let loop_upper_bound = L.build_sub listSize (L.const_int i32_t 1) "loop_upper_bound" build in
+     (* loop condition: cnt <= j-i *)
+     let loop_cond _builder = 
+          L.build_icmp L.Icmp.Slt (L.build_load loop_idx "loop_cnt" _builder) loop_upper_bound "loop_cond" _builder
+      in
+      let loop_body _builder = 
+        let curIndex = L.build_load loop_idx_ptr "cur_idx" _builder in
+        let shiftToIndex = L.build_sub curIndex (L.const_int i32_t 1) "shift_to_idx" _builder in
+        let get_val = L.build_call (StringMap.find (type_str typ) list_get) [| listPtr; curIndex |] "list_get" _builder in
+        let _ = L.build_call (StringMap.find (type_str typ) list_set) [| listPtr2; shiftToIndex; get_val |] "" _builder in
+        let _ = L.build_store (L.build_sub)
+        let indexIncr = L.build_add (L.build_load loop_cnt_ptr "loop_cnt" _builder) (L.const_int i32_t 1) "loop_itr" _builder in
+        let _ = L.build_store indexIncr loop_cnt_ptr _builder in 
+        _builder
+     in
+     let while_builder = build_while build loop_cond loop_body def in
+     let _ = L.build_ret_void build in
+     StringMap.add defName def m in 
+  List.fold_left list_remove_ty StringMap.empty [ A.Bool; A.Int; A.Float; A.String ] in
+ *)
   (* Define each function (arguments and return type) so we can 
      call it even before we've created its body *)
   let function_decls : (L.llvalue * sfunc_decl) StringMap.t =
@@ -421,6 +549,8 @@ let translate (globals, functions) =
        let _ = init_list builder new_list_ptr list_type in
        let _ = L.build_call ((StringMap.find (type_str list_type)) list_slice) [| (lookup id); new_list_ptr; (expr builder e1); (expr builder e2) |] "" builder in
        (L.build_load new_list_ptr "new_list" builder);
+    | SListFind (list_type, id, e) ->
+      L.build_call (StringMap.find (type_str list_type) list_find) [| (lookup id); (expr builder e) |] "list_find" builder
     | SCall ("prints", [e]) ->
       L.build_call printf_func [| str_format_str ; (expr builder e) |] "printf" builder
     | SCall ("printi", [e]) ->
@@ -450,6 +580,8 @@ let translate (globals, functions) =
           ignore(L.build_call (StringMap.find (type_str list_type) list_set) [| (lookup id); (expr builder e1); (expr builder e2) |] "" builder); builder
       | SListClear (list_type, id) ->
           ignore(init_list builder (lookup id) list_type); builder
+  (*  | SListRemove (id, e) ->
+          ignore(L.build_call (StringMap.find (type_str (fst e)) list_remove) [| (lookup id); (expr builder e) |] "" builder); builder  *)
       | SExpr e -> ignore(expr builder e); builder 
       | SReturn e -> ignore(match fdecl.styp with
                               (* Special "return nothing" instr *)

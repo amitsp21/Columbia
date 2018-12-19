@@ -154,7 +154,13 @@ let check (globals, functions) =
            let list_type = match (type_of_identifier var) with
               List x -> x
               | _ -> raise (Failure ("list_slice operand not a list"))
-           in (type_of_identifier var, SListSlice(list_type, var, e1', e2'))    
+           in (type_of_identifier var, SListSlice(list_type, var, e1', e2'))
+      | ListFind (var, e) ->
+         let (t, e') = expr e in
+         let list_type = match (type_of_identifier var) with
+             List x when t = x -> x
+             | _ -> raise (Failure ("list_find operand error"))
+         in (Int, SListFind(list_type, var, (t, e')))
       | Call(fname, args) -> 
           let fd = find_func fname in
           let param_length = List.length fd.formals in
@@ -200,6 +206,8 @@ let check (globals, functions) =
           SListSet(get_list_type var, var, check_int_expr e1, check_match_list_type_expr var e2)
       | ListClear var ->
           SListClear(get_list_type var, var)
+(*       | ListRemove (var, e) ->
+        SListRemove(var, check_match_list_type_expr var e) *)
 (*       | ListReverse var -> SListClear(get_list_type var, var)
       | ListInsert (var, e1, e2) -> SListClear(get_list_type var, var)
       | ListRemove (var, e) -> SListClear(get_list_type var, var) *)
