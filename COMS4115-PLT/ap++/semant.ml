@@ -92,7 +92,7 @@ let check (globals, functions) =
 
     (* Return a semantically-checked expression, i.e., with a type *)
     let rec expr = function
-        ILiteral  l -> (Int, SILiteral l)
+        ILiteral l -> (Int, SILiteral l)
       | BLiteral l  -> (Bool, SBLiteral l)
       | FLiteral l -> (Float, SFLiteral l)
       | SLiteral l -> (String, SSLiteral l)
@@ -188,8 +188,8 @@ let check (globals, functions) =
     in
     let get_list_type l = 
       match (type_of_identifier l) with
-             List x -> x
-             | _ -> raise (Failure ("list_get operand not a list"))
+         List x -> x
+         | _ -> raise (Failure ("operand is not a list type"))
     in
     let check_match_list_type_expr l e = 
      let (t', e') = expr e
@@ -210,7 +210,8 @@ let check (globals, functions) =
          SListRemove(var, check_match_list_type_expr var e)
       | ListInsert (var, e1, e2) ->
          SListInsert(var, check_int_expr e1, check_match_list_type_expr var e2)
-(*       | ListReverse var -> SListClear(get_list_type var, var) *)
+      | ListReverse var -> 
+         SListReverse(get_list_type var, var)
       | If(p, b1, b2) -> SIf(check_bool_expr p, check_stmt b1, check_stmt b2)
       | For(e1, e2, e3, st) -> SFor(expr e1, check_bool_expr e2, expr e3, check_stmt st)
       | While(p, s) -> SWhile(check_bool_expr p, check_stmt s)

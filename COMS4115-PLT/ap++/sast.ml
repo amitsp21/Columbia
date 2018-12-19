@@ -30,9 +30,7 @@ type sstmt =
 | SListClear of typ * string
 | SListRemove of string * sexpr
 | SListInsert of string * sexpr * sexpr
-(* 
-| SListRev of typ * string
- *)
+| SListReverse of typ * string
 
 type sfunc_decl = {
     styp : typ;

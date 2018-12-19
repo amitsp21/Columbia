@@ -36,9 +36,7 @@ type stmt =
 | ListClear of string
 | ListRemove of string * expr
 | ListInsert of string * expr * expr
-(* | ListRev of string
-
- *)
+| ListReverse of string
 
 type func_decl = {
     typ : typ;

@@ -99,7 +99,7 @@ stmt:
 | LIST_CLEAR LPAREN ID RPAREN SEMICOLON     { ListClear($3) }
 | LIST_REMOVE LPAREN ID COMMA expr RPAREN SEMICOLON { ListRemove($3, $5) }  
 | LIST_INSERT LPAREN ID COMMA expr COMMA expr RPAREN SEMICOLON { ListInsert($3, $5, $7) }
-/* | LIST_REVERSE LPAREN ID RPAREN SEMICOLON       { ListReverse($3) } */
+| LIST_REVERSE LPAREN ID RPAREN SEMICOLON       { ListReverse($3) }
 
 expr_opt:
   /* nothing */ { Noexpr }

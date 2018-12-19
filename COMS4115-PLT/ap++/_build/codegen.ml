@@ -428,6 +428,64 @@ let translate (globals, functions) =
      StringMap.add defName def m in 
   List.fold_left list_insert_ty StringMap.empty [ A.Bool; A.Int; A.Float ] in
 
+ (*
+#intializing pointers
+   left = 0
+   right = len(alist)-1
+
+   #condition for termination
+   while left<right:
+
+       #swapping
+       temp = alist[left]
+       alist[left] = alist[right]
+       alist[right] = temp
+
+       #updating pointers
+       left += 1
+       right -= 1
+ *)
+ (* void list_insert(list, int idx, typ value) *)
+  let list_reverse : L.llvalue StringMap.t = 
+    let list_reverse_ty m typ =
+     let ltype = (ltype_of_typ typ) in 
+     let defName = (type_str typ) in
+     let def = L.define_function ("list_reverse" ^ defName) (L.function_type void_t [| L.pointer_type (list_t ltype) |]) the_module in
+     let build = L.builder_at_end context (L.entry_block def) in
+
+     let listPtr = L.build_alloca (L.pointer_type (list_t ltype)) "list_ptr_alloc" build in
+     ignore(L.build_store (L.param def 0) listPtr build);
+     let listLoad = L.build_load listPtr "list_load" build in
+
+     let listSizePtrPtr = L.build_struct_gep listLoad 0 "list_size_ptr_ptr" build in 
+     let listSizePtr = L.build_load listSizePtrPtr "list_size_ptr" build in
+     let listSize = L.build_load listSizePtr "list_size" build in
+
+     let leftPtr = L.build_alloca i32_t "left_idx" build in 
+     let _ = L.build_store (L.const_int i32_t 0) leftPtr build in
+     let rightPtr = L.build_alloca i32_t "right_idx" build in
+     let _ = L.build_store (L.build_sub listSize (L.const_int i32_t 1) "tmp" build) rightPtr build in
+
+     let while_cond _builder = L.build_icmp L.Icmp.Slt 
+        (L.build_load leftPtr "left_idx" _builder) 
+        (L.build_load rightPtr "right_idx" _builder) "while_cond" _builder 
+     in
+     let while_body _builder = 
+        let left_idx = (L.build_load leftPtr "left_idx" _builder) in
+        let right_idx = (L.build_load rightPtr "right_idx" _builder) in
+        let get_left_val = L.build_call (StringMap.find (type_str typ) list_get) [| listLoad; left_idx |] "list_get" _builder in
+        let get_right_val = L.build_call (StringMap.find (type_str typ) list_get) [| listLoad; right_idx |] "list_get" _builder in
+        let _ = L.build_call (StringMap.find (type_str typ) list_set) [| listLoad; left_idx; get_right_val |] "" _builder in
+        let _ = L.build_call (StringMap.find (type_str typ) list_set) [| listLoad; right_idx; get_left_val |] "" _builder in
+        let _ = L.build_store (L.build_add left_idx (L.const_int i32_t 1) "tmp" _builder) leftPtr _builder in
+        let _ = L.build_store (L.build_sub right_idx (L.const_int i32_t 1) "tmp" _builder) rightPtr _builder in
+        _builder
+      in
+      let while_builder = build_while build while_cond while_body def in
+      ignore(L.build_ret_void while_builder);
+      StringMap.add defName def m in 
+  List.fold_left list_reverse_ty StringMap.empty [ A.Bool; A.Int; A.Float ] in
+
   (* Define each function (arguments and return type) so we can 
      call it even before we've created its body *)
   let function_decls : (L.llvalue * sfunc_decl) StringMap.t =
@@ -611,6 +669,8 @@ let translate (globals, functions) =
           ignore(L.build_call (StringMap.find (type_str (fst e)) list_remove) [| (lookup id); (expr builder e) |] "" builder); builder
       | SListInsert (id, e1, e2) ->
           ignore(L.build_call (StringMap.find (type_str (fst e2)) list_insert) [| (lookup id); (expr builder e1); (expr builder e2) |] "" builder); builder
+      | SListReverse (list_type, id) ->
+          ignore(L.build_call (StringMap.find (type_str list_type) list_reverse) [| (lookup id) |] "" builder); builder
       | SExpr e -> ignore(expr builder e); builder 
       | SReturn e -> ignore(match fdecl.styp with
                               (* Special "return nothing" instr *)
