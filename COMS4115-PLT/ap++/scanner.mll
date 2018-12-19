@@ -1,8 +1,13 @@
+(* Parser for AP++ compiler *)
 { open Parser }
+
+let esc_regex = '\\' ['\\' ''' '"' 'n' 'r' 't']
+let ascii_regex = ([' '-'!' '#'-'[' ']'-'~'])
 
 rule token = parse
   [' ' '\t' '\r' '\n'] { token lexbuf } (* Whitespace *)
-| "/*"    { comment lexbuf }            (* Comments *)
+| "/*"    { comment lexbuf }            (* Multi-line Comment *)
+| "//" { line_comment lexbuf }			(* Single-line Comment *)
 | '('     { LPAREN }
 | ')'     { RPAREN }
 | '{'     { LBRACE }
@@ -12,10 +17,10 @@ rule token = parse
 | ':'     { COLON }
 | ';'     { SEMICOLON }
 | ','	  { COMMA }
-| '+'     { PLUS }
 | "++"    { PLUSPLUS }
-| '-'     { MINUS }
 | "--"    { MINUSMINUS }
+| '+'     { PLUS }
+| '-'     { MINUS }
 | '*'     { TIMES }
 | '/'     { DIVIDE }
 | '%'	  { MOD }
@@ -29,7 +34,6 @@ rule token = parse
 | ">="    { GEQ }
 | "if"    { IF }
 | "else"  { ELSE }
-| "elseif" { ELSEIF }
 | "while" { WHILE }
 | "for"   { FOR }
 | "return" { RETURN }
@@ -56,12 +60,15 @@ rule token = parse
 | "true"	{ BLITERAL(true) }
 | "false"	{ BLITERAL(false) }
 | ['0'-'9']+('.')['0'-'9']*(['e' 'E']['+' '-']?['0'-'9']+)? as lit { FLITERAL(float_of_string lit) }
-| '"'(_+ as lit)'"' { SLITERAL(lit) }
+| '"' ((ascii_regex | esc_regex)* as lit)'"' { SLITERAL(lit) }
 | ['a'-'z' 'A'-'Z']['a'-'z' 'A'-'Z' '0'-'9' '_']* as id_name { ID(id_name) }
 | eof     { EOF }
 | _ as char { raise (Failure("illegal character " ^ Char.escaped char)) }
 
+and line_comment = parse
+ '\n' { token lexbuf }
+ | _ { line_comment lexbuf }
+
 and comment = parse
   "*/"    { token lexbuf }
 | _       { comment lexbuf }
-

@@ -28,7 +28,6 @@ type token =
   | RETURN
   | IF
   | ELSE
-  | ELSEIF
   | WHILE
   | FOR
   | INT

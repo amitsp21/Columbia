@@ -535,7 +535,7 @@ let translate (globals, functions) =
       | SId s       -> L.build_load (lookup s) s builder
       | SAssign (s, e) -> let e' = expr builder e in
                           ignore(L.build_store e' (lookup s) builder); e'
-      | SBinop ((A.Float,_ ) as e1, op, e2) ->
+      | SBinop ((A.Float, _ ) as e1, op, e2) ->
         let e1' = expr builder e1
         and e2' = expr builder e2 in
         (match op with 
@@ -552,6 +552,15 @@ let translate (globals, functions) =
         | A.And | A.Or | A.Mod ->
             raise (Failure "internal error: semant should have rejected and/or on float")
         ) e1' e2' "tmp" builder
+       (* TODO: list equality check *)
+       (* | SBinop ((A.List, _) as e1, op, e2) ->
+        let e1' = expr builder e1
+        and e2' = expr builder e2 in
+        (match op with 
+          A.Equal   -> 
+        | A.Neq     -> 
+        | _ -> raise (Failure "internal error: semant should have rejected and/or on float")
+        ) e1' e2' "tmp" builder *)
       | SBinop (e1, op, e2) ->
         let e1' = expr builder e1
         and e2' = expr builder e2 in
@@ -580,28 +589,28 @@ let translate (globals, functions) =
         let newVal = (L.build_add e' (L.const_int i32_t 1)) "tmp" builder in
         let id = match (e'') with 
           SId s -> s
-          | _ -> raise (Failure ("PlusPlus can only be applied to an Id type")) in
+          | _ -> raise (Failure ("++ operand must be an ID")) in
         let varPtr = (lookup id) in
         let _ = L.build_store newVal varPtr builder in newVal
       | A.MinusMinusPre ->
         let newVal = (L.build_sub e' (L.const_int i32_t 1)) "tmp" builder in
         let id = match (e'') with 
           SId s -> s
-          | _ -> raise (Failure ("PlusPlus can only be applied to an Id type")) in
+          | _ -> raise (Failure ("-- operand must be an ID")) in
         let varPtr = (lookup id) in
         let _ = L.build_store newVal varPtr builder in newVal
       | A.PlusPlusPost -> 
         let newVal = (L.build_add e' (L.const_int i32_t 1)) "tmp" builder in
         let id = match (e'') with 
           SId s -> s
-          | _ -> raise (Failure ("PlusPlus can only be applied to an Id type")) in
+          | _ -> raise (Failure ("++ operand must be an ID")) in
         let varPtr = (lookup id) in
         let _ = L.build_store newVal varPtr builder in e'
       | A.MinusMinusPost ->
         let newVal = (L.build_sub e' (L.const_int i32_t 1)) "tmp" builder in
         let id = match (e'') with 
           SId s -> s
-          | _ -> raise (Failure ("PlusPlus can only be applied to an Id type")) in
+          | _ -> raise (Failure ("-- operand must be an ID")) in
         let varPtr = (lookup id) in
         let _ = L.build_store newVal varPtr builder in e')
 
