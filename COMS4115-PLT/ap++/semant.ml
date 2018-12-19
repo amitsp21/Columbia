@@ -160,7 +160,7 @@ let check (globals, functions) =
              | (Void, Int) 
              | (Int, Void)
              | (Void, Void) -> Int
-             |  _ -> raise (Failure ("invalid list index arguments for list slice"))
+             |  _ -> raise (Failure ("invalid list index arguments for list slice: " ^ string_of_sexpr e1' ^ ", " ^ string_of_sexpr e2'))
            in (type_of_identifier var, SListSlice(check_list_type var, var, e1', e2'))
       | ListFind (var, e) ->
          let (t, e') = expr e in
