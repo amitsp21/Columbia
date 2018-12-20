@@ -2,8 +2,11 @@
 
 ###### Testing test-add1
 ./ap_plusplus.native tests/test-add1.mc > test-add1.ll
-Fatal error: exception Failure("unrecognized function print")
-###### FAILED
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-add1.ll > test-add1.s
+cc -o test-add1.exe test-add1.s printbig.o
+./test-add1.exe
+diff -b test-add1.out tests/test-add1.out > test-add1.diff
+###### SUCCESS
 
 ###### Testing test-arith1
 ./ap_plusplus.native tests/test-arith1.mc > test-arith1.ll
@@ -47,8 +50,11 @@ diff -b test-float1.out tests/test-float1.out > test-float1.diff
 
 ###### Testing test-float2
 ./ap_plusplus.native tests/test-float2.mc > test-float2.ll
-Fatal error: exception Stdlib.Parsing.Parse_error
-###### FAILED
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-float2.ll > test-float2.s
+cc -o test-float2.exe test-float2.s printbig.o
+./test-float2.exe
+diff -b test-float2.out tests/test-float2.out > test-float2.diff
+###### SUCCESS
 
 ###### Testing test-float3
 ./ap_plusplus.native tests/test-float3.mc > test-float3.ll
@@ -68,8 +74,11 @@ diff -b test-for1.out tests/test-for1.out > test-for1.diff
 
 ###### Testing test-for2
 ./ap_plusplus.native tests/test-for2.mc > test-for2.ll
-Fatal error: exception Failure("unrecognized function print")
-###### FAILED
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-for2.ll > test-for2.s
+cc -o test-for2.exe test-for2.s printbig.o
+./test-for2.exe
+diff -b test-for2.out tests/test-for2.out > test-for2.diff
+###### SUCCESS
 
 ###### Testing test-func1
 ./ap_plusplus.native tests/test-func1.mc > test-func1.ll
@@ -113,8 +122,11 @@ diff -b test-func5.out tests/test-func5.out > test-func5.diff
 
 ###### Testing test-func6
 ./ap_plusplus.native tests/test-func6.mc > test-func6.ll
-Fatal error: exception Failure("unrecognized function print")
-###### FAILED
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-func6.ll > test-func6.s
+cc -o test-func6.exe test-func6.s printbig.o
+./test-func6.exe
+diff -b test-func6.out tests/test-func6.out > test-func6.diff
+###### SUCCESS
 
 ###### Testing test-func7
 ./ap_plusplus.native tests/test-func7.mc > test-func7.ll
@@ -127,3 +139,505 @@ diff -b test-func7.out tests/test-func7.out > test-func7.diff
 ###### Testing test-func8
 ./ap_plusplus.native tests/test-func8.mc > test-func8.ll
 /usr/local/opt/llvm/bin/llc -relocation-model=pic test-func8.ll > test-func8.s
+cc -o test-func8.exe test-func8.s printbig.o
+./test-func8.exe
+diff -b test-func8.out tests/test-func8.out > test-func8.diff
+###### SUCCESS
+
+###### Testing test-func9
+./ap_plusplus.native tests/test-func9.mc > test-func9.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-func9.ll > test-func9.s
+cc -o test-func9.exe test-func9.s printbig.o
+./test-func9.exe
+diff -b test-func9.out tests/test-func9.out > test-func9.diff
+###### SUCCESS
+
+###### Testing test-gcd
+./ap_plusplus.native tests/test-gcd.mc > test-gcd.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-gcd.ll > test-gcd.s
+cc -o test-gcd.exe test-gcd.s printbig.o
+./test-gcd.exe
+diff -b test-gcd.out tests/test-gcd.out > test-gcd.diff
+###### SUCCESS
+
+###### Testing test-gcd2
+./ap_plusplus.native tests/test-gcd2.mc > test-gcd2.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-gcd2.ll > test-gcd2.s
+cc -o test-gcd2.exe test-gcd2.s printbig.o
+./test-gcd2.exe
+diff -b test-gcd2.out tests/test-gcd2.out > test-gcd2.diff
+###### SUCCESS
+
+###### Testing test-global1
+./ap_plusplus.native tests/test-global1.mc > test-global1.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-global1.ll > test-global1.s
+cc -o test-global1.exe test-global1.s printbig.o
+./test-global1.exe
+diff -b test-global1.out tests/test-global1.out > test-global1.diff
+###### SUCCESS
+
+###### Testing test-global2
+./ap_plusplus.native tests/test-global2.mc > test-global2.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-global2.ll > test-global2.s
+cc -o test-global2.exe test-global2.s printbig.o
+./test-global2.exe
+diff -b test-global2.out tests/test-global2.out > test-global2.diff
+###### SUCCESS
+
+###### Testing test-global3
+./ap_plusplus.native tests/test-global3.mc > test-global3.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-global3.ll > test-global3.s
+cc -o test-global3.exe test-global3.s printbig.o
+./test-global3.exe
+diff -b test-global3.out tests/test-global3.out > test-global3.diff
+###### SUCCESS
+
+###### Testing test-helloworld
+./ap_plusplus.native tests/test-helloworld.mc > test-helloworld.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-helloworld.ll > test-helloworld.s
+cc -o test-helloworld.exe test-helloworld.s printbig.o
+./test-helloworld.exe
+diff -b test-helloworld.out tests/test-helloworld.out > test-helloworld.diff
+###### SUCCESS
+
+###### Testing test-if1
+./ap_plusplus.native tests/test-if1.mc > test-if1.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-if1.ll > test-if1.s
+cc -o test-if1.exe test-if1.s printbig.o
+./test-if1.exe
+diff -b test-if1.out tests/test-if1.out > test-if1.diff
+###### SUCCESS
+
+###### Testing test-if2
+./ap_plusplus.native tests/test-if2.mc > test-if2.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-if2.ll > test-if2.s
+cc -o test-if2.exe test-if2.s printbig.o
+./test-if2.exe
+diff -b test-if2.out tests/test-if2.out > test-if2.diff
+###### SUCCESS
+
+###### Testing test-if3
+./ap_plusplus.native tests/test-if3.mc > test-if3.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-if3.ll > test-if3.s
+cc -o test-if3.exe test-if3.s printbig.o
+./test-if3.exe
+diff -b test-if3.out tests/test-if3.out > test-if3.diff
+###### SUCCESS
+
+###### Testing test-if4
+./ap_plusplus.native tests/test-if4.mc > test-if4.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-if4.ll > test-if4.s
+cc -o test-if4.exe test-if4.s printbig.o
+./test-if4.exe
+diff -b test-if4.out tests/test-if4.out > test-if4.diff
+###### SUCCESS
+
+###### Testing test-if5
+./ap_plusplus.native tests/test-if5.mc > test-if5.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-if5.ll > test-if5.s
+cc -o test-if5.exe test-if5.s printbig.o
+./test-if5.exe
+diff -b test-if5.out tests/test-if5.out > test-if5.diff
+###### SUCCESS
+
+###### Testing test-if6
+./ap_plusplus.native tests/test-if6.mc > test-if6.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-if6.ll > test-if6.s
+cc -o test-if6.exe test-if6.s printbig.o
+./test-if6.exe
+diff -b test-if6.out tests/test-if6.out > test-if6.diff
+###### SUCCESS
+
+###### Testing test-list01
+./ap_plusplus.native tests/test-list01.mc > test-list01.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-list01.ll > test-list01.s
+cc -o test-list01.exe test-list01.s printbig.o
+./test-list01.exe
+diff -b test-list01.out tests/test-list01.out > test-list01.diff
+###### SUCCESS
+
+###### Testing test-list02
+./ap_plusplus.native tests/test-list02.mc > test-list02.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-list02.ll > test-list02.s
+cc -o test-list02.exe test-list02.s printbig.o
+./test-list02.exe
+diff -b test-list02.out tests/test-list02.out > test-list02.diff
+###### SUCCESS
+
+###### Testing test-list03
+./ap_plusplus.native tests/test-list03.mc > test-list03.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-list03.ll > test-list03.s
+cc -o test-list03.exe test-list03.s printbig.o
+./test-list03.exe
+diff -b test-list03.out tests/test-list03.out > test-list03.diff
+###### SUCCESS
+
+###### Testing test-list04
+./ap_plusplus.native tests/test-list04.mc > test-list04.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-list04.ll > test-list04.s
+cc -o test-list04.exe test-list04.s printbig.o
+./test-list04.exe
+diff -b test-list04.out tests/test-list04.out > test-list04.diff
+###### SUCCESS
+
+###### Testing test-list05
+./ap_plusplus.native tests/test-list05.mc > test-list05.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-list05.ll > test-list05.s
+cc -o test-list05.exe test-list05.s printbig.o
+./test-list05.exe
+diff -b test-list05.out tests/test-list05.out > test-list05.diff
+###### SUCCESS
+
+###### Testing test-list06
+./ap_plusplus.native tests/test-list06.mc > test-list06.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-list06.ll > test-list06.s
+cc -o test-list06.exe test-list06.s printbig.o
+./test-list06.exe
+diff -b test-list06.out tests/test-list06.out > test-list06.diff
+###### SUCCESS
+
+###### Testing test-list07
+./ap_plusplus.native tests/test-list07.mc > test-list07.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-list07.ll > test-list07.s
+cc -o test-list07.exe test-list07.s printbig.o
+./test-list07.exe
+diff -b test-list07.out tests/test-list07.out > test-list07.diff
+###### SUCCESS
+
+###### Testing test-list08
+./ap_plusplus.native tests/test-list08.mc > test-list08.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-list08.ll > test-list08.s
+cc -o test-list08.exe test-list08.s printbig.o
+./test-list08.exe
+diff -b test-list08.out tests/test-list08.out > test-list08.diff
+###### SUCCESS
+
+###### Testing test-list09
+./ap_plusplus.native tests/test-list09.mc > test-list09.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-list09.ll > test-list09.s
+cc -o test-list09.exe test-list09.s printbig.o
+./test-list09.exe
+diff -b test-list09.out tests/test-list09.out > test-list09.diff
+###### SUCCESS
+
+###### Testing test-list10
+./ap_plusplus.native tests/test-list10.mc > test-list10.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-list10.ll > test-list10.s
+cc -o test-list10.exe test-list10.s printbig.o
+./test-list10.exe
+diff -b test-list10.out tests/test-list10.out > test-list10.diff
+###### SUCCESS
+
+###### Testing test-list11
+./ap_plusplus.native tests/test-list11.mc > test-list11.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-list11.ll > test-list11.s
+cc -o test-list11.exe test-list11.s printbig.o
+./test-list11.exe
+diff -b test-list11.out tests/test-list11.out > test-list11.diff
+###### SUCCESS
+
+###### Testing test-list12
+./ap_plusplus.native tests/test-list12.mc > test-list12.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-list12.ll > test-list12.s
+cc -o test-list12.exe test-list12.s printbig.o
+./test-list12.exe
+diff -b test-list12.out tests/test-list12.out > test-list12.diff
+###### SUCCESS
+
+###### Testing test-list13
+./ap_plusplus.native tests/test-list13.mc > test-list13.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-list13.ll > test-list13.s
+cc -o test-list13.exe test-list13.s printbig.o
+./test-list13.exe
+diff -b test-list13.out tests/test-list13.out > test-list13.diff
+###### SUCCESS
+
+###### Testing test-list14
+./ap_plusplus.native tests/test-list14.mc > test-list14.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-list14.ll > test-list14.s
+cc -o test-list14.exe test-list14.s printbig.o
+./test-list14.exe
+diff -b test-list14.out tests/test-list14.out > test-list14.diff
+###### SUCCESS
+
+###### Testing test-local1
+./ap_plusplus.native tests/test-local1.mc > test-local1.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-local1.ll > test-local1.s
+cc -o test-local1.exe test-local1.s printbig.o
+./test-local1.exe
+diff -b test-local1.out tests/test-local1.out > test-local1.diff
+###### SUCCESS
+
+###### Testing test-local2
+./ap_plusplus.native tests/test-local2.mc > test-local2.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-local2.ll > test-local2.s
+cc -o test-local2.exe test-local2.s printbig.o
+./test-local2.exe
+diff -b test-local2.out tests/test-local2.out > test-local2.diff
+###### SUCCESS
+
+###### Testing test-minusminus01
+./ap_plusplus.native tests/test-minusminus01.mc > test-minusminus01.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-minusminus01.ll > test-minusminus01.s
+cc -o test-minusminus01.exe test-minusminus01.s printbig.o
+./test-minusminus01.exe
+diff -b test-minusminus01.out tests/test-minusminus01.out > test-minusminus01.diff
+###### SUCCESS
+
+###### Testing test-minusminus02
+./ap_plusplus.native tests/test-minusminus02.mc > test-minusminus02.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-minusminus02.ll > test-minusminus02.s
+cc -o test-minusminus02.exe test-minusminus02.s printbig.o
+./test-minusminus02.exe
+diff -b test-minusminus02.out tests/test-minusminus02.out > test-minusminus02.diff
+###### SUCCESS
+
+###### Testing test-mod01
+./ap_plusplus.native tests/test-mod01.mc > test-mod01.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-mod01.ll > test-mod01.s
+cc -o test-mod01.exe test-mod01.s printbig.o
+./test-mod01.exe
+diff -b test-mod01.out tests/test-mod01.out > test-mod01.diff
+###### SUCCESS
+
+###### Testing test-ops1
+./ap_plusplus.native tests/test-ops1.mc > test-ops1.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-ops1.ll > test-ops1.s
+cc -o test-ops1.exe test-ops1.s printbig.o
+./test-ops1.exe
+diff -b test-ops1.out tests/test-ops1.out > test-ops1.diff
+###### SUCCESS
+
+###### Testing test-ops2
+./ap_plusplus.native tests/test-ops2.mc > test-ops2.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-ops2.ll > test-ops2.s
+cc -o test-ops2.exe test-ops2.s printbig.o
+./test-ops2.exe
+diff -b test-ops2.out tests/test-ops2.out > test-ops2.diff
+###### SUCCESS
+
+###### Testing test-plusplus01
+./ap_plusplus.native tests/test-plusplus01.mc > test-plusplus01.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-plusplus01.ll > test-plusplus01.s
+cc -o test-plusplus01.exe test-plusplus01.s printbig.o
+./test-plusplus01.exe
+diff -b test-plusplus01.out tests/test-plusplus01.out > test-plusplus01.diff
+###### SUCCESS
+
+###### Testing test-plusplus02
+./ap_plusplus.native tests/test-plusplus02.mc > test-plusplus02.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-plusplus02.ll > test-plusplus02.s
+cc -o test-plusplus02.exe test-plusplus02.s printbig.o
+./test-plusplus02.exe
+diff -b test-plusplus02.out tests/test-plusplus02.out > test-plusplus02.diff
+###### SUCCESS
+
+###### Testing test-quicksort
+./ap_plusplus.native tests/test-quicksort.mc > test-quicksort.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-quicksort.ll > test-quicksort.s
+cc -o test-quicksort.exe test-quicksort.s printbig.o
+./test-quicksort.exe
+diff -b test-quicksort.out tests/test-quicksort.out > test-quicksort.diff
+###### SUCCESS
+
+###### Testing test-var1
+./ap_plusplus.native tests/test-var1.mc > test-var1.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-var1.ll > test-var1.s
+cc -o test-var1.exe test-var1.s printbig.o
+./test-var1.exe
+diff -b test-var1.out tests/test-var1.out > test-var1.diff
+###### SUCCESS
+
+###### Testing test-var2
+./ap_plusplus.native tests/test-var2.mc > test-var2.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-var2.ll > test-var2.s
+cc -o test-var2.exe test-var2.s printbig.o
+./test-var2.exe
+diff -b test-var2.out tests/test-var2.out > test-var2.diff
+###### SUCCESS
+
+###### Testing test-while1
+./ap_plusplus.native tests/test-while1.mc > test-while1.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-while1.ll > test-while1.s
+cc -o test-while1.exe test-while1.s printbig.o
+./test-while1.exe
+diff -b test-while1.out tests/test-while1.out > test-while1.diff
+###### SUCCESS
+
+###### Testing test-while2
+./ap_plusplus.native tests/test-while2.mc > test-while2.ll
+/usr/local/opt/llvm/bin/llc -relocation-model=pic test-while2.ll > test-while2.s
+cc -o test-while2.exe test-while2.s printbig.o
+./test-while2.exe
+diff -b test-while2.out tests/test-while2.out > test-while2.diff
+###### SUCCESS
+
+###### Testing fail-assign1
+./ap_plusplus.native < tests/fail-assign1.mc 2> fail-assign1.err >> testall.log
+diff -b fail-assign1.err tests/fail-assign1.err > fail-assign1.diff
+###### SUCCESS
+
+###### Testing fail-assign2
+./ap_plusplus.native < tests/fail-assign2.mc 2> fail-assign2.err >> testall.log
+diff -b fail-assign2.err tests/fail-assign2.err > fail-assign2.diff
+###### SUCCESS
+
+###### Testing fail-assign3
+./ap_plusplus.native < tests/fail-assign3.mc 2> fail-assign3.err >> testall.log
+diff -b fail-assign3.err tests/fail-assign3.err > fail-assign3.diff
+###### SUCCESS
+
+###### Testing fail-dead1
+./ap_plusplus.native < tests/fail-dead1.mc 2> fail-dead1.err >> testall.log
+diff -b fail-dead1.err tests/fail-dead1.err > fail-dead1.diff
+###### SUCCESS
+
+###### Testing fail-dead2
+./ap_plusplus.native < tests/fail-dead2.mc 2> fail-dead2.err >> testall.log
+diff -b fail-dead2.err tests/fail-dead2.err > fail-dead2.diff
+###### SUCCESS
+
+###### Testing fail-expr1
+./ap_plusplus.native < tests/fail-expr1.mc 2> fail-expr1.err >> testall.log
+diff -b fail-expr1.err tests/fail-expr1.err > fail-expr1.diff
+###### SUCCESS
+
+###### Testing fail-expr2
+./ap_plusplus.native < tests/fail-expr2.mc 2> fail-expr2.err >> testall.log
+diff -b fail-expr2.err tests/fail-expr2.err > fail-expr2.diff
+###### SUCCESS
+
+###### Testing fail-expr3
+./ap_plusplus.native < tests/fail-expr3.mc 2> fail-expr3.err >> testall.log
+diff -b fail-expr3.err tests/fail-expr3.err > fail-expr3.diff
+###### SUCCESS
+
+###### Testing fail-float1
+./ap_plusplus.native < tests/fail-float1.mc 2> fail-float1.err >> testall.log
+diff -b fail-float1.err tests/fail-float1.err > fail-float1.diff
+###### SUCCESS
+
+###### Testing fail-float2
+./ap_plusplus.native < tests/fail-float2.mc 2> fail-float2.err >> testall.log
+diff -b fail-float2.err tests/fail-float2.err > fail-float2.diff
+###### SUCCESS
+
+###### Testing fail-for1
+./ap_plusplus.native < tests/fail-for1.mc 2> fail-for1.err >> testall.log
+diff -b fail-for1.err tests/fail-for1.err > fail-for1.diff
+###### SUCCESS
+
+###### Testing fail-for2
+./ap_plusplus.native < tests/fail-for2.mc 2> fail-for2.err >> testall.log
+diff -b fail-for2.err tests/fail-for2.err > fail-for2.diff
+###### SUCCESS
+
+###### Testing fail-for3
+./ap_plusplus.native < tests/fail-for3.mc 2> fail-for3.err >> testall.log
+diff -b fail-for3.err tests/fail-for3.err > fail-for3.diff
+###### SUCCESS
+
+###### Testing fail-for4
+./ap_plusplus.native < tests/fail-for4.mc 2> fail-for4.err >> testall.log
+diff -b fail-for4.err tests/fail-for4.err > fail-for4.diff
+###### SUCCESS
+
+###### Testing fail-for5
+./ap_plusplus.native < tests/fail-for5.mc 2> fail-for5.err >> testall.log
+diff -b fail-for5.err tests/fail-for5.err > fail-for5.diff
+###### SUCCESS
+
+###### Testing fail-func1
+./ap_plusplus.native < tests/fail-func1.mc 2> fail-func1.err >> testall.log
+diff -b fail-func1.err tests/fail-func1.err > fail-func1.diff
+###### SUCCESS
+
+###### Testing fail-func2
+./ap_plusplus.native < tests/fail-func2.mc 2> fail-func2.err >> testall.log
+diff -b fail-func2.err tests/fail-func2.err > fail-func2.diff
+###### SUCCESS
+
+###### Testing fail-func3
+./ap_plusplus.native < tests/fail-func3.mc 2> fail-func3.err >> testall.log
+diff -b fail-func3.err tests/fail-func3.err > fail-func3.diff
+###### SUCCESS
+
+###### Testing fail-func4
+./ap_plusplus.native < tests/fail-func4.mc 2> fail-func4.err >> testall.log
+diff -b fail-func4.err tests/fail-func4.err > fail-func4.diff
+###### SUCCESS
+
+###### Testing fail-func5
+./ap_plusplus.native < tests/fail-func5.mc 2> fail-func5.err >> testall.log
+diff -b fail-func5.err tests/fail-func5.err > fail-func5.diff
+###### SUCCESS
+
+###### Testing fail-func6
+./ap_plusplus.native < tests/fail-func6.mc 2> fail-func6.err >> testall.log
+diff -b fail-func6.err tests/fail-func6.err > fail-func6.diff
+###### SUCCESS
+
+###### Testing fail-func7
+./ap_plusplus.native < tests/fail-func7.mc 2> fail-func7.err >> testall.log
+diff -b fail-func7.err tests/fail-func7.err > fail-func7.diff
+###### SUCCESS
+
+###### Testing fail-func8
+./ap_plusplus.native < tests/fail-func8.mc 2> fail-func8.err >> testall.log
+diff -b fail-func8.err tests/fail-func8.err > fail-func8.diff
+###### SUCCESS
+
+###### Testing fail-func9
+./ap_plusplus.native < tests/fail-func9.mc 2> fail-func9.err >> testall.log
+diff -b fail-func9.err tests/fail-func9.err > fail-func9.diff
+###### SUCCESS
+
+###### Testing fail-global1
+./ap_plusplus.native < tests/fail-global1.mc 2> fail-global1.err >> testall.log
+diff -b fail-global1.err tests/fail-global1.err > fail-global1.diff
+###### SUCCESS
+
+###### Testing fail-global2
+./ap_plusplus.native < tests/fail-global2.mc 2> fail-global2.err >> testall.log
+diff -b fail-global2.err tests/fail-global2.err > fail-global2.diff
+###### SUCCESS
+
+###### Testing fail-if1
+./ap_plusplus.native < tests/fail-if1.mc 2> fail-if1.err >> testall.log
+diff -b fail-if1.err tests/fail-if1.err > fail-if1.diff
+###### SUCCESS
+
+###### Testing fail-if2
+./ap_plusplus.native < tests/fail-if2.mc 2> fail-if2.err >> testall.log
+diff -b fail-if2.err tests/fail-if2.err > fail-if2.diff
+###### SUCCESS
+
+###### Testing fail-if3
+./ap_plusplus.native < tests/fail-if3.mc 2> fail-if3.err >> testall.log
+diff -b fail-if3.err tests/fail-if3.err > fail-if3.diff
+###### SUCCESS
+
+###### Testing fail-nomain
+./ap_plusplus.native < tests/fail-nomain.mc 2> fail-nomain.err >> testall.log
+diff -b fail-nomain.err tests/fail-nomain.err > fail-nomain.diff
+###### SUCCESS
+
+###### Testing fail-return1
+./ap_plusplus.native < tests/fail-return1.mc 2> fail-return1.err >> testall.log
+diff -b fail-return1.err tests/fail-return1.err > fail-return1.diff
+###### SUCCESS
+
+###### Testing fail-return2
+./ap_plusplus.native < tests/fail-return2.mc 2> fail-return2.err >> testall.log
+diff -b fail-return2.err tests/fail-return2.err > fail-return2.diff
+###### SUCCESS
+
+###### Testing fail-while1
+./ap_plusplus.native < tests/fail-while1.mc 2> fail-while1.err >> testall.log
+diff -b fail-while1.err tests/fail-while1.err > fail-while1.diff
+###### SUCCESS
+
+###### Testing fail-while2
+./ap_plusplus.native < tests/fail-while2.mc 2> fail-while2.err >> testall.log
+diff -b fail-while2.err tests/fail-while2.err > fail-while2.diff
+###### SUCCESS

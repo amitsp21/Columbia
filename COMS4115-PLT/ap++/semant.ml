@@ -189,13 +189,13 @@ let check (globals, functions) =
 
     let check_bool_expr e = 
       let (t', e') = expr e
-      and err = "expected Boolean expression"
+      and err = "expected Boolean expression in " ^ string_of_expr e
       in if t' != Bool then raise (Failure err) else (t', e') 
     
     in
     let check_int_expr e = 
       let (t', e') = expr e
-      and err = "expected Integer expression"
+      and err = "expected Integer expression in " ^ string_of_expr e
       in if t' != Int then raise (Failure err) else (t', e') 
     in
     let check_match_list_type_expr l e = 

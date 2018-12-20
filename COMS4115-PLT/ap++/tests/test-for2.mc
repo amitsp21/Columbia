@@ -6,6 +6,6 @@ int main()
     printi(i);
     i = i + 1;
   }
-  print(42);
+  printi(42);
   return 0;
 }

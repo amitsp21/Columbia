@@ -1,6 +1,9 @@
-(* Parser for AP++ compiler *)
+(* Scanner for AP++ compiler *)
+
 { open Parser }
 
+let digit = ['0' - '9']
+let digits = digit+
 let esc_regex = '\\' ['\\' ''' '"' 'n' 'r' 't']
 let ascii_regex = ([' '-'!' '#'-'[' ']'-'~'])
 
@@ -56,10 +59,10 @@ rule token = parse
 | "list_remove" { LIST_REMOVE }
 | "list_find" { LIST_FIND }
 | "list" { LIST }
-| ['0'-'9']+ as lit { ILITERAL(int_of_string lit) }
+| digits as lit { ILITERAL(int_of_string lit) }
 | "true"	{ BLITERAL(true) }
 | "false"	{ BLITERAL(false) }
-| ['0'-'9']+('.')['0'-'9']*(['e' 'E']['+' '-']?['0'-'9']+)? as lit { FLITERAL(float_of_string lit) }
+| digits '.'  digit* ( ['e' 'E'] ['+' '-']? digits )? as lit { FLITERAL(float_of_string lit) }
 | '"' ((ascii_regex | esc_regex)* as lit)'"' { SLITERAL(lit) }
 | ['a'-'z' 'A'-'Z']['a'-'z' 'A'-'Z' '0'-'9' '_']* as id_name { ID(id_name) }
 | eof     { EOF }
